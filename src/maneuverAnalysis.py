@@ -264,13 +264,14 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
                         objDistances.insert(insertPoint, allDistances[x])
 
     if(maneuverAngle == -1):
-        print("Maneuver: CAN'T MOVE\n")
-        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        return
+        #print("Maneuver: CAN'T MOVE\n")
+        #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
     elif(maneuverFound):
-        print("Maneuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
-        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
-        #moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
-        #               pathAngles, xBound)
+        #print("Maneuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
+        #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
+                       pathAngles, xBound)
     else:
         calculateObjMovement(objAngles, objDistances, oppAngle, allDistances)
 
@@ -348,12 +349,12 @@ def calculateOppMovement(oppAngles, oppDistances, allDistances):
                             maneuverDistance)
 
     if(clearPath):
-        print("Maneuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
-        print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
-        #moveToOpponent(maneuverAngle, pathAngles, oppAngles)
-    else:
-        print("Maneuver: CAN'T MOVE\n")
-        print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
+        #print("Maneuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
+        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
+        moveToOpponent(maneuverAngle, pathAngles, oppAngles)
+    #else:
+        #print("Maneuver: CAN'T MOVE\n")
+        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
             
     return 
 

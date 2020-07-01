@@ -14,12 +14,12 @@
 ##Slamtec RPLIDAR A1 - 360 Laser Range Scanner Library;
 ##Created by MIT Skoltech, edited by and retrieved through Adafruit;
 ##See adafruit_rplidar.py for copyright license. 
-#import adafruit_rplidar
+import adafruit_rplidar
 
 ##Adafruit 16-Channel 12-bit PWM/Servo Driver Library;
 ##Created by and retrieved through Adafruit;
 ##See PCA9685.py for copyright license. 
-#import PCA9685	                                
+import PCA9685	                                
            
 ##Allows for calculations, conversions, and rounding.
 from math import ceil, cos, floor, radians, sin 
@@ -41,8 +41,8 @@ from math import ceil, cos, floor, radians, sin
 ##          values are more practical.
 
 ##Global objects for the LIDAR sensor and pwm driver breakout board.
-WHEELS = 1#PCA9685.PCA9685()
-SENSOR  = 1#adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
+WHEELS = PCA9685.PCA9685()
+SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 
 ##Any distance measurements are assumed to be in inches.
 ##Any angular measurements are assumed to be in degrees.

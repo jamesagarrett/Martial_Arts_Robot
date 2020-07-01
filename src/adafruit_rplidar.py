@@ -230,6 +230,7 @@ class RPLidar(object):
     def _read_descriptor(self):
         '''Reads descriptor packet'''
         descriptor = self._serial_port.read(DESCRIPTOR_LEN)
+        #print(descriptor)
         self.log_bytes('debug', 'Received descriptor:', descriptor)
         if len(descriptor) != DESCRIPTOR_LEN:
             raise RPLidarException('Descriptor length mismatch')

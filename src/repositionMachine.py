@@ -29,8 +29,10 @@ from globals import DES_OPP_ANGLE,\
                     MAX_CW_SPEED,\
                     MIN_CCW_SPEED,\
                     MIN_CW_SPEED,\
+                    PWM_FREQ,\
                     PWM_PORTS,\
                     SENSOR,\
+                    SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
                     SPEED_CONSTS,\
@@ -152,9 +154,9 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x])
+            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
         else:
-            wheelPWMs[x] = MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x])
+            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
 
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -190,7 +192,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
     ##Prevent "" error.
     SENSOR.stop()
-    SENSOR.connect()      
+    SENSOR.disconnect()
+    SENSOR.connect()     
             
     return
 
@@ -262,9 +265,9 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x])
+            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
         else:
-            wheelPWMs[x] = MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x])
+            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -299,7 +302,8 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
 
     ##Prevent "" error.
     SENSOR.stop()
-    SENSOR.connect()      
+    SENSOR.disconnect()
+    SENSOR.connect()    
 
     return
 
@@ -341,10 +345,10 @@ def rotateMachine(turnCW, opponentSpan):
 
     #####################################
 
-    if(turnCW):
-        print("Maneuver: Direction - Clockwise\n")
-    else:
-        print("Maneuver: Direction - Counter-Clockwise\n")
+    #if(turnCW):
+    #    print("Maneuver: Direction - Clockwise\n")
+    #else:
+    #    print("Maneuver: Direction - Counter-Clockwise\n")
 
     for x in range (1, ceil(opponentSpan/2) + 1):
         stopAngles.insert(0, DES_OPP_ANGLE-x)
@@ -388,6 +392,7 @@ def rotateMachine(turnCW, opponentSpan):
 
     ##Prevent "" error.
     SENSOR.stop()
+    SENSOR.disconnect()
     SENSOR.connect()
 
     return

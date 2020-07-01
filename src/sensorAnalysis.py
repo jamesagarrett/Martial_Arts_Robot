@@ -36,12 +36,17 @@ from globals import DES_OPP_ANGLE,\
                     LEFT_TURN_ANGLE_MAX,\
                     LEFT_TURN_ANGLE_MIN,\
                     MACH_RADIUS,\
+                    PWM_FREQ,\
+                    PWM_PORTS,\
                     RIGHT_TURN_ANGLE_MAX,\
                     RIGHT_TURN_ANGLE_MIN,\
                     SENSOR,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
-                    SNS_OPP_DISTANCE                     
+                    SNS_OPP_DISTANCE,\
+                    START_TICK,\
+                    STOP_SPEED,\
+                    WHEELS
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -123,8 +128,9 @@ def collectData():
         
     ##Prevent "" error.
     SENSOR.stop()
+    SENSOR.disconnect()
     SENSOR.connect()
-    print(distancesCount, "Distances Found\n")
+    #print(distancesCount, "Distances Found\n")
     interpretData(sensorDistances)
 
     return
@@ -248,10 +254,14 @@ def interpretData(distanceValues):
                 opponentAngle += x
                 opponentSpan += 1
         
-        opponentAngle = floor(opponentAngle/opponentSpan)
+        if(opponentSpan > 0):
+            opponentAngle = floor(opponentAngle/opponentSpan)
+        else:
+            opponentAngle = DES_OPP_ANGLE
+
         print("Status: Too Close\n")
-        calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
-                             distanceValues)
+        #calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
+        #                     distanceValues)
 
         return
 
@@ -280,7 +290,7 @@ def interpretData(distanceValues):
 
     if(tooFar):
         print("Status: Too Far\n")
-        calculateOppMovement(activeAngles, activeDistances, distanceValues)
+        #calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
         return
 
@@ -308,6 +318,7 @@ def interpretData(distanceValues):
           
         if(turningCW or turningCCW):
             print("Status: Not Centered")
+            print(activeAngles)
             print("CW" if turningCW else "CCW\n")
             opponentSpan = len(activeAngles)
             rotateMachine(turningCW, opponentSpan)
@@ -322,27 +333,33 @@ def interpretData(distanceValues):
 #--------------------------------------  --------------------------------------#
 
 def main():
-    from globals import SNS_OPT_DISTANCE
 
     import time
-    start_time = time.time()
-    distances = [0.0]*360
-    for x in range (0, 360):
-        distances[x] = SNS_OPT_DISTANCE + 20
+    import os
+
+    #SENSOR.connect()
+    start = input("STARTING\n")
     
-    distances[270] = SNS_MIN_DISTANCE - 0.0000001
-    for x in range (265, 276):
-        distances[x] = getCollinearDistance(x, 270, distances[270])
-    
-    distances[90] = SNS_OPT_DISTANCE + 11
-    for x in range (85, 96):
-        distances[x] = getCollinearDistance(x, 90, distances[90])
-    
-    distances[80] = 33
-    #distances[177] = 33
-    #distances[2] = 33
-    interpretData(distances)
-    print("--- %s seconds ---" % (time.time() - start_time))
+    try:
+        while(True):
+            clear = lambda: os.system('clear')
+            clear()
+            print("RUNNING\n")
+            start_time = time.time()
+            collectData()
+            print("--- %s seconds ---" % (time.time() - start_time))
+
+    except KeyboardInterrupt:
+        clear = lambda: os.system('clear')
+        clear()
+        print("\nTERMINATING")
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        SENSOR.stop()
+        SENSOR.disconnect()
+        #SENSOR.connect()
 
     return
 
