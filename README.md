@@ -3,4 +3,6 @@ A maneuverable, robotic machine powered by a Raspberry Pi that uses LIDAR detect
 ## Features
 Raspberry Pi 3.0 - Single-board computer used for code execution and debugging  
 Slamtec RPLIDAR A1 - 360° distancing detection sensor used for analyzing robot surroundings  
+## Details  
+## Crdits  
 
