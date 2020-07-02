@@ -9,7 +9,7 @@ Adafruit 16-Channel 12-Bit PWM/Servo Driver - Breakout board connected to the Pi
 ## Program Details  
 
 ## Credits  
-Thank you to Adafruit for providing code to run their PWM/Servo Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
+Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
 Both programs, which contain their respective licenses, can be found under the "src" folder along with all other \*.py files.  
 They can also be found at their original GitHub links:  
 * PCA9685.py: https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685    
