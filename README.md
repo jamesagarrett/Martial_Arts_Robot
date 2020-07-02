@@ -7,8 +7,20 @@ Omni-directional Wheels (3) - Wheels used for in-place turning and 360° linear 
 Jaguar Motor Controllers (3) - PWM speed controllers used to specify output current for the wheels  
 Adafruit 16-Channel 12-Bit PWM/Servo Driver - Breakout board connected to the Pi used to output PWM signals to the motor controllers 
 ## Program Details  
+This program is split into seven modules, all contributing to 3 primary tasks:  
+1. Sensor data collection and analysis
+2. Optimal angle and distance maneuvering calculations
+3. Repositioning of the robot to the new location  
 
-## Demos
+Module Functionality:  
+* PCA9685.py: Created by Adafruit as a tool for communicating with the 16-Channel PWM Driver mentioned under "Robot Features"  
+* Adafruit_rplidar.py: Created by Adafruit as a tool for retreiving raw data from the Slamtec RPLIDAR sensor mentioned under "Robot Features"  
+* globals.py: Constant declarations, such as the minimum distance the robot can be from an object, that are used throughout other modules
+* helperFunctions.py: A single location for frequent data calculations that are utilized in more than one module
+* sensorAnalysis.py: Cotains main() and is where LIDAR sensor data is collected and analyzed to see if and how the robot should reposition
+* maneuverAnalysis.py: Determines the best angle and distance to move at in order to be a safe distance from the user and environmental obsticles
+* repositionMachine.py: Gives output to the wheels, moving the robot to the desired position  
+# Demos
 [![Ultrasonic Sensors Test w/ Robot Before Switching to LIDAR](https://img.youtube.com/vi/7fe__-JRM5k/0.jpg)](https://www.youtube.com/watch?v=7fe__-JRM5k "Ultrasonic Sensor Test w/ Robot Before Switching to LIDAR") 
 
 [![LIDAR Sensor Test](https://img.youtube.com/vi/xRAZIY07_VE/0.jpg)](https://www.youtube.com/watch?v=xRAZIY07_VE "LIDAR Sensor Test")  
