@@ -7,9 +7,10 @@ Omni-directional Wheels (3) - Wheels used for in-place turning and 360° movemen
 Jaguar Motor Controllers (3) - PWM speed controllers used to specify output speed for the wheels  
 Adafruit 16-Channel 12-Bit PWM/Servo Driver - Breakout board connected to the Pi used to output PWM signals to the motor controllers 
 ## Program Details  
+
 ## Credits  
-Thank you to Adafruit for providing code to run their PWM/Servo Driver (PCA9685.py) as well as the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
-Both programs, which contain their respective licenses, can be found under the "src" folder with all \*.py files.  
-These programs can be found at the following GitHub links:  
+Thank you to Adafruit for providing code to run their PWM/Servo Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
+Both programs, which contain their respective licenses, can be found under the "src" folder along with all other \*.py files.  
+They can also be found at their original GitHub links:  
 * PCA9685.py: https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685    
 * Adafruit_rplidar.py: https://github.com/adafruit/rplidar
