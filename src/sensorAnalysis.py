@@ -12,11 +12,14 @@
 ##  maneuver itself to be back within the desired range described in globals.py.
 ##
 
-##For rounding.
+##Used for rounding.
 from math import atan, ceil, degrees, floor   
 
 ##Used for efficient inserting and sorting of a list.
 from bisect import bisect_left  
+
+##Used for resetting the terminal screen while printing data
+from os import system
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
@@ -127,10 +130,12 @@ def collectData():
   
             break
         
-    ##Prevent "" error.
+    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+	##data again
     SENSOR.stop()
     SENSOR.disconnect()
     SENSOR.connect()
+
     #print(distancesCount, "Distances Found\n")
     interpretData(sensorDistances)
 
@@ -290,7 +295,7 @@ def interpretData(distanceValues):
             tooFar = True    
 
     if(tooFar):
-        #print("Status: Too Far\n", activeAngles, "\n")
+        print("Status: Too Far\n")
         calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
         return
@@ -305,9 +310,9 @@ def interpretData(distanceValues):
 
             if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
                 activeAngles.append(x)
-                turningCW = True
+                turningCCW = True
             
-        if(not turningCW):
+        if(not turningCCW):
             for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
                 y = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
                 
@@ -315,12 +320,12 @@ def interpretData(distanceValues):
                 
                 if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
                     activeAngles.append(x)
-                    turningCCW = True
+                    turningCW = True
           
-        if(turningCW or turningCCW):
+        if(turningCCW or turningCW):
             print("Status: Not Centered")
             print(activeAngles)
-            print("CW" if turningCW else "CCW\n")
+            print("CCW" if turningCCW else "CW\n")
             opponentSpan = len(activeAngles)
             rotateMachine(turningCW, opponentSpan)
         else:
@@ -334,33 +339,29 @@ def interpretData(distanceValues):
 #--------------------------------------  --------------------------------------#
 
 def main():
-
-    import time
-    import os
-
-    #SENSOR.connect()
-    start = input("STARTING\n")
+    start = input("PRESS <ENTER> TO BEGIN")
     
     try:
+		reset = 0;
+
         while(True):
-            #clear = lambda: os.system('clear')
-            #clear()
-            #print("RUNNING\n")
-            #start_time = time.time()
+           if(reset % 10 == 0) 
+				clear = lambda: system('clear')
+				clear()
+				print("RUNNING\n")
             collectData()
-            #print("--- %s seconds ---" % (time.time() - start_time))
+			reset += 1
 
     except KeyboardInterrupt:
-        clear = lambda: os.system('clear')
+        clear = lambda: system('clear')
         clear()
-        print("\nTERMINATING")
+        print("TERMINATING")
         WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
         SENSOR.stop()
         SENSOR.disconnect()
-        #SENSOR.connect()
 
     return
 

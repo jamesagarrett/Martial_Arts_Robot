@@ -5,7 +5,7 @@
 ##  Last Updated: July 11, 2020
 ##
 ##  repositionMachine.py
-##  Last Updated: January 19, 2020
+##  Last Updated: July 11, 2020
 ##
 ##  Preform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -190,7 +190,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break
 
-    ##Prevent "" error.
+    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+	##data again
     SENSOR.stop()
     SENSOR.disconnect()
     SENSOR.connect()     
@@ -300,7 +301,8 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break 
 
-    ##Prevent "" error.
+    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+	##data again
     SENSOR.stop()
     SENSOR.disconnect()
     SENSOR.connect()    
@@ -390,7 +392,8 @@ def rotateMachine(turnCW, opponentSpan):
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break  
 
-    ##Prevent "" error.
+    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+	##data again
     SENSOR.stop()
     SENSOR.disconnect()
     SENSOR.connect()

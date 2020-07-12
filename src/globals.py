@@ -86,15 +86,15 @@ START_TICK = 0
 ##low will result in no movement. Any value above MIN_CCW_SPEED or below 
 ##MIN_CW_SPEED will result in movement by the wheels. STOP_SPEED is the mean of
 ##these values.
-MIN_CCW_SPEED = 965
-MIN_CW_SPEED = 1025
+MIN_CCW_SPEED = 1025
+MIN_CW_SPEED = 965
 STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
 MAX_SPEED = 150
-MAX_CCW_SPEED = MIN_CCW_SPEED - MAX_SPEED
-MAX_CW_SPEED = MIN_CW_SPEED + MAX_SPEED
+MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
+MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
@@ -145,7 +145,7 @@ SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 6.0
+OPP_DISTANCE = MAX_DISTANCE + 12.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
