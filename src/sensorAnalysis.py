@@ -343,12 +343,12 @@ def main():
     
     try:
         while(True):
-            clear = lambda: os.system('clear')
-            clear()
-            print("RUNNING\n")
-            start_time = time.time()
+            #clear = lambda: os.system('clear')
+            #clear()
+            #print("RUNNING\n")
+            #start_time = time.time()
             collectData()
-            print("--- %s seconds ---" % (time.time() - start_time))
+            #print("--- %s seconds ---" % (time.time() - start_time))
 
     except KeyboardInterrupt:
         clear = lambda: os.system('clear')
