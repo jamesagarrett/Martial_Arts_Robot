@@ -138,7 +138,7 @@ SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 60.0
+MAX_DISTANCE = 40.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
