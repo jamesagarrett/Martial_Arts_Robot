@@ -5,7 +5,7 @@
 ##  Last Updated: July 11, 2020
 ##
 ##  globals.py
-##  Last Updated: August 12, 2019
+##  Last Updated: July 11, 2020
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -86,15 +86,15 @@ START_TICK = 0
 ##low will result in no movement. Any value above MIN_CCW_SPEED or below 
 ##MIN_CW_SPEED will result in movement by the wheels. STOP_SPEED is the mean of
 ##these values.
-MIN_CCW_SPEED = 1025
-MIN_CW_SPEED = 965
+MIN_CCW_SPEED = 965
+MIN_CW_SPEED = 1025
 STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 200
-MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
-MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
+MAX_SPEED = 150
+MAX_CCW_SPEED = MIN_CCW_SPEED - MAX_SPEED
+MAX_CW_SPEED = MIN_CW_SPEED + MAX_SPEED
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
