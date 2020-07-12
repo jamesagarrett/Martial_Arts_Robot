@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: January 19, 2020
+##  Last Updated: July 11, 2020
 ##
 ##  sensorAnalysis.py
-##  Last Updated: January 19, 2020
+##  Last Updated: July 11, 2020
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -15,7 +15,7 @@
 ##For rounding.
 from math import atan, ceil, degrees, floor   
 
-##Used for sufficient inserting and sorting of a list.
+##Used for efficient inserting and sorting of a list.
 from bisect import bisect_left  
 
 ##Module that includes functions that are used throughout the project.
@@ -63,6 +63,7 @@ from globals import DES_OPP_ANGLE,\
 ## passed:    nothing
 ## returns:   nothing
 ## calls:     sensorAnalysis.interpretData()
+##			  helperFunctions.getCartesianAngle()
 ##
 ## Retrieve sensor readings and store all angles and      *
 ## associated distances.                                  *

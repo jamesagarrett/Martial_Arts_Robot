@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: January 19, 2020
+##  Last Updated: July 11, 2020
 ##
 ##  maneuverAnalysis.py
 ##  Last Updated: January 19, 2020
@@ -14,7 +14,7 @@
 ##For calculations, conversions, and rounding.
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
 
-##Used for sufficient inserting and sorting of a list.
+##Used for efficient inserting and sorting of a list.
 from bisect import bisect_left                             
 
 ##Module that includes functions that are used throughout the project.
