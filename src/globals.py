@@ -51,7 +51,7 @@ SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 PWM_FREQ = 160
 
 ##The pin location of each wheel on the pwm breakout board.
-PWM_PORTS = [5, 6, 7]
+PWM_PORTS = [7, 5, 6]
 
 ##The physical angular location of each wheel on the machine.
 WHEEL_LOCATIONS = [210, 330, 90]
@@ -92,7 +92,7 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 150
+MAX_SPEED = 200
 MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
 MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
