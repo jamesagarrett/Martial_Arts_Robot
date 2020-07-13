@@ -296,7 +296,7 @@ def interpretData(distanceValues):
 			tooFar = True	 
 
 	if(tooFar):
-		print("Status: Too Far\n")
+		print("Status: Too Far\n", activeAngles, activeDistances)
 		calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
 		return

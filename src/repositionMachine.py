@@ -261,7 +261,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
                      / SPEED_CONSTS[3]
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
-
+	
     for x in range (0, len(PWM_PORTS)):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
@@ -269,7 +269,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
         else:
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
-    
+    print(repositionAngle, wheelSpeeds, wheelPWMs)
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
