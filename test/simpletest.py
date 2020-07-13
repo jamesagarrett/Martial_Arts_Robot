@@ -23,19 +23,28 @@ pwm = PCA9685.PCA9685()
 pwm.set_pwm_freq(160)
 
 x = -0.47956
+y = 0.64084 
+z = -0.16128
 while(x != 0):
-    if(-1 <= x <= 1):
-        if(x < 0):
-            speed = 1025 + (150/(1/x))
-        else:
-            speed = 965 + (150/(1/x))
-        print(speed)
-        pwm.set_pwm(7, 0, math.floor(speed))
-        pwm.set_pwm(0, 0, math.floor(speed))
-        pwm.set_pwm(15, 0, math.floor(speed))
-    else:
-        print("Invalid")
-    x = float(input("Speed: "))
+	if(-1 <= x <= 1):
+		if(x < -1):
+			speed = 1025 + (150/(1/x))
+			speed2 = 1025 + (150/(1/y))
+			speed3 = 1025 + (150/(1/z))
+		else:
+			speed = 965 + (150/(1/x))
+			speed2 = 965 + (150/(1/y))
+			speed3 = 965 + (150/(1/z))
+		print(speed, speed2, speed3)
+		pwm.set_pwm(7, 0, math.floor(speed))
+		pwm.set_pwm(0, 0, math.floor(speed2))
+		pwm.set_pwm(15, 0, math.floor(speed3))
+	else:
+		print("Invalid")
+	time.sleep(5)
+	x = float(input("Speed: "))
+	y = float(input("Speed: "))
+	z = float(input("Speed: "))
 
 #to stop robot at the end
 pwm.set_pwm(7, 0, 1000)
