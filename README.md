@@ -2,13 +2,13 @@
 ## Introduction
 A maneuverable, robotic machine powered by a Raspberry Pi that uses LIDAR detection to autonomously navigate its environment. This machine is designed and programmed to simulate martial arts sparring for users who want a dynamic training experience when unaccompanied by another human opponent. Built to support the weight of a punching bag, this machine navigates its surroundings while also keeping track of its user's position and maintaining a close, but safe, distance from them at all times.
 ## Robot Features
-**Raspberry Pi 3.0:** Single-board computer used for code execution and debugging  
+**Raspberry Pi 3.0:** Single-board computer used for code execution  
 **Slamtec RPLIDAR A1:** 360° distancing detection sensor used for analyzing robot surroundings  
-**Omni-directional Wheels (3):** Wheels used for in-place turning and 360° linear movement  
+**Omni-directional Wheels (3):** Specialized wheels used for linear movement in any and all desired directions  
 **Jaguar Motor Controllers (3):** PWM speed controllers used to specify output current for the wheels  
 **Adafruit 16-Channel 12-Bit PWM/Servo Driver:** Breakout board connected to the Pi used to output PWM signals to the motor controllers 
 ## Program Details  
-This program is split into seven modules, all contributing to 3 primary tasks:  
+This program is split into modules, all contributing to 3 primary tasks:  
 1. Sensor data collection and analysis
 2. Optimal angle and distance maneuvering calculations
 3. Repositioning of the robot to its new, desired location  
