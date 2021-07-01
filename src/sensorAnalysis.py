@@ -2,7 +2,7 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##	Last Updated: July 12, 2020
+##  Last Updated: July 1, 2021
 ##
 ##	sensorAnalysis.py
 ##	Last Updated: July 12, 2020
@@ -110,7 +110,7 @@ def collectData():
 			if(sensorDistances[angle] == 0.0 and distance > 0.0):
 				sensorDistances[angle] = 0.0393 * distance
 				distancesCount += 1
-		 
+
 		##Cease data collection if all angles have an accompanying distance 
 		##value. If no distance can be found for an angle, set its distance 
 		##equal to the value of the angle before it. This may occur do to 
@@ -127,10 +127,10 @@ def collectData():
 			for x in range (listStartPnt, listStartPnt + 360):
 				if(sensorDistances[x] == 0.0):
 					sensorDistances[x] = sensorDistances[x-1]
-  
+
 			break
 		
-	##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+	##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
 	SENSOR.stop()
 	SENSOR.disconnect()
@@ -297,7 +297,7 @@ def interpretData(distanceValues):
 
 	if(tooFar):
 		print("Status: Too Far\n", activeAngles, activeDistances)
-		calculateOppMovement(activeAngles, activeDistances, distanceValues)
+		#calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
 		return
 
@@ -322,7 +322,7 @@ def interpretData(distanceValues):
 				if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
 					activeAngles.append(x)
 					turningCW = True
-		  
+
 		if(turningCCW or turningCW):
 			print("Status: Not Centered")
 			print(activeAngles)
@@ -350,7 +350,19 @@ def main():
 				clear = lambda: system('clear')
 				clear()
 				print("RUNNING\n")
+
 			collectData()
+
+			#sensorDistances = [MACH_RADIUS + 35.0]*360
+			#for x in range (FRONT_ANGLE_MIN, FRONT_ANGLE_MAX+1):
+			#	sensorDistances[x] = SNS_MAX_DISTANCE + 10
+
+			#sensorDistances[90] = SNS_MIN_DISTANCE - 3
+			#sensorDistances[270] = SNS_MIN_DISTANCE + 13
+			
+			#interpretData(sensorDistances)
+			#break
+
 			reset += 1
 
 	except KeyboardInterrupt:

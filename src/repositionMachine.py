@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 12, 2020
+##  Last Updated: July 1, 2021
 ##
 ##  repositionMachine.py
 ##  Last Updated: July 11, 2020
@@ -55,7 +55,7 @@ from globals import DES_OPP_ANGLE,\
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int maneuverAngle, float maneuverDistance,
 ##            float moveObjDistance, int[] pathAngles, 
-##            float xBound
+##            float MACH_RADIUS
 ## returns:   nothing
 ## calls:     helperFunctions.getCartesianAngle()
 ##
@@ -106,7 +106,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                                     ##to 0 when only linear movement is desired;
                                     ##this value will act as a percentage,
                                     ##values greater than 0 mean ccw machine
-                                    ##rotation,less than zero, cw rotation.
+                                    ##rotation, less than zero, cw rotation.
 
     wheelPWMs = [0]*3               ##The pwm output values for each wheel.
 
@@ -149,7 +149,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                      / SPEED_CONSTS[3]
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
-
+    
     for x in range (0, len(PWM_PORTS)):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
@@ -157,6 +157,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
             wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
         else:
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
+    
+    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
 
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -190,7 +192,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break
 
-    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
     SENSOR.stop()
     SENSOR.disconnect()
@@ -261,7 +263,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
                      / SPEED_CONSTS[3]
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
-	
+
     for x in range (0, len(PWM_PORTS)):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
@@ -269,7 +271,9 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
         else:
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
-    print(repositionAngle, wheelSpeeds, wheelPWMs)
+    
+    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
+            
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -301,7 +305,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break 
 
-    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
     SENSOR.stop()
     SENSOR.disconnect()
@@ -347,10 +351,10 @@ def rotateMachine(turnCW, opponentSpan):
 
     #####################################
 
-    #if(turnCW):
-    #    print("Maneuver: Direction - Clockwise\n")
-    #else:
-    #    print("Maneuver: Direction - Counter-Clockwise\n")
+    if(turnCW):
+        print("Maneuver: Direction - Clockwise\n")
+    else:
+        print("Maneuver: Direction - Counter-Clockwise\n")
 
     for x in range (1, ceil(opponentSpan/2) + 1):
         stopAngles.insert(0, DES_OPP_ANGLE-x)
@@ -392,7 +396,7 @@ def rotateMachine(turnCW, opponentSpan):
             WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
             break  
 
-    ##Prevents adafruit_rplidar.py runtime error when attemping to collect 
+    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
     SENSOR.stop()
     SENSOR.disconnect()

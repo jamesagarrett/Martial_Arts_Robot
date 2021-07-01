@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 12, 2020
+##  Last Updated: July 1, 2021
 ##
 ##  globals.py
-##  Last Updated: July 11, 2020
+##  Last Updated: June 30, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -105,10 +105,6 @@ FRONT_ANGLE_MAX = 299
 ##look to reposition itself with the opponent.
 DES_OPP_ANGLE = ceil((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 
-##The angles in which two sides meet - the vertices - used for calculations 
-##before repositioning toward an object.
-VRTX_ANGLES = [30, 90, 150, 210, 270, 330]
-
 ##The positions of the opponent in which the machine will turn to face them, are
 ##considered to be within these angular ranges.
 LEFT_TURN_ANGLE_MIN = 180
@@ -124,10 +120,6 @@ MACH_RADIUS = 20.0
 #associated distance that is unknown - value of 0 - or is less than or equal to 
 #the MACH_RADIUS.
 ANGLE_ERR = 3
-
-##The length of a single side of the machine frame; used for calculations 
-##before repositioning toward an object.
-SIDE_LENGTH = 16.0
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
@@ -149,6 +141,11 @@ OPP_DISTANCE = MAX_DISTANCE + 12.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
+
+##Objects cannot be within this angular distance of the machine in the direction
+##it is repositioning if also closer than the distance being traveled to
+##reposition.
+PATH_ZONE = 90
 
 ##Objects too close to the machine must be this angular distance from each 
 ##other for the machine to traverse between them.
