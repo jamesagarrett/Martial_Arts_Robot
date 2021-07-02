@@ -92,7 +92,7 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 100
+MAX_SPEED = 150
 MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
 MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
