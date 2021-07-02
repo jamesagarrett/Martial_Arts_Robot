@@ -5,7 +5,7 @@
 ##  Last Updated: July 1, 2021
 ##
 ##  globals.py
-##  Last Updated: June 30, 2021
+##  Last Updated: July 1, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -92,7 +92,7 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 150
+MAX_SPEED = 130
 MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
 MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
@@ -123,28 +123,28 @@ ANGLE_ERR = 3
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 9.0
+MIN_DISTANCE = 6.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 40.0
+MAX_DISTANCE = 36.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 12.0
+OPP_DISTANCE = MAX_DISTANCE + 8.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
 
 ##Objects cannot be within this angular distance of the machine in the direction
-##it is repositioning if also closer than the distance being traveled to
-##reposition.
+##it is repositioning if also closer than the distance being traveled while
+##repositioning.
 PATH_ZONE = 90
 
 ##Objects too close to the machine must be this angular distance from each 
