@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 1, 2021
+##  Last Updated: July 2, 2021
 ##
 ##  globals.py
 ##  Last Updated: July 1, 2021
@@ -10,6 +10,8 @@
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
 ##
+
+from math import ceil, cos, floor, radians, sin 
 
 ##Slamtec RPLIDAR A1 - 360 Laser Range Scanner Library;
 ##Created by MIT Skoltech, edited by and retrieved through Adafruit;
@@ -21,9 +23,6 @@ import adafruit_rplidar
 ##See PCA9685.py for copyright license. 
 import PCA9685	                                
            
-##Allows for calculations, conversions, and rounding.
-from math import ceil, cos, floor, radians, sin 
-
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
 
@@ -37,15 +36,15 @@ from math import ceil, cos, floor, radians, sin
 ##
 ##      1.  There are physical design changes to the machine, such as wheel 
 ##          positioning.
-##      2.  Troubleshooting and testing were used to determine other default 
-##          values are more practical.
+##      2.  Testing is performed and determines other default values are more
+##          practical.
 
 ##Global objects for the LIDAR sensor and pwm driver breakout board.
 WHEELS = PCA9685.PCA9685()
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 
-##Any distance measurements are assumed to be in inches.
-##Any angular measurements are assumed to be in degrees.
+##Any distance measurements are in inches.
+##Any angular measurements are in degrees.
 
 ##The pwm frequency used for driving the wheels.
 PWM_FREQ = 160
@@ -65,19 +64,11 @@ WHEEL_DIRECTIONS = [WHEEL_LOCATIONS[0] - 90, WHEEL_LOCATIONS[1] - 90,
 ##for further analysis. Due to how these equations are used, certain 
 ##precautions must be taken when determining WHEEL_LOCATIONS values. This is 
 ##also further explained in the documentation.
-SPEED_CONSTS = [0]*4
-
-SPEED_CONSTS[0] = cos(radians(WHEEL_DIRECTIONS[0])) \
-                - cos(radians(WHEEL_DIRECTIONS[2]))
-
-SPEED_CONSTS[1] = sin(radians(WHEEL_DIRECTIONS[0])) \
-                  - sin(radians(WHEEL_DIRECTIONS[2]))
-
-SPEED_CONSTS[2] = cos(radians(WHEEL_DIRECTIONS[1])) \
-                  - cos(radians(WHEEL_DIRECTIONS[2]))
-
-SPEED_CONSTS[3] = sin(radians(WHEEL_DIRECTIONS[1])) \
-                  - sin(radians(WHEEL_DIRECTIONS[2]))
+SPEED_CONSTS = [
+cos(radians(WHEEL_DIRECTIONS[0])) - cos(radians(WHEEL_DIRECTIONS[2])),
+sin(radians(WHEEL_DIRECTIONS[0])) - sin(radians(WHEEL_DIRECTIONS[2])),
+cos(radians(WHEEL_DIRECTIONS[1])) - cos(radians(WHEEL_DIRECTIONS[2])),
+sin(radians(WHEEL_DIRECTIONS[1])) - sin(radians(WHEEL_DIRECTIONS[2]))]
 
 ##The tick value in which the signal to the wheels transitions low to high.
 START_TICK = 0
@@ -147,19 +138,13 @@ SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
 ##repositioning.
 PATH_ZONE = 90
 
-##Objects too close to the machine must be this angular distance from each 
-##other for the machine to traverse between them.
-OBJ_ANGLE_MIN = 120
-
-##The (optimal) preferred distance for the machine to be from any given object, 
-##including the opponent.
+##The optimal and preferred distance for the machine to be from any given 
+##object, including the opponent.
 OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/3
 
 ##The optimal distance sensor reading.
 SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
 
-##The (sufficient) distance used if the OPT_DISTANCE value cannot be reached 
-##when repositioning.
+##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
+##repositioning.
 SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/2
-
-

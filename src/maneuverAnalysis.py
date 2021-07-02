@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 1, 2021
+##  Last Updated: July 2, 2021
 ##
 ##  maneuverAnalysis.py
 ##  Last Updated: July 1, 2021
@@ -11,23 +11,17 @@
 ##  the desired ranges described in globals.py.
 ##
 
-##For calculations, conversions, and rounding.
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
-
-##Used for efficient inserting and sorting of a list.
 from bisect import bisect_left                             
-
-##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance
 
-##Module for preforming reposition of the machine, based on sensor data 
+##Module for performing reposition of the machine, based on sensor data 
 ##collection and analysis.
 from repositionMachine import moveFromObject, moveToOpponent
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import ANGLE_ERR,\
                     MACH_RADIUS,\
-                    OBJ_ANGLE_MIN,\
                     OPT_DISTANCE,\
                     PATH_ZONE,\
                     SNS_MAX_DISTANCE,\
@@ -191,7 +185,6 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
     clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                               MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
-    print(oppAngle, "Old:", allDistances[oppAngle], "New:", newOppDistance, "\n")
     oppInRange = SNS_MIN_DISTANCE <= newOppDistance <= SNS_MAX_DISTANCE
 
     if(clearPath and oppInRange):
@@ -356,7 +349,7 @@ def findMoveAngle(objAngles):
         else:
             objectsSpace = objAngles[x+1] - objAngles[x]
 
-        if(OBJ_ANGLE_MIN <= objectsSpace > largestSpace):
+        if(objectsSpace > largestSpace):
             largestSpace = objectsSpace 
             if(x == -1):
                 if((objAngles[-1] + objAngles[0])/2 >= 180):

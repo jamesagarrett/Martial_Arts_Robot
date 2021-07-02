@@ -2,23 +2,18 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 1, 2021
+##  Last Updated: July 2, 2021
 ##
 ##  repositionMachine.py
 ##  Last Updated: July 11, 2020
 ##
-##  Preform a maneuver action of either: turning the machine, moving toward the
+##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
 ##  of the machine described in globals.py.
 ##
 
-##For calculations, conversions, and rounding.
 from math import atan, ceil, cos, degrees, floor, radians, sin 
-
-##Used for efficient inserting and sorting of a list.
 from bisect import bisect_left  
-
-##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
 
 ##THESE VALUES ARE NOT TO BE CHANGED!

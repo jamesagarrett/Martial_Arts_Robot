@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 1, 2021
+##  Last Updated: July 2, 2021
 ##
 ##  helperFunctions.py
 ##  Last Updated: January 19, 2020
@@ -10,7 +10,6 @@
 ##  Functions used to assist in other modules within the project.
 ##
 
-##For calculations and conversions.
 from math import cos, pi, radians
 
 #--------------------------------------  --------------------------------------#

@@ -2,23 +2,18 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 1, 2021
+##  Last Updated: July 2, 2021
 ##
 ##	sensorAnalysis.py
-##	Last Updated: July 12, 2020
+##	Last Updated: July 2, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
 ##	maneuver itself to be back within the desired range described in globals.py.
 ##
 
-##Used for rounding.
-from math import atan, ceil, degrees, floor   
-
-##Used for efficient inserting and sorting of a list.
+from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
-
-##Used for resetting the terminal screen while printing data
 from os import system
 
 ##Module that includes functions that are used throughout the project.
@@ -28,7 +23,7 @@ from helperFunctions import getCollinearDistance, getCartesianAngle
 ##away from the opponent.
 from maneuverAnalysis import calculateObjMovement, calculateOppMovement
 
-##Module for preforming reposition of the machine, based on sensor data 
+##Module for performing repositioning of the machine, based on sensor data 
 ##collection and analysis.
 from repositionMachine import rotateMachine
 
@@ -280,9 +275,6 @@ def interpretData(distanceValues):
 		adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE, 
 												SNS_MAX_DISTANCE)
 
-		adjustedDistance2 = getCollinearDistance(x, DES_OPP_ANGLE,
-												 SNS_OPP_DISTANCE)
-
 		if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
 			activeAngles.clear()
 			activeDistances.clear()
@@ -290,7 +282,10 @@ def interpretData(distanceValues):
 			opponentFound = True
 			break
 
-		if(adjustedDistance < distanceValues[x] <= adjustedDistance2):
+		adjustedDistance2 = getCollinearDistance(x, DES_OPP_ANGLE,
+												 SNS_OPP_DISTANCE)
+
+		if(distanceValues[x] <= adjustedDistance):
 			activeAngles.append(x)
 			activeDistances.append(distanceValues[x])	
 			tooFar = True	 
@@ -341,13 +336,13 @@ def interpretData(distanceValues):
 
 def main():
 	start = input("PRESS <ENTER> TO BEGIN")
-	
+	clear = lambda: system('clear')
+
 	try:
 		reset = 0;
 
 		while(True):
 			if(reset % 10 == 0):
-				clear = lambda: system('clear')
 				clear()
 				print("RUNNING\n")
 
@@ -366,7 +361,6 @@ def main():
 			reset += 1
 
 	except KeyboardInterrupt:
-		clear = lambda: system('clear')
 		clear()
 		print("TERMINATING")
 		WHEELS.set_pwm_freq(PWM_FREQ)
