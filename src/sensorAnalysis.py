@@ -2,7 +2,7 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 2, 2021
+##  Last Updated: July 5, 2021
 ##
 ##	sensorAnalysis.py
 ##	Last Updated: July 2, 2021
@@ -282,7 +282,7 @@ def interpretData(distanceValues):
 			opponentFound = True
 			break
 
-		adjustedDistance2 = getCollinearDistance(x, DES_OPP_ANGLE,
+		adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE,
 												 SNS_OPP_DISTANCE)
 
 		if(distanceValues[x] <= adjustedDistance):
@@ -291,8 +291,8 @@ def interpretData(distanceValues):
 			tooFar = True	 
 
 	if(tooFar):
-		print("Status: Too Far\n", activeAngles, activeDistances)
-		#calculateOppMovement(activeAngles, activeDistances, distanceValues)
+		print("Status: Too Far\n")
+		calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
 		return
 
@@ -342,23 +342,22 @@ def main():
 		reset = 0;
 
 		while(True):
-			if(reset % 10 == 0):
-				clear()
-				print("RUNNING\n")
+			#if(reset % 10 == 0):
+			#	clear()
+			#	print("RUNNING\n")
+			#reset += 1
 
-			collectData()
+			#collectData()
 
-			#sensorDistances = [MACH_RADIUS + 35.0]*360
-			#for x in range (FRONT_ANGLE_MIN, FRONT_ANGLE_MAX+1):
-			#	sensorDistances[x] = SNS_MAX_DISTANCE + 10
+			sensorDistances = [MACH_RADIUS + 30.0]*360
+			for x in range (FRONT_ANGLE_MIN, FRONT_ANGLE_MAX+1):
+				sensorDistances[x] = SNS_OPP_DISTANCE + 12
 
-			#sensorDistances[90] = SNS_MIN_DISTANCE - 3
-			#sensorDistances[270] = SNS_MIN_DISTANCE + 13
+			for x in range (265, 276):
+				sensorDistances[x] = SNS_MAX_DISTANCE + 3
 			
-			#interpretData(sensorDistances)
-			#break
-
-			reset += 1
+			interpretData(sensorDistances)
+			break
 
 	except KeyboardInterrupt:
 		clear()

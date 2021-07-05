@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 2, 2021
+##  Last Updated: July 5, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 11, 2020
+##  Last Updated: July 5, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -14,6 +14,9 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
+from os import system
+
+##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
@@ -38,6 +41,8 @@ from globals import DES_OPP_ANGLE,\
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
+
+clear = lambda: system('clear')
 
 #########################################
 ##
@@ -155,43 +160,54 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     
     print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
 
-    WHEELS.set_pwm_freq(PWM_FREQ)
-    WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
-    WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
-    WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
+    try:
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
 
-    for scan in SENSOR.iter_scans():
+        for scan in SENSOR.iter_scans():
 
-        for (_, angle, distance) in scan:
+            for (_, angle, distance) in scan:
 
-            angle = getCartesianAngle(floor(angle))
-            distance *= 0.0393
+                angle = getCartesianAngle(floor(angle))
+                distance *= 0.0393
 
-            index = bisect_left(watchAngles, angle)
+                index = bisect_left(watchAngles, angle)
 
-            if(index < len(watchAngles) and angle == watchAngles[index] and
-              MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                doneMoving = True
+                if(index < len(watchAngles) and angle == watchAngles[index] and
+                  MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+                    doneMoving = True
+                    break
+
+                index = bisect_left(stopAngles, angle)
+
+                if(index < len(stopAngles) and angle == stopAngles[index] and
+                  MACH_RADIUS < distance <= objectDistance - stopDistances[index]):
+                    doneMoving = True
+                    break
+
+            if(doneMoving):
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
                 break
 
-            index = bisect_left(stopAngles, angle)
+        ##Prevents adafruit_rplidar.py runtime error when attempting to collect
+	    ##data again
+        SENSOR.stop()
+        SENSOR.disconnect()
+        SENSOR.connect()
 
-            if(index < len(stopAngles) and angle == stopAngles[index] and
-              MACH_RADIUS < distance <= objectDistance - stopDistances[index]):
-                doneMoving = True
-                break
-
-        if(doneMoving):
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
-            break
-
-    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
-	##data again
-    SENSOR.stop()
-    SENSOR.disconnect()
-    SENSOR.connect()     
+    except KeyboardInterrupt:
+        clear()
+        print("TERMINATING")
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        SENSOR.stop()
+        SENSOR.disconnect()
             
     return
 
@@ -268,43 +284,54 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
     print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-            
-    WHEELS.set_pwm_freq(PWM_FREQ)
-    WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
-    WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
-    WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
+    
+    try:
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
 
-    for scan in SENSOR.iter_scans():
+        #for scan in SENSOR.iter_scans():
         
-        for (_, angle, distance) in scan:
-            angle = getCartesianAngle(floor(angle))
-            distance *= 0.0393
+        #    for (_, angle, distance) in scan:
+        #        angle = getCartesianAngle(floor(angle))
+        #        distance *= 0.0393
 
-            index = bisect_left(watchAngles, angle)
+        #        index = bisect_left(watchAngles, angle)
 
-            if(index < len(watchAngles) and angle == watchAngles[index] and
-              MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                doneMoving = True
-                break
+        #        if(index < len(watchAngles) and angle == watchAngles[index] and
+        #          MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+        #            doneMoving = True
+        #            break
 
-            index = bisect_left(stopAngles, angle)
+        #        index = bisect_left(stopAngles, angle)
 
-            if(index < len(stopAngles) and angle == stopAngles[index] and
-              MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
-                doneMoving = True
-                break
+        #        if(index < len(stopAngles) and angle == stopAngles[index] and
+        #          MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+        #            doneMoving = True
+        #            break
 
-        if(doneMoving):
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
-            break 
+        #    if(doneMoving):
+        #        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        #        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        #        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        #        break 
 
-    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
-	##data again
-    SENSOR.stop()
-    SENSOR.disconnect()
-    SENSOR.connect()    
+        ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
+	    ##data again
+        SENSOR.stop()
+        SENSOR.disconnect()
+        SENSOR.connect()    
+
+    except KeyboardInterrupt:
+        clear()
+        print("TERMINATING")
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        SENSOR.stop()
+        SENSOR.disconnect()
 
     return
 
@@ -355,46 +382,57 @@ def rotateMachine(turnCW, opponentSpan):
         stopAngles.insert(0, DES_OPP_ANGLE-x)
         stopAngles.append(DES_OPP_ANGLE+x)
 
-    WHEELS.set_pwm_freq(PWM_FREQ)
-    if(turnCW):
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CW_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CW_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CW_SPEED)
-    else:
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CCW_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CCW_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CCW_SPEED) 
+    try:
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        if(turnCW):
+            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CW_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CW_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CW_SPEED)
+        else:
+            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CCW_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CCW_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CCW_SPEED) 
 
-    for scan in SENSOR.iter_scans():
+        for scan in SENSOR.iter_scans():
         
-        for (_, angle, distance) in scan:
-            angle = getCartesianAngle(floor(angle))
-            distance *= 0.0393
+            for (_, angle, distance) in scan:
+                angle = getCartesianAngle(floor(angle))
+                distance *= 0.0393
 
-            if(MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                doneMoving = True
-                break
+                if(MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+                    doneMoving = True
+                    break
          
-            adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
-                                                    SNS_MAX_DISTANCE)
+                adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
+                                                        SNS_MAX_DISTANCE)
 
-            index = bisect_left(stopAngles, angle)
+                index = bisect_left(stopAngles, angle)
 
-            if(index < len(stopAngles) and angle == stopAngles[index] and
-              MACH_RADIUS < distance <= adjustedDistance):
-                doneMoving = True
-                break
+                if(index < len(stopAngles) and angle == stopAngles[index] and
+                  MACH_RADIUS < distance <= adjustedDistance):
+                    doneMoving = True
+                    break
     
-        if(doneMoving):
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
-            break  
+            if(doneMoving):
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+                break  
 
-    ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
-	##data again
-    SENSOR.stop()
-    SENSOR.disconnect()
-    SENSOR.connect()
+        ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
+	    ##data again
+        SENSOR.stop()
+        SENSOR.disconnect()
+        SENSOR.connect()
+
+    except KeyboardInterrupt:
+        clear()
+        print("TERMINATING")
+        WHEELS.set_pwm_freq(PWM_FREQ)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        SENSOR.stop()
+        SENSOR.disconnect()
 
     return
