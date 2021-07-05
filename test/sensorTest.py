@@ -57,3 +57,5 @@ for scan in SENSOR.iter_scans():
             else:
                 print(angle, distance)
 
+    break
+
