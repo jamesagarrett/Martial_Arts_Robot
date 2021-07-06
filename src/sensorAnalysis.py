@@ -2,17 +2,17 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 5, 2021
+##  Last Updated: July 6, 2021
 ##
 ##	sensorAnalysis.py
-##	Last Updated: July 2, 2021
+##  Last Updated: July 6, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
 ##	maneuver itself to be back within the desired range described in globals.py.
 ##
 
-from math import atan, ceil, degrees, floor
+from math import atan, ceil, degrees, floor, round
 from bisect import bisect_left	
 from os import system
 
@@ -100,7 +100,7 @@ def collectData():
 		##sensor, values are initially read in this same manner before being 
 		##adjusted here. Distances are converted from millimeters to inches.
 		for (_, angle, distance) in scan:
-			angle = getCartesianAngle(floor(angle))
+			angle = getCartesianAngle(round(angle))
 
 			if(sensorDistances[angle] == 0.0 and distance > 0.0):
 				sensorDistances[angle] = 0.0393 * distance

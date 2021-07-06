@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 5, 2021
+##  Last Updated: July 6, 2021
 ##
 ##  helperFunctions.py
 ##  Last Updated: January 19, 2020
@@ -27,7 +27,7 @@ from math import cos, pi, radians
 ##            repositionMachine.moveFromObject()
 ##                              moveToOpponent()
 ##                              rotateMachine()
-## passed:    int floor(angle)
+## passed:    int round(angle)
 ## returns:   float customAngle
 ## calls:     nobody
 ##

@@ -1,28 +1,8 @@
-from math import cos, floor, pi, radians
+from math import cos, pi, radians, round
 import adafruit_rplidar
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
-
-#########################################
-##
-##	FUNCTION DEFINITION
-##
-#########################################
-
-## ********************************************************
-## name:      getCartesianAngle
-## called by: sensorAnalysis.interpretData()
-##            repositionMachine.moveFromObject()
-##                              moveToOpponent()
-##                              rotateMachine()
-## passed:    int floor(angle)
-## returns:   float customAngle
-## calls:     nobody
-##
-## Returns the standard counter-clockwise Cartesian angle *
-## for the given angle.                                   *
-## ********************************************************
 def getCartesianAngle(angle):
 
     #####################################
@@ -43,6 +23,7 @@ def getCartesianAngle(angle):
     return cartAngle
 
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
+
 sensorDistances = [0]*360
 count = 0
 prevCount = 0
@@ -51,7 +32,7 @@ for scan in SENSOR.iter_scans():
     prevCount = count
 
     for (_, angle, distance) in scan:
-        angle = getCartesianAngle(floor(angle))
+        angle = getCartesianAngle(round(angle))
 
         if(sensorDistances[angle] > 0):
             continue
@@ -62,8 +43,10 @@ for scan in SENSOR.iter_scans():
     if(count == prevCount):
         break
 
+SENSOR.stop()
+SENSOR.disconnect()
+
 print("\n", count, "\n")
 for i in range(360):
     if(0.0 < sensorDistances[i] < 20.0):
         print (i, sensorDistances[i])
-

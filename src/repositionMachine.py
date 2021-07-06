@@ -2,17 +2,17 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 5, 2021
+##  Last Updated: July 6, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 5, 2021
+##  Last Updated: July 6, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
 ##  of the machine described in globals.py.
 ##
 
-from math import atan, ceil, cos, degrees, floor, radians, sin 
+from math import atan, ceil, cos, degrees, floor, radians, round, sin 
 from bisect import bisect_left  
 from os import system
 
@@ -170,7 +170,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
             for (_, angle, distance) in scan:
 
-                angle = getCartesianAngle(floor(angle))
+                angle = getCartesianAngle(round(angle))
                 distance *= 0.0393
 
                 index = bisect_left(watchAngles, angle)
@@ -294,7 +294,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
         #for scan in SENSOR.iter_scans():
         
         #    for (_, angle, distance) in scan:
-        #        angle = getCartesianAngle(floor(angle))
+        #        angle = getCartesianAngle(round(angle))
         #        distance *= 0.0393
 
         #        index = bisect_left(watchAngles, angle)
@@ -396,7 +396,7 @@ def rotateMachine(turnCW, opponentSpan):
         for scan in SENSOR.iter_scans():
         
             for (_, angle, distance) in scan:
-                angle = getCartesianAngle(floor(angle))
+                angle = getCartesianAngle(round(angle))
                 distance *= 0.0393
 
                 if(MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
