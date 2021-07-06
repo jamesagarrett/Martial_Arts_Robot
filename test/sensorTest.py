@@ -59,9 +59,12 @@ for scan in SENSOR.iter_scans():
         sensorDistances[angle] = distance * 0.0393
         count += 1
         
-    if(count == prevCount):
-        break
+        if(angle == 270):
+            print(distance*0.393)
+    #if(count == prevCount):
+    #    break
 
+print("\n", count, "\n")
 for i in range(360):
     if(0.0 < sensorDistances[i] < 20.0):
         print (i, sensorDistances[i])
