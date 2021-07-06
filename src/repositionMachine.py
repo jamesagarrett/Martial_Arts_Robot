@@ -12,7 +12,7 @@
 ##  of the machine described in globals.py.
 ##
 
-from math import atan, ceil, cos, degrees, floor, radians, round, sin 
+from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
 from os import system
 
@@ -150,7 +150,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
     
-    for x in range (0, len(PWM_PORTS)):
+    for x in range (3):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
@@ -275,7 +275,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
 
-    for x in range (0, len(PWM_PORTS)):
+    for x in range (3):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):

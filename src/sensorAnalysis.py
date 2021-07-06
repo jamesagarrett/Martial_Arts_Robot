@@ -12,7 +12,7 @@
 ##	maneuver itself to be back within the desired range described in globals.py.
 ##
 
-from math import atan, ceil, degrees, floor, round
+from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
 

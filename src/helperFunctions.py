@@ -5,7 +5,7 @@
 ##  Last Updated: July 6, 2021
 ##
 ##  helperFunctions.py
-##  Last Updated: January 19, 2020
+##  Last Updated: July 6, 2021
 ##
 ##  Functions used to assist in other modules within the project.
 ##

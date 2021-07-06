@@ -1,4 +1,4 @@
-from math import cos, pi, radians, round
+from math import cos, pi, radians
 import adafruit_rplidar
 
 #--------------------------------------  --------------------------------------#
