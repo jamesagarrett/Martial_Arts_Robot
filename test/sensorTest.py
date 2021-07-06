@@ -46,7 +46,14 @@ for scan in SENSOR.iter_scans():
 SENSOR.stop()
 SENSOR.disconnect()
 
-print("\n", count, "\n")
+for i in range(360):
+    if(sensorDistances[i] == 0.0):
+        print (i)
+
+print("\n")
+
 for i in range(360):
     if(0.0 < sensorDistances[i] < 20.0):
         print (i, sensorDistances[i])
+
+print("\n", count)
