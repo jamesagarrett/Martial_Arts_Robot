@@ -53,14 +53,15 @@ for scan in SENSOR.iter_scans():
     for (_, angle, distance) in scan:
         angle = getCartesianAngle(floor(angle))
 
-        if(sensorDistances[angle] > 0):
+        if(angle != 270 and sensorDistances[angle] > 0):
             continue
 
         sensorDistances[angle] = distance * 0.0393
         count += 1
         
         if(angle == 270):
-            print(distance*0.393)
+            print(distance*0.0393)
+
     #if(count == prevCount):
     #    break
 
