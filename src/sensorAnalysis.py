@@ -337,6 +337,7 @@ def interpretData(distanceValues):
 def main():
 	start = input("PRESS <ENTER> TO BEGIN")
 	clear = lambda: system('clear')
+	WHEELS.set_pwm_freq(PWM_FREQ)
 
 	try:
 		reset = 0;
@@ -362,7 +363,6 @@ def main():
 	except KeyboardInterrupt:
 		clear()
 		print("TERMINATING")
-		WHEELS.set_pwm_freq(PWM_FREQ)
 		WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
 		WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
 		WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)

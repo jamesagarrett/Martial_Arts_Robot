@@ -161,7 +161,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
 
     try:
-        WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
@@ -202,7 +201,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
@@ -284,12 +282,33 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
     print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    
+    print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+
     try:
-        WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
+
+        while(True):
+            angle = int(input("Angle: "))
+            distance = int(input("Distance: "))
+
+            index = bisect_left(watchAngles, angle)
+
+            if(index < len(watchAngles) and angle == watchAngles[index] and
+                MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+                break
+
+            index = bisect_left(stopAngles, angle)
+
+            if(index < len(stopAngles) and angle == stopAngles[index] and
+              MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+                doneMoving = True
+                break
+
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED) 
 
         #for scan in SENSOR.iter_scans():
         
@@ -326,7 +345,6 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
@@ -383,7 +401,6 @@ def rotateMachine(turnCW, opponentSpan):
         stopAngles.append(DES_OPP_ANGLE+x)
 
     try:
-        WHEELS.set_pwm_freq(PWM_FREQ)
         if(turnCW):
             WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CW_SPEED)
             WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CW_SPEED)
@@ -428,7 +445,6 @@ def rotateMachine(turnCW, opponentSpan):
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm_freq(PWM_FREQ)
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
