@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 6, 2021
+##  Last Updated: July 8, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 6, 2021
+##  Last Updated: July 8, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -54,8 +54,7 @@ clear = lambda: system('clear')
 ## name:      moveFromObject
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int maneuverAngle, float maneuverDistance,
-##            float moveObjDistance, int[] pathAngles, 
-##            float MACH_RADIUS
+##            float moveObjDistance, int[] pathAngles 
 ## returns:   nothing
 ## calls:     helperFunctions.getCartesianAngle()
 ##
@@ -64,7 +63,7 @@ clear = lambda: system('clear')
 ## distance.                                              *        
 ## ********************************************************
 def moveFromObject(repositionAngle, repositionDistance, objectDistance,        
-                   watchAngles, xBound):
+                   watchAngles):
 
     #####################################
     ##
@@ -81,58 +80,71 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                                     ##doesn't return a distance value.
 
     stopDistances = \
-        [repositionDistance]        ##The corresponding distances associated 
-                                    ##with each stopAngles value.
+        [objectDistance - \
+        repositionDistance]        ##The corresponding distances associated 
+                                   ##with each stopAngles value. The machine has
+                                   ##moved appropriately once these distance
+                                   ##values have been reached.
 
-    angleBound = 0                  ##The angle with respect to repositionAngle
-                                    ##in which the x-coordinate boundary - 
-                                    ##xBound - and y-coordinate boundary - 
-                                    ##repositionDistance - intersect. Angles 
-                                    ##between repositionAngle and angleBound are
-                                    ##added to stopAngles.
+    stopDist = 0                   ##The current value being added to 
+                                   ##stopDistances.
 
-    wheelSpeeds = [0]*3             ##The speed for each wheel in order to
-                                    ##reposition at the desired angle; this
-                                    ##value will act as a percentage, values
-                                    ##greater than 0 mean ccw wheel rotation,
-                                    ##less than zero, cw wheel rotation.
+    objectDistances = \
+        [objectDistance]           ##The distance of the object being moved 
+                                   ##toward for each stopAngles value
 
-    speedVars = [0]*2               ##Variables used to determine wheelSpeeds
-                                    ##values.
+    angleBound = 0                 ##The angle with respect to repositionAngle
+                                   ##in which the x-coordinate boundary - 
+                                   ##MACH_RADIUS - and y-coordinate boundary - 
+                                   ##repositionDistance - intersect. Angles 
+                                   ##between repositionAngle and angleBound are
+                                   ##added to stopAngles.
 
-    rotationCoeff = 0               ##Value used to change wheelSpeeds values to
-                                    ##allow for machine rotation in order to
-                                    ##face the opponent while repositioning; set
-                                    ##to 0 when only linear movement is desired;
-                                    ##this value will act as a percentage,
-                                    ##values greater than 0 mean ccw machine
-                                    ##rotation, less than zero, cw rotation.
+    wheelSpeeds = [0]*3            ##The speed for each wheel in order to
+                                   ##reposition at the desired angle; this
+                                   ##value will act as a percentage, values
+                                   ##greater than 0 mean ccw wheel rotation,
+                                   ##less than zero, cw wheel rotation.
 
-    wheelPWMs = [0]*3               ##The pwm output values for each wheel.
+    speedVars = [0]*2              ##Variables used to determine wheelSpeeds
+                                   ##values.
 
-    doneMoving = False              ##Set to True if the new desired position is
-                                    ##reached, or an object is detected too
-                                    ##close to the machine.
+    rotationCoeff = 0              ##Value used to change wheelSpeeds values to
+                                   ##allow for machine rotation in order to
+                                   ##face the opponent while repositioning; set
+                                   ##to 0 when only linear movement is desired;
+                                   ##this value will act as a percentage,
+                                   ##values greater than 0 mean ccw machine
+                                   ##rotation, less than zero, cw rotation.
 
-    adjustedDistance = 0            ##The returned value of 
-                                    ##getCollinearDistance().
+    wheelPWMs = [0]*3              ##The pwm output values for each wheel.
 
-    index = 0                       ##The index of a given list in which a value
-                                    ##is stored if present.
+    doneMoving = False             ##Set to True if the new desired position is
+                                   ##reached, or an object is detected too
+                                   ##close to the machine.
+
+    adjustedDistance = 0           ##The returned value of 
+                                   ##getCollinearDistance().
+
+    index = 0                      ##The index of a given list in which a value
+                                   ##is stored if present.
     
     #####################################
 
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    angleBound = floor(degrees(atan(xBound/repositionDistance))) 
+    angleBound = floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
 
     for x in range(1, angleBound + 1):
         stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])
         stopAngles.append(watchAngles[len(watchAngles)//2 + x])
 
-        stopDistances.insert(0, repositionDistance/cos(radians(x)))
-        stopDistances.append(repositionDistance/cos(radians(x)))
+        stopDist = objectDistance/cos(radians(x)) - \
+                   repositionDistance/cos(radians(x))
+
+        stopDistances.insert(0, stopDist)
+        stopDistances.append(stopDist)
 
     speedVars[0] = sin(radians(repositionAngle)) \
                    - rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
@@ -159,6 +171,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
     print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
+    print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -174,15 +187,16 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
                 index = bisect_left(watchAngles, angle)
 
-                if(index < len(watchAngles) and angle == watchAngles[index] and
-                  MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                    doneMoving = True
-                    break
+                if(index < len(watchAngles) and angle == watchAngles[index]):
+                    if(MACH_RADIUS < distance < SNS_MIN_DISTANCE):
+                        doneMoving = True
+                        break
+                else:
+                    continue
 
                 index = bisect_left(stopAngles, angle)
 
-                if(index < len(stopAngles) and angle == stopAngles[index] and
-                  MACH_RADIUS < distance <= objectDistance - stopDistances[index]):
+                if(MACH_RADIUS < distance <= stopDistances[index]):
                     doneMoving = True
                     break
 
@@ -289,27 +303,6 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
 
-        #while(True):
-        #    angle = int(input("Angle: "))
-        #    distance = int(input("Distance: "))
-
-        #    index = bisect_left(watchAngles, angle)
-
-        #    if(index < len(watchAngles) and angle == watchAngles[index] and
-        #        MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-        #        break
-
-        #    index = bisect_left(stopAngles, angle)
-
-        #    if(index < len(stopAngles) and angle == stopAngles[index] and
-        #      MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
-        #        doneMoving = True
-        #        break
-
-        #WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        #WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        #WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED) 
-
         for scan in SENSOR.iter_scans():
         
             for (_, angle, distance) in scan:
@@ -318,15 +311,16 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
 
                 index = bisect_left(watchAngles, angle)
 
-                if(index < len(watchAngles) and angle == watchAngles[index] and
-                  MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                    doneMoving = True
-                    break
+                if(index < len(watchAngles) and angle == watchAngles[index]):
+                    if(MACH_RADIUS < distance < SNS_MIN_DISTANCE):
+                        doneMoving = True
+                        break
+                else:
+                    continue
 
                 index = bisect_left(stopAngles, angle)
 
-                if(index < len(stopAngles) and angle == stopAngles[index] and
-                  MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+                if(MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
                     doneMoving = True
                     break
 

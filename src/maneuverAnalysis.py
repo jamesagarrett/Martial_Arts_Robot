@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 6, 2021
+##  Last Updated: July 8, 2021
 ##
 ##  maneuverAnalysis.py
 ##  Last Updated: July 1, 2021
@@ -238,7 +238,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
         print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
         print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
-                       pathAngles, MACH_RADIUS)
+                       pathAngles)
     else:
         calculateObjMovement(objAngles, objDistances, oppAngle, allDistances)
 
