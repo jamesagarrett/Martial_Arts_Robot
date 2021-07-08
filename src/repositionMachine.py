@@ -289,52 +289,52 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
 
-        while(True):
-            angle = int(input("Angle: "))
-            distance = int(input("Distance: "))
+        #while(True):
+        #    angle = int(input("Angle: "))
+        #    distance = int(input("Distance: "))
 
-            index = bisect_left(watchAngles, angle)
+        #    index = bisect_left(watchAngles, angle)
 
-            if(index < len(watchAngles) and angle == watchAngles[index] and
-                MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-                break
+        #    if(index < len(watchAngles) and angle == watchAngles[index] and
+        #        MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+        #        break
 
-            index = bisect_left(stopAngles, angle)
+        #    index = bisect_left(stopAngles, angle)
 
-            if(index < len(stopAngles) and angle == stopAngles[index] and
-              MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
-                doneMoving = True
-                break
+        #    if(index < len(stopAngles) and angle == stopAngles[index] and
+        #      MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+        #        doneMoving = True
+        #        break
 
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED) 
+        #WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+        #WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+        #WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED) 
 
-        #for scan in SENSOR.iter_scans():
+        for scan in SENSOR.iter_scans():
         
-        #    for (_, angle, distance) in scan:
-        #        angle = getCartesianAngle(round(angle))
-        #        distance *= 0.0393
+            for (_, angle, distance) in scan:
+                angle = getCartesianAngle(round(angle))
+                distance *= 0.0393
 
-        #        index = bisect_left(watchAngles, angle)
+                index = bisect_left(watchAngles, angle)
 
-        #        if(index < len(watchAngles) and angle == watchAngles[index] and
-        #          MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
-        #            doneMoving = True
-        #            break
+                if(index < len(watchAngles) and angle == watchAngles[index] and
+                  MACH_RADIUS < distance <= SNS_MIN_DISTANCE):
+                    doneMoving = True
+                    break
 
-        #        index = bisect_left(stopAngles, angle)
+                index = bisect_left(stopAngles, angle)
 
-        #        if(index < len(stopAngles) and angle == stopAngles[index] and
-        #          MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
-        #            doneMoving = True
-        #            break
+                if(index < len(stopAngles) and angle == stopAngles[index] and
+                  MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+                    doneMoving = True
+                    break
 
-        #    if(doneMoving):
-        #        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        #        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        #        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
-        #        break 
+            if(doneMoving):
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+                break 
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	    ##data again
