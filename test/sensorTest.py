@@ -27,6 +27,7 @@ SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 sensorDistances = [0]*360
 count = 0
 prevCount = 0
+blocked = 0
 
 for scan in SENSOR.iter_scans():
     prevCount = count
@@ -55,5 +56,6 @@ print("\n")
 for i in range(360):
     if(0.0 < sensorDistances[i] < 20.0):
         print (i, sensorDistances[i])
+        blocked += 1
 
-print("\n", count)
+print("\nMissing: ", 360-count, "Blocked: ", blocked)
