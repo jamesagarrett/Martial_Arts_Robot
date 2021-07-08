@@ -4,6 +4,6 @@
     "\\src",
     "\\test"
   ],
-  "SelectedNode": "\\test\\sensorTest.py",
+  "SelectedNode": "\\src\\adafruit_rplidar.py",
   "PreviewInSolutionExplorer": false
 }
