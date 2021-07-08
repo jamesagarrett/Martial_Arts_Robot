@@ -58,4 +58,4 @@ for i in range(360):
         print (i, sensorDistances[i])
         blocked += 1
 
-print("\nMissing: ", 360-count, "Blocked: ", blocked)
+print("\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n\n")
