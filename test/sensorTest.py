@@ -28,6 +28,7 @@ sensorDistances = [0]*360
 count = 0
 prevCount = 0
 blocked = 0
+newSet = 0
 
 for scan in SENSOR.iter_scans():
     prevCount = count
@@ -49,13 +50,18 @@ SENSOR.disconnect()
 
 for i in range(360):
     if(sensorDistances[i] == 0.0):
+        if(newSet == 2):
+            print("\n")
+        
         print (i)
+        newSet = 1
 
-print("\n")
-
-for i in range(360):
     if(0.0 < sensorDistances[i] < 20.0):
+        if(newSet == 1):
+            print("\n")
+
         print (i, sensorDistances[i])
         blocked += 1
+        newSet = 2
 
-print("\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n\n")
+print("\n\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n\n")
