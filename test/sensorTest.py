@@ -25,6 +25,7 @@ from rplidar import RPLidar
 lidar = RPLidar('/dev/ttyUSB0')
 sensorDistances = [0.0]*360
 count = 0
+prevCount = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
  print('%d: Got %d measures' % (i, len(scan)))
@@ -37,7 +38,7 @@ for i, scan in enumerate(lidar.iter_scans()):
      sensorDistances[angle] = distance * 0.0393
      count += 1
 
- if i == 30 or count == 360:
+ if i == 30 or count == 360 or prevCount == count:
   break
 
 lidar.stop()
