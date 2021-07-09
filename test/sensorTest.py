@@ -23,7 +23,7 @@ def getCartesianAngle(angle):
 
 from rplidar import RPLidar
 lidar = RPLidar('/dev/ttyUSB0')
-sensorDistances = [0]*360
+sensorDistances = [0.0]*360
 count = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
@@ -31,8 +31,8 @@ for i, scan in enumerate(lidar.iter_scans()):
  for(_, angle, distance) in scan:
      angle = getCartesianAngle(round(angle))
 
- #    if(sensorDistances[angle] > 0):
- #       continue
+     if(sensorDistances[angle] > 0):
+        continue
 
  #    sensorDistances[angle] = distance * 0.0393
  #    count += 1
