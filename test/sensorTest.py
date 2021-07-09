@@ -38,7 +38,7 @@ for i, scan in enumerate(lidar.iter_scans()):
      sensorDistances[angle] = distance * 0.0393
      count += 1
 
- if i == 30 or count == 360 or prevCount == count:
+ if i == 40 or count == 360 or prevCount == count:
   break
 
 lidar.stop()
