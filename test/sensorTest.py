@@ -33,7 +33,7 @@ for scan in SENSOR.iter_scans():
     prevCount = count
 
     for (_, angle, distance) in scan:
-        angle = getCartesianAngle(round(angle))
+        #angle = getCartesianAngle(round(angle))
 
         if(sensorDistances[angle] > 0):
             continue
