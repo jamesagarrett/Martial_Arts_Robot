@@ -39,6 +39,8 @@ for scan in SENSOR.iter_scans():
 
         sensorDistances[angle] = distance * 0.0393
         count += 1
+        if(count % 10 == 0):
+            print(count)
        
     if(count == 360):
         break
