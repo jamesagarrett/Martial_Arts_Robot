@@ -35,10 +35,10 @@ for scan in SENSOR.iter_scans():
     for (_, angle, distance) in scan:
         #angle = getCartesianAngle(round(angle))
 
-        if(sensorDistances[angle] > 0):
+        if(sensorDistances[round(angle)] > 0):
             continue
 
-        sensorDistances[angle] = distance * 0.0393
+        sensorDistances[round(angle)] = distance * 0.0393
         count += 1
        
     if(count == prevCount):
