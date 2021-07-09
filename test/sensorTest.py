@@ -28,16 +28,16 @@ count = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
  print('%d: Got %d measures' % (i, len(scan)))
- for(_, angle, distance) in scan:
-     angle = getCartesianAngle(round(angle))
+ #for(_, angle, distance) in scan:
+ #    angle = getCartesianAngle(round(angle))
 
-     if(sensorDistances[angle] > 0):
-        continue
+ #    if(sensorDistances[angle] > 0):
+ #       continue
 
-     sensorDistances[angle] = distance * 0.0393
-     count += 1
+ #    sensorDistances[angle] = distance * 0.0393
+ #    count += 1
 
- if i == 100 or count == 360:
+ if i == 10 or count == 360:
   break
 
 lidar.stop()
