@@ -34,16 +34,17 @@ for scan in SENSOR.iter_scans():
     for (_, angle, distance) in scan:
         angle = getCartesianAngle(round(angle))
 
-        if(sensorDistances[floor(angle)] > 0):
+        if(sensorDistances[angle] > 0):
             continue
 
-        sensorDistances[floor(angle)] = distance * 0.0393
+        sensorDistances[angle] = distance * 0.0393
         count += 1
        
-    if(count == prevCount):
+    if(count == 360):
         break
 
 SENSOR.stop()
+SENSOR.stop_motor()
 SENSOR.disconnect()
 
 lastI = -1
