@@ -52,7 +52,7 @@ HEALTH_TYPE = 6
 
 # Constants & Command to start A2 motor
 MAX_MOTOR_PWM = 1023
-DEFAULT_MOTOR_PWM = 660
+DEFAULT_MOTOR_PWM = 100
 SET_PWM_BYTE = b'\xF0'
 
 _HEALTH_STATUSES = {
