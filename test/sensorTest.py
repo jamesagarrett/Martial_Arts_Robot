@@ -23,7 +23,7 @@ def getCartesianAngle(angle):
     return cartAngle
 
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
-print(SENSOR.info)
+print(SENSOR.get_info())
 sensorDistances = [0]*360
 count = 0
 prevCount = 0
