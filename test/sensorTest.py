@@ -39,6 +39,7 @@ for i, scan in enumerate(lidar.iter_scans()):
      count += 1
 
  if i == 40 or count == 360 or prevCount == count:
+  print("Scans: ", i)
   break
 
 lidar.stop()
