@@ -1,4 +1,4 @@
-from math import cos, pi, radians
+from math import cos, pi, radians, floor
 import adafruit_rplidar
 
 #--------------------------------------  --------------------------------------#
@@ -35,10 +35,10 @@ for scan in SENSOR.iter_scans():
     for (_, angle, distance) in scan:
         #angle = getCartesianAngle(round(angle))
 
-        if(sensorDistances[round(angle)] > 0):
+        if(sensorDistances[floor(angle)] > 0):
             continue
 
-        sensorDistances[round(angle)] = distance * 0.0393
+        sensorDistances[floor(angle)] = distance * 0.0393
         count += 1
        
     if(count == prevCount):
