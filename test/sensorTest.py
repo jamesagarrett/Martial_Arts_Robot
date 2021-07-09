@@ -21,67 +21,44 @@ def getCartesianAngle(angle):
         
     return cartAngle
 
-#SENSOR  = adafruit_rplidar.RPLidar('/dev/ttyUSB0')
-#sensorDistances = [0]*360
-#count = 0
-#prevCount = 0
-#blocked = 0
-
-#for scan in SENSOR.iter_scans():
-#    prevCount = count
-
-#    for (_, angle, distance) in scan:
-#        angle = getCartesianAngle(round(angle))
-
-#        if(sensorDistances[angle] > 0):
-#            continue
-
-#        sensorDistances[angle] = distance * 0.0393
-#        count += 1
-#        if(count % 10 == 0):
-#            print(count)
-       
-#    if(count == prevCount):
-#        break
-
-#SENSOR.stop()
-#SENSOR.stop_motor()
-#SENSOR.disconnect()
-
-#lastI = -1
-
-#for i in range(360):
-#    if(sensorDistances[i] == 0.0):
-#        if(i != lastI + 1):
-#            print("\n")
-        
-#        print (i, "NONE")
-#        lastI = i
-
-#    if(0.0 < sensorDistances[i] < 20.0):
-#        if(i != lastI + 1):
-#            print("\n")
-
-#        print (i, sensorDistances[i])
-#        blocked += 1
-#        lastI = i
-
-#print("\n\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
-
 from rplidar import RPLidar
 lidar = RPLidar('/dev/ttyUSB0')
-
-info = lidar.get_info()
-print(info)
-
-health = lidar.get_health()
-print(health)
+sensorDistances = [0]*360
 
 for i, scan in enumerate(lidar.iter_scans()):
  print('%d: Got %d measures' % (i, len(scan)))
- if i > 10:
+ for(_, angle, distance) in scan:
+     angle = getCartesianAngle(round(angle))
+
+     if(sensorDistances[angle] > 0):
+        continue
+
+     sensorDistances[angle] = distance * 0.0393
+     count += 1
+
+ if i == 100 or count == 360:
   break
 
 lidar.stop()
 lidar.stop_motor()
 lidar.disconnect()
+
+lastI = -1
+
+for i in range(360):
+    if(sensorDistances[i] == 0.0):
+        if(i != lastI + 1):
+            print("\n")
+        
+        print (i, "NONE")
+        lastI = i
+
+    if(0.0 < sensorDistances[i] < 20.0):
+        if(i != lastI + 1):
+            print("\n")
+
+        print (i, sensorDistances[i])
+        blocked += 1
+        lastI = i
+
+print("\n\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
