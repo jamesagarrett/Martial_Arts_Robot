@@ -26,6 +26,7 @@ lidar = RPLidar('/dev/ttyUSB0')
 sensorDistances = [0.0]*360
 count = 0
 prevCount = 0
+scans = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
  print('%d: Got %d measures' % (i, len(scan)))
@@ -39,7 +40,7 @@ for i, scan in enumerate(lidar.iter_scans()):
      count += 1
 
  if i == 40 or count == 360 or prevCount == count:
-  print("Scans: ", i)
+  scans = i
   break
 
 lidar.stop()
@@ -65,4 +66,4 @@ for i in range(360):
         blocked += 1
         lastI = i
 
-print("\n\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
+print("\n\nScans: ", scans, "\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
