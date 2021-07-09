@@ -44,7 +44,6 @@ for scan in SENSOR.iter_scans():
         break
 
 SENSOR.stop()
-#SENSOR.stop_motor()
 SENSOR.disconnect()
 
 lastI = -1
