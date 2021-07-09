@@ -28,8 +28,8 @@ count = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
  print('%d: Got %d measures' % (i, len(scan)))
- #for(_, angle, distance) in scan:
- #    angle = getCartesianAngle(round(angle))
+ for(_, angle, distance) in scan:
+     angle = getCartesianAngle(round(angle))
 
  #    if(sensorDistances[angle] > 0):
  #       continue
@@ -45,6 +45,7 @@ lidar.stop_motor()
 lidar.disconnect()
 
 lastI = -1
+blocked = 0
 
 for i in range(360):
     if(sensorDistances[i] == 0.0):
