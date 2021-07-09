@@ -29,10 +29,6 @@ count = 0
 prevCount = 0
 blocked = 0
 
-SENSOR.connect()
-import time
-time.sleep(5)
-
 for scan in SENSOR.iter_scans():
     prevCount = count
 
