@@ -21,16 +21,21 @@ def getCartesianAngle(angle):
         
     return cartAngle
 
-from rplidar import RPLidar
-lidar = RPLidar('/dev/ttyUSB0')
+from adafruit_rplidar import RPLidar
+
+port = input("Which sensor port: ")
+lidar = RPLidar(None, '/dev/ttyUSB' + port, timeout=3)
+
 sensorDistances = [0.0]*360
 count = 0
 prevCount = 0
 scans = 0
+measures = 0
 
 for i, scan in enumerate(lidar.iter_scans()):
  prevCount = count
- print('%d: Got %d measures' % (i, len(scan)))
+ measures += len(scan)
+
  for(_, angle, distance) in scan:
      angle = getCartesianAngle(round(angle))
 
@@ -40,8 +45,8 @@ for i, scan in enumerate(lidar.iter_scans()):
      sensorDistances[angle] = distance * 0.0393
      count += 1
 
- if i == 50 or count == 360 or prevCount == count:
-  scans = i
+ if i == 11 or count == 360:
+  scans = i+1
   break
 
 lidar.stop()
@@ -67,4 +72,4 @@ for i in range(360):
         blocked += 1
         lastI = i
 
-print("\n\nScans: ", scans, "\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
+print("\n\nScans: ", scans, "\nMPS: ", measures/scans, "\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")

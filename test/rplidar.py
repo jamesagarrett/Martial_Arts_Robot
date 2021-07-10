@@ -207,6 +207,7 @@ class RPLidar(object):
         descriptor = self._serial.read(DESCRIPTOR_LEN)
         self.logger.debug('Received descriptor: %s', _showhex(descriptor))
         if len(descriptor) != DESCRIPTOR_LEN:
+            print("\n", len(descriptor), "\n")
             raise RPLidarException('Descriptor length mismatch')
         elif not descriptor.startswith(SYNC_BYTE + SYNC_BYTE2):
             raise RPLidarException('Incorrect descriptor starting bytes')
