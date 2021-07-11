@@ -110,7 +110,7 @@ MACH_RADIUS = 20.0
 ##The number of angles permitted beyond any given angle that all have an 
 #associated distance that is unknown - value of 0 - or is less than or equal to 
 #the MACH_RADIUS.
-ANGLE_ERR = 3
+ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.

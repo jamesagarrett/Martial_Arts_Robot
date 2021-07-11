@@ -1,4 +1,4 @@
-from math import cos, pi, radians, floor
+from math import cos, pi, radians, floor, ceil
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -16,14 +16,14 @@ def getCartesianAngle(angle):
     
     if(0 <= angle <= 180):
         cartAngle = 180 - angle
-    elif(181 <= angle <= 359):
+    elif(181 <= angle <= 360):
         cartAngle = 540 - angle
         
     return cartAngle
 
 from adafruit_rplidar import RPLidar
 
-lidar = RPLidar(None, '/dev/ttyUSB0', timeout=3)
+lidar = RPLidar(None, '/dev/ttyUSB0')
 
 sensorDistances = [0.0]*360
 count = 0
@@ -31,23 +31,32 @@ prevCount = 0
 scans = 0
 measures = 0
 
+import time
+start = time.time()
+totalScans = 5
+APS = [0]*totalScans
+
 for i, scan in enumerate(lidar.iter_scans()):
  prevCount = count
  measures += len(scan)
 
  for(_, angle, distance) in scan:
-     angle = getCartesianAngle(round(angle))
-     sensorMeasures[angle] += 1
+     cartAngle = getCartesianAngle(floor(angle))
+     if(sensorDistances[cartAngle] > 0):
+        cartAngle = getCartesianAngle(ceil(angle))
+        if(sensorDistances[cartAngle] > 0):
+            continue
 
-     if(sensorDistances[angle] > 0):
-        continue
-
-     sensorDistances[angle] = distance * 0.0393
+     sensorDistances[cartAngle] = distance * 0.0393
      count += 1
+ 
+ APS[i] = count - prevCount
 
- if i == 99 or count == 360:
+ if i == totalScans-1 or count == 360:
   scans = i+1
   break
+
+end = time.time()
 
 lidar.stop()
 lidar.disconnect()
@@ -57,18 +66,19 @@ blocked = 0
 
 for i in range(360):
     if(sensorDistances[i] == 0.0):
-        if(i != lastI + 1):
-            print("\n")
+#        if(i != lastI + 1):
+#            print("\n")
         
-        print (i, "NONE")
+#        print (i, "NONE")
         lastI = i
 
     if(0.0 < sensorDistances[i] < 20.0):
-        if(i != lastI + 1):
-            print("\n")
+#        if(i != lastI + 1):
+#            print("\n")
 
-        print (i, sensorDistances[i])
+#        print (i, sensorDistances[i])
         blocked += 1
         lastI = i
 
-print("\n\nScans: ", scans, "\nMPS: ", measures/scans, "\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
+print("\n\n", APS)
+print("\n\nTime: ", end-start, "\nScans: ", scans, "\nMPS: ", measures/scans, "\nMissing: ", 360-count, "\nBlocked: ", blocked, "\n")
