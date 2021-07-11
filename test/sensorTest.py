@@ -66,17 +66,17 @@ blocked = 0
 
 for i in range(360):
     if(sensorDistances[i] == 0.0):
-#        if(i != lastI + 1):
-#            print("\n")
+        if(i != lastI + 1):
+            print("\n")
         
-#        print (i, "NONE")
+        print (i, "NONE")
         lastI = i
 
     if(0.0 < sensorDistances[i] < 20.0):
-#        if(i != lastI + 1):
-#            print("\n")
+        if(i != lastI + 1):
+            print("\n")
 
-#        print (i, sensorDistances[i])
+        print (i, sensorDistances[i])
         blocked += 1
         lastI = i
 
