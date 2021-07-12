@@ -2,10 +2,10 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##	sensorAnalysis.py
-##  Last Updated: July 6, 2021
+##  Last Updated: July 11, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
@@ -44,6 +44,7 @@ from globals import DES_OPP_ANGLE,\
 					SNS_OPP_DISTANCE,\
 					START_TICK,\
 					STOP_SPEED,\
+					TOTAL_SCANS, \
 					WHEELS
 
 #--------------------------------------  --------------------------------------#
@@ -77,12 +78,12 @@ def collectData():
 	sensorDistances = [0.0]*360 ##A list of all measured sensor distances for 
 								##each angle, 0-359.
 
+	cartAngle = 0				##The angle measurement returned from 
+								##getCartesianAngle().
+	
 	distancesCount = 0			##The amount of measured sensor distances from
 								##the current iteration of the distance 
 								##collection loop. 
-
-	prevDistCount = 0			##The value of distancesCount from the previous
-								##iteration of the distance collection loop.
 
 	listStartPnt = 0			##The position in sensorDistances to begin 
 								##iterating when manually entering values; done
@@ -90,40 +91,38 @@ def collectData():
 	
 	#####################################
 
-	for scan in SENSOR.iter_scans():
-
-		prevDistCount = distancesCount
+	for i, scan in enumerate(SENSOR.iter_scans()):
 
 		##Collect and store sensor data. Distances are stored in such a way
 		##that the corresponding index for each value represents its angle on
 		##the standard Cartesian plane. Due to the clockwise rotation of the 
-		##sensor, values are initially read in this same manner before being 
+		##sensor, values are also initially read in this manner before being 
 		##adjusted here. Distances are converted from millimeters to inches.
 		for (_, angle, distance) in scan:
-			angle = getCartesianAngle(round(angle))
+			if(distance <= 0.0):
+				continue
 
-			if(sensorDistances[angle] == 0.0 and distance > 0.0):
-				sensorDistances[angle] = 0.0393 * distance
-				distancesCount += 1
+			cartAngle = getCartesianAngle(floor(angle))
+			if(sensorDistances[cartAngle] > 0.0):
+				cartAngle = getCartesianAngle(ceil(angle))
+				if(sensorDistances[cartAngle] > 0.0):
+					continue
 
-		##Cease data collection if all angles have an accompanying distance 
-		##value. If no distance can be found for an angle, set its distance 
-		##equal to the value of the angle before it. This may occur do to 
-		##unpredictable environmental factors, such as excessive lighting. 
-		if(distancesCount >= 360):
+			sensorDistances[cartAngle] = distance * 0.0393
+
+		if(i == TOTAL_SCANS - 1 or distancesCount == 360):
 			break
 		
-		elif(distancesCount == prevDistCount):			  
-			for x in range (-359, 1):
-				if(sensorDistances[x-1] == 0.0 and sensorDistances[x] > 0.0):
-					listStartPnt = x + 1
-					break
+	##Populate missing sensorDistances values
+	if(distancesCount < 360):
+		for x in range (-359, 1):
+			if(sensorDistances[x-1] == 0.0 and sensorDistances[x] > 0.0):
+				listStartPnt = x + 1
+				break
 	
-			for x in range (listStartPnt, listStartPnt + 360):
-				if(sensorDistances[x] == 0.0):
-					sensorDistances[x] = sensorDistances[x-1]
-
-			break
+		for x in range (listStartPnt, listStartPnt + 360):
+			if(sensorDistances[x] == 0.0):
+				sensorDistances[x] = sensorDistances[x-1]
 		
 	##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
@@ -178,7 +177,7 @@ def interpretData(distanceValues):
 								##to activeAngles if they are detecting the same
 								##object as the original angle.
 
-	adjustedDistance = 0		##The returned value of getCollinearDistance()
+	adjustedDistance = 0		##The returned value of getCollinearDistance().
 	adjustedDistance2 = 0
 
 	tooClose = False			##Set to True if the machine detects an 
@@ -261,9 +260,9 @@ def interpretData(distanceValues):
 		else:
 			opponentAngle = DES_OPP_ANGLE
 
-		print("Status: Too Close\n")
-		#calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
-		#					  distanceValues)
+		#print("Status: Too Close\n")
+		calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
+							  distanceValues)
 
 		return
 
@@ -291,7 +290,7 @@ def interpretData(distanceValues):
 			tooFar = True	 
 
 	if(tooFar):
-		print("Status: Too Far\n")
+		#print("Status: Too Far\n")
 		calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
 		return
@@ -319,9 +318,8 @@ def interpretData(distanceValues):
 					turningCW = True
 
 		if(turningCCW or turningCW):
-			print("Status: Not Centered")
-			print(activeAngles)
-			print("CCW" if turningCCW else "CW\n")
+			#print("Status: Not Centered")
+			#print(activeAngles)
 			opponentSpan = len(activeAngles)
 			rotateMachine(turningCW, opponentSpan)
 		else:
@@ -335,30 +333,33 @@ def interpretData(distanceValues):
 #--------------------------------------  --------------------------------------#
 
 def main():
-	start = input("PRESS <ENTER> TO BEGIN")
-	clear = lambda: system('clear')
+	#####################################
+	##
+	##	VARIABLE DECLARATION
+	##
+	#####################################
+
+	clear = lambda:system('clear')		##Used for clearing the terminal screen.
+
+	reset = 0							##Determines when to reset the terminal
+										##screen.
+	
+	#####################################
+	
+	input("PRESS <ENTER> TO BEGIN")
 	WHEELS.set_pwm_freq(PWM_FREQ)
-
+	import time
 	try:
-		reset = 0;
-
 		while(True):
-			#if(reset % 10 == 0):
-			#	clear()
-			#	print("RUNNING\n")
-			#reset += 1
+			if(reset % 10 == 0):
+				clear()
+				print("RUNNING\n")
+				reset = 0
+			reset += 1
 
-			#collectData()
-
-			sensorDistances = [MACH_RADIUS + 30.0]*360
-			for x in range (FRONT_ANGLE_MIN, FRONT_ANGLE_MAX+1):
-				sensorDistances[x] = SNS_OPP_DISTANCE + 12
-
-			for x in range (265, 276):
-				sensorDistances[x] = SNS_MAX_DISTANCE + 3
-			
-			interpretData(sensorDistances)
-			break
+			start = time.time()
+			collectData()
+			print(time.time() - start)
 
 	except KeyboardInterrupt:
 		clear()

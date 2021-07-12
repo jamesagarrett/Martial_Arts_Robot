@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  helperFunctions.py
-##  Last Updated: July 6, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  Functions used to assist in other modules within the project.
 ##
@@ -48,7 +48,7 @@ def getCartesianAngle(angle):
     
     if(0 <= angle <= 180):
         cartAngle = 180 - angle
-    elif(181 <= angle <= 359):
+    elif(181 <= angle <= 360):
         cartAngle = 540 - angle
         
     return cartAngle

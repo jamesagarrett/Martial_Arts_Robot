@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  maneuverAnalysis.py
 ##  Last Updated: July 1, 2021
@@ -112,7 +112,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
                                 ##to objAngles if they are detecting the same
                                 ##object as the original angle.
 
-    adjustedDistance = 0        ##The returned value of getCollinearDistance() 
+    adjustedDistance = 0        ##The returned value of getCollinearDistance(). 
 
     #####################################
     
@@ -120,7 +120,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
 
     if(maneuverAngle == -1):
         print("Maneuver: CAN'T MOVE\n")
-        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value
@@ -201,7 +201,6 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
         clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                                   MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
-        print(oppAngle, "Old:", allDistances[oppAngle], "New:", newOppDistance, "\n") 
         oppInRange = SNS_MIN_DISTANCE <= newOppDistance <= SNS_MAX_DISTANCE
 
         if(clearPath and oppInRange):
@@ -236,7 +235,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
 
     if(maneuverFound):
         print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
-        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
                        pathAngles)
     else:
@@ -297,12 +296,12 @@ def calculateOppMovement(oppAngles, oppDistances, allDistances):
                             MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
     if(clearPath):
-        print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
-        print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
+        #print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
+        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
         moveToOpponent(maneuverAngle, pathAngles, oppAngles)
     else:
-        print("Maneuver: CAN'T MOVE\n")
-        print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
+        #print("Maneuver: CAN'T MOVE\n")
+        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
             
     return 
 

@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -41,8 +41,6 @@ from globals import DES_OPP_ANGLE,\
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
-
-clear = lambda: system('clear')
 
 #########################################
 ##
@@ -91,7 +89,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
     objectDistances = \
         [objectDistance]           ##The distance of the object being moved 
-                                   ##toward for each stopAngles value
+                                   ##toward for each stopAngles value.
 
     angleBound = 0                 ##The angle with respect to repositionAngle
                                    ##in which the x-coordinate boundary - 
@@ -129,6 +127,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     index = 0                      ##The index of a given list in which a value
                                    ##is stored if present.
     
+    clear = lambda:system('clear') ##Used for clearing the terminal screen.
+
     #####################################
 
     ##See documentation for explanation on how the following equations were 
@@ -170,8 +170,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         else:
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
-    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+    #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
+    #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -243,28 +243,34 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
     ##
     #####################################
 
-    wheelSpeeds = [0]*3     ##The speed for each wheel in order to reposition 
-                            ##at the desired angle; this value will act as a 
-                            ##percentage, values greater than 0 mean ccw wheel 
-                            ##rotation, less than zero, cw wheel rotation.
+    wheelSpeeds = [0]*3             ##The speed for each wheel in order to
+                                    ##reposition at the desired angle; this 
+                                    ###value will act as a percentage, values
+                                    ###greater than 0 mean ccw rotation, less 
+                                    ##than zero, cw wheel rotation.
 
-    speedVars = [0]*2       ##Variables used to determine wheelSpeeds values.
+    speedVars = [0]*2               ##Variables used to determine wheelSpeeds 
+                                    ##values.
 
-    rotationCoeff = 0       ##Value used to change wheelSpeeds values to allow 
-                            ##for machine rotation in order to face the 
-                            ##opponent while repositioning; set to 0 when only 
-                            ##linear movement is desired; this value will act 
-                            ##as a percentage, values greater than 0 mean ccw 
-                            ##machine rotation,less than zero, cw rotation.
+    rotationCoeff = 0               ##Value used to change wheelSpeeds values to
+                                    ##allow for machine rotation in order to
+                                    ###face the opponent while repositioning;
+                                    ###set to 0 when only linear movement is
+                                    ##desired. This value will act as a
+                                    ##percentage; values greater than 0 mean ccw
+                                    ##machine rotation, less than zero, cw 
+                                    ##rotation.
 
-    wheelPWMs = [0]*3       ##The pwm output values for each wheel.
+    wheelPWMs = [0]*3               ##The pwm output values for each wheel.
 
-    doneMoving = False      ##Set to True if the new desired position is 
-                            ##reached, or an object is detected too close to the
-                            ##machine.
+    doneMoving = False              ##Set to True if the new desired position is
+                                    ##reached, or an object is detected too
+                                    ##close to the machine.
 
-    index = 0               ##The index of a given list in which a value is
-                            ##stored if present.
+    index = 0                       ##The index of a given list in which a value
+                                    ##is stored if present.
+
+    clear = lambda:system('clear')  ##Used for clearing the terminal screen.
 
     #####################################
 
@@ -295,8 +301,8 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
         else:
             wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
     
-    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+    #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
+    #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -383,12 +389,14 @@ def rotateMachine(turnCW, opponentSpan):
     index = 0                       ##The index of a given list in which a value
                                     ##is stored if present.
 
+    clear = lambda:system('clear')  ##Used for clearing the terminal screen.
+
     #####################################
 
     if(turnCW):
-        print("Maneuver: Direction - Clockwise\n")
+        #print("Maneuver: Direction - Clockwise\n")
     else:
-        print("Maneuver: Direction - Counter-Clockwise\n")
+        #print("Maneuver: Direction - Counter-Clockwise\n")
 
     for x in range (1, ceil(opponentSpan/2) + 1):
         stopAngles.insert(0, DES_OPP_ANGLE-x)

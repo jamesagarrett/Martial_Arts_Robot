@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 8, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  globals.py
-##  Last Updated: July 1, 2021
+##  Last Updated: July 11, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -21,7 +21,7 @@ import adafruit_rplidar
 ##Adafruit 16-Channel 12-bit PWM/Servo Driver Library;
 ##Created by and retrieved through Adafruit;
 ##See PCA9685.py for copyright license. 
-import PCA9685	                                
+#import PCA9685	                                
            
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -40,7 +40,7 @@ import PCA9685
 ##          practical.
 
 ##Global objects for the LIDAR sensor and pwm driver breakout board.
-WHEELS = PCA9685.PCA9685()
+WHEELS = 1#PCA9685.PCA9685()
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 
 ##Any distance measurements are in inches.
@@ -86,6 +86,10 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 MAX_SPEED = 130
 MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
 MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
+
+##The amount of sensor scan rotations to perform before for collecting angular
+##distance values before analyzing them.
+TOTAL_SCANS = 5
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
