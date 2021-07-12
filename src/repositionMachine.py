@@ -172,6 +172,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+    return
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -303,6 +304,7 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
     
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+    return
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -401,6 +403,8 @@ def rotateMachine(turnCW, opponentSpan):
     for x in range (1, ceil(opponentSpan/2) + 1):
         stopAngles.insert(0, DES_OPP_ANGLE-x)
         stopAngles.append(DES_OPP_ANGLE+x)
+
+    return
 
     try:
         if(turnCW):
