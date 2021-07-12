@@ -393,9 +393,9 @@ def rotateMachine(turnCW, opponentSpan):
 
     #####################################
 
-    if(turnCW):
+    #if(turnCW):
         #print("Maneuver: Direction - Clockwise\n")
-    else:
+    #else:
         #print("Maneuver: Direction - Counter-Clockwise\n")
 
     for x in range (1, ceil(opponentSpan/2) + 1):

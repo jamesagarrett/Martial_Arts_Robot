@@ -299,7 +299,7 @@ def calculateOppMovement(oppAngles, oppDistances, allDistances):
         #print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
         #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
         moveToOpponent(maneuverAngle, pathAngles, oppAngles)
-    else:
+    #else:
         #print("Maneuver: CAN'T MOVE\n")
         #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
             
