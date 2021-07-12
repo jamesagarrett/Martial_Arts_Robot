@@ -351,17 +351,29 @@ def main():
 	#WHEELS.set_pwm_freq(PWM_FREQ)
 	import time
 	try:
-		while(True):
+		totalCount = 0
+		totalTime = 0
+
+		while(reset < 1000):
 			if(reset % 10 == 0):
 				clear()
-				print("RUNNING\n")
-				reset = 0
+				if(reset == 0):
+					print("RUNNING\n")
+				else:
+					print(totalCount/reset, totalTime/reset)
+				#reset = 0
 			reset += 1
 
 			start = time.time()
 			count = collectData()
-			print(count, time.time() - start)
-			
+			end = time.time() - start
+
+			print(count, end)
+			totalCount += count
+			totalTime += end
+
+		print(totalCount/reset, totalTime/reset)
+
 	except KeyboardInterrupt:
 		clear()
 		print("TERMINATING")
