@@ -354,13 +354,13 @@ def main():
 		totalCount = 0
 		totalTime = 0
 
-		while(reset < 1000):
+		while(reset < 500):
 			if(reset % 10 == 0):
 				clear()
 				if(reset == 0):
 					print("RUNNING\n")
 				else:
-					print(totalCount/reset, totalTime/reset)
+					print("%d %.2f %.4f\n" % (reset, totalCount/reset, totalTime/reset))
 				#reset = 0
 			reset += 1
 
@@ -372,7 +372,8 @@ def main():
 			totalCount += count
 			totalTime += end
 
-		print(totalCount/reset, totalTime/reset)
+		clear()
+		print("%d %.2f %.4f\n" % (reset, totalCount/reset, totalTime/reset))
 
 	except KeyboardInterrupt:
 		clear()
