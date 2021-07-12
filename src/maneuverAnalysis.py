@@ -119,7 +119,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        print("Maneuver: CAN'T MOVE\n")
+        #print("Maneuver: CAN'T MOVE\n")
         #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         return
 

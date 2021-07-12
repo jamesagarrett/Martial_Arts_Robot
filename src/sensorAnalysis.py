@@ -113,18 +113,7 @@ def collectData():
 
 		if(i == TOTAL_SCANS - 1 or distancesCount == 360):
 			break
-		
-	##Populate missing sensorDistances values
-	if(distancesCount < 360):
-		for x in range (-359, 1):
-			if(sensorDistances[x-1] == 0.0 and sensorDistances[x] > 0.0):
-				listStartPnt = x + 1
-				break
 	
-		for x in range (listStartPnt, listStartPnt + 360):
-			if(sensorDistances[x] == 0.0):
-				sensorDistances[x] = sensorDistances[x-1]
-		
 	##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
 	SENSOR.stop()
@@ -323,10 +312,10 @@ def interpretData(distanceValues):
 			#print(activeAngles)
 			opponentSpan = len(activeAngles)
 			rotateMachine(turningCW, opponentSpan)
-		else:
-			print("Status: No Opponent\n")
-	else:
-		print("Status: Good\n")
+		#else:
+			#print("Status: No Opponent\n")
+	#else:
+		#print("Status: Good\n")
 
 	return
 
