@@ -347,7 +347,7 @@ def main():
 	#####################################
 	
 	input("PRESS <ENTER> TO BEGIN")
-	WHEELS.set_pwm_freq(PWM_FREQ)
+	#WHEELS.set_pwm_freq(PWM_FREQ)
 	import time
 	try:
 		while(True):
