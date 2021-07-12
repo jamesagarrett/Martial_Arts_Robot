@@ -133,7 +133,7 @@ def collectData():
 	#print(distancesCount, "Distances Found\n")
 	interpretData(sensorDistances)
 
-	return
+	return distancesCount
 
 ## ********************************************************
 ## name:	  interpretData
@@ -358,9 +358,9 @@ def main():
 			reset += 1
 
 			start = time.time()
-			collectData()
-			print(time.time() - start)
-
+			count = collectData()
+			print(count, time.time() - start)
+			
 	except KeyboardInterrupt:
 		clear()
 		print("TERMINATING")

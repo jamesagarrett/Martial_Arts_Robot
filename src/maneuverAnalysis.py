@@ -234,7 +234,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
                         objDistances.insert(insertPoint, allDistances[x])
 
     if(maneuverFound):
-        print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
+        #print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
         #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
                        pathAngles)
