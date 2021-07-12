@@ -108,6 +108,7 @@ def collectData():
 				if(sensorDistances[cartAngle] > 0.0):
 					continue
 
+			distancesCount += 1
 			sensorDistances[cartAngle] = distance * 0.0393
 
 		if(i == TOTAL_SCANS - 1 or distancesCount == 360):
