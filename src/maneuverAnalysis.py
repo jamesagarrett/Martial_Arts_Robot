@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 11, 2021
+##  Last Updated: July 12, 2021
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 1, 2021
+##  Last Updated: July 12, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired ranges described in globals.py.
@@ -359,6 +359,9 @@ def findMoveAngle(objAngles):
                                     + objAngles[0])/2 + 180)
             else:
                 maneuverAngle = floor((objAngles[x+1] + objAngles[x])/2)
+
+    if(largestSpace < PATH_ZONE):
+        maneuverAngle = -1
 
     return maneuverAngle
 
