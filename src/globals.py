@@ -89,7 +89,7 @@ MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
 ##The amount of sensor scan rotations to perform before for collecting angular
 ##distance values before analyzing them.
-TOTAL_SCANS = 5
+TOTAL_SCANS = 4
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.

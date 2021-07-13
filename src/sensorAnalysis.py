@@ -90,7 +90,7 @@ def collectData():
 								##when the sensor cannot read a value by itself.
 	
 	#####################################
-
+	
 	for i, scan in enumerate(SENSOR.iter_scans()):
 
 		##Collect and store sensor data. Distances are stored in such a way
@@ -120,7 +120,6 @@ def collectData():
 	SENSOR.disconnect()
 	SENSOR.connect()
 
-	#print(distancesCount, "Distances Found\n")
 	interpretData(sensorDistances)
 
 	return distancesCount
@@ -337,32 +336,18 @@ def main():
 	#####################################
 	
 	input("PRESS <ENTER> TO BEGIN")
-	#WHEELS.set_pwm_freq(PWM_FREQ)
-	import time
+	WHEELS.set_pwm_freq(PWM_FREQ)
+	
 	try:
+		reset = 0
 		totalCount = 0
 		totalTime = 0
-
-		while(reset < 500):
+		
+		while(reset < stop):
 			if(reset % 10 == 0):
 				clear()
-				if(reset == 0):
-					print("RUNNING\n")
-				else:
-					print("%d %.2f %.4f\n" % (reset, totalCount/reset, totalTime/reset))
-				#reset = 0
+				reset = 0
 			reset += 1
-
-			start = time.time()
-			count = collectData()
-			end = time.time() - start
-
-			print(count, end)
-			totalCount += count
-			totalTime += end
-
-		clear()
-		print("%d %.2f %.4f\n" % (reset, totalCount/reset, totalTime/reset))
 
 	except KeyboardInterrupt:
 		clear()

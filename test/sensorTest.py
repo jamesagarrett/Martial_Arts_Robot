@@ -33,7 +33,7 @@ measures = 0
 
 import time
 start = time.time()
-totalScans = 5
+totalScans = 15
 APS = [0]*totalScans
 
 for i, scan in enumerate(lidar.iter_scans()):
