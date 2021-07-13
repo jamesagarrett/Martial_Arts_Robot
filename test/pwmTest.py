@@ -44,8 +44,8 @@ while(x != 0 and y != 0 and z != 0):
 
 	print(speed, speed2, speed3)
 	pwm.set_pwm(7, 0, math.floor(speed))
-	pwm.set_pwm(0, 0, math.floor(speed2))
-	pwm.set_pwm(15, 0, math.floor(speed3))
+	pwm.set_pwm(6, 0, math.floor(speed2))
+	pwm.set_pwm(5, 0, math.floor(speed3))
 	
 	time.sleep(5)
 	x = float(input("Speed: "))
@@ -54,6 +54,6 @@ while(x != 0 and y != 0 and z != 0):
 
 #to stop robot at the end
 pwm.set_pwm(7, 0, 1000)
-pwm.set_pwm(0, 0, 1000)
-pwm.set_pwm(15, 0, 1000)
+pwm.set_pwm(6, 0, 1000)
+pwm.set_pwm(5, 0, 1000)
 

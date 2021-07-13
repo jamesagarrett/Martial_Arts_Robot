@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired ranges described in globals.py.

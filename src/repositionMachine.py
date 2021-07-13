@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -20,8 +20,11 @@ from os import system
 from helperFunctions import getCollinearDistance, getCartesianAngle
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
+
 from globals import DES_OPP_ANGLE,\
-                    MACH_RADIUS,\
+                    FRONT_ANGLE_MIN,\
+					FRONT_ANGLE_MAX,\
+					MACH_RADIUS,\
                     MAX_SPEED,\
                     MAX_CCW_SPEED,\
                     MAX_CW_SPEED,\
@@ -356,28 +359,20 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
 # ********************************************************
 ## name:      rotateMachine
 ## called by: sensorAnalysis.interpretData()
-## passed:    int turningDirection, int len(activeAngles)
+## passed:    int turningDirection
 ## returns:   nothing
 ## calls:     helperFunctions.getCartesianAngle(),
 ##                            getCollinearDistance()
 ##
 ## Rotate the machine to face the opponent.               *
 ## ********************************************************
-def rotateMachine(turnCW, opponentSpan):
+def rotateMachine(turnCW):
     
     #####################################
     ##
     ##  VARIABLE DECLARATION
     ##
     #####################################
-
-    stopAngles = [DES_OPP_ANGLE]    ##The angles in which the machine will look 
-                                    ##to stop moving once facing the opponent; 
-                                    ##DES_OPP_ANGLE is the center-point for the 
-                                    ##opponent, and thus the preferred stopping 
-                                    ##point, however multiple values are used as
-                                    ##a failsafe in case an angle doesn't 
-                                    ##return a distance value.
 
     doneMoving = False              ##Set to True once the machine is again 
                                     ##facing the opponent, or an object is 
@@ -425,9 +420,7 @@ def rotateMachine(turnCW, opponentSpan):
                 adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
                                                         SNS_MAX_DISTANCE)
 
-                index = bisect_left(stopAngles, angle)
-
-                if(index < len(stopAngles) and angle == stopAngles[index] and
+                if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX and
                   MACH_RADIUS < distance <= adjustedDistance):
                     doneMoving = True
                     break

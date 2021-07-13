@@ -2,10 +2,10 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##	sensorAnalysis.py
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
@@ -191,7 +191,7 @@ def interpretData(distanceValues):
 								##opponent too far right of center. 
 
 	#####################################
-
+	
 	##Collect position data for objects if considered too close to the machine.
 	##getCollinearDistance() is used iff there is first an object detected 
 	##within SNS_MIN_DISTANCE, and looks for other distance values that lie on 
@@ -271,14 +271,14 @@ def interpretData(distanceValues):
 		adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE,
 												 SNS_OPP_DISTANCE)
 
-		if(distanceValues[x] <= adjustedDistance):
+		if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
 			activeAngles.append(x)
 			activeDistances.append(distanceValues[x])	
 			tooFar = True	 
 
 	if(tooFar):
-		#print("Status: Too Far\n")
-		calculateOppMovement(activeAngles, activeDistances, distanceValues)
+		print("Status: Too Far\n")
+		#calculateOppMovement(activeAngles, activeDistances, distanceValues)
 
 		return
 
@@ -305,14 +305,13 @@ def interpretData(distanceValues):
 					turningCW = True
 
 		if(turningCCW or turningCW):
-			#print("Status: Not Centered")
+			print("Status: Not Centered")
 			#print(activeAngles)
-			opponentSpan = len(activeAngles)
-			rotateMachine(turningCW, opponentSpan)
+			rotateMachine(turningCW)
 		#else:
-			#print("Status: No Opponent\n")
+			print("Status: No Opponent\n")
 	#else:
-		#print("Status: Good\n")
+		print("Status: Good\n")
 
 	return
 
@@ -337,15 +336,13 @@ def main():
 	WHEELS.set_pwm_freq(PWM_FREQ)
 	
 	try:
-		reset = 0
-		totalCount = 0
-		totalTime = 0
-		
-		while(reset < stop):
+		while(True):
 			if(reset % 10 == 0):
 				clear()
 				reset = 0
 			reset += 1
+
+			collectData()
 
 	except KeyboardInterrupt:
 		clear()

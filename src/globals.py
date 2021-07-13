@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  globals.py
 ##  Last Updated: July 12, 2021
@@ -83,7 +83,7 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 130
+MAX_SPEED = 100
 MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
 MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
 
@@ -125,7 +125,7 @@ SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 36.0
+MAX_DISTANCE = 26.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
