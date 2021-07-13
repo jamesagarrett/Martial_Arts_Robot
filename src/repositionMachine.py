@@ -5,7 +5,7 @@
 ##  Last Updated: July 12, 2021
 ##
 ##  repositionMachine.py
-##  Last Updated: July 11, 2021
+##  Last Updated: July 12, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -172,7 +172,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
-    return
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -304,7 +303,6 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
     
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
-    return
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -403,8 +401,6 @@ def rotateMachine(turnCW, opponentSpan):
     for x in range (1, ceil(opponentSpan/2) + 1):
         stopAngles.insert(0, DES_OPP_ANGLE-x)
         stopAngles.append(DES_OPP_ANGLE+x)
-
-    return
 
     try:
         if(turnCW):

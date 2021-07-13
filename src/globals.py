@@ -5,7 +5,7 @@
 ##  Last Updated: July 12, 2021
 ##
 ##  globals.py
-##  Last Updated: July 11, 2021
+##  Last Updated: July 12, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.

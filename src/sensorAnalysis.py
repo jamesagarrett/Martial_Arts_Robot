@@ -5,7 +5,7 @@
 ##  Last Updated: July 12, 2021
 ##
 ##	sensorAnalysis.py
-##  Last Updated: July 11, 2021
+##  Last Updated: July 12, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
@@ -121,8 +121,6 @@ def collectData():
 	SENSOR.connect()
 
 	interpretData(sensorDistances)
-
-	return distancesCount
 
 ## ********************************************************
 ## name:	  interpretData
@@ -249,9 +247,9 @@ def interpretData(distanceValues):
 		else:
 			opponentAngle = DES_OPP_ANGLE
 
-		#print("Status: Too Close\n")
-		calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
-							  distanceValues)
+		print("Status: Too Close\n")
+		#calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
+		#					  distanceValues)
 
 		return
 
