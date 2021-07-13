@@ -21,7 +21,7 @@ import adafruit_rplidar
 ##Adafruit 16-Channel 12-bit PWM/Servo Driver Library;
 ##Created by and retrieved through Adafruit;
 ##See PCA9685.py for copyright license. 
-#import PCA9685	                                
+import PCA9685	                                
            
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -40,7 +40,7 @@ import adafruit_rplidar
 ##          practical.
 
 ##Global objects for the LIDAR sensor and pwm driver breakout board.
-WHEELS = 1#PCA9685.PCA9685()
+WHEELS = PCA9685.PCA9685()
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 
 ##Any distance measurements are in inches.
