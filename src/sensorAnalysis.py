@@ -61,7 +61,7 @@ from globals import DES_OPP_ANGLE,\
 ## called by: sensorAnalysis.main()
 ## passed:    nothing
 ## returns:   nothing
-## calls:	  sensorAnalysis.interpretData()
+## calls:     sensorAnalysis.interpretData()
 ##            helperFunctions.getCartesianAngle()
 ##
 ## Retrieve sensor readings and store all angles and	  *
@@ -127,9 +127,9 @@ def collectData():
 ## called by: sensorAnalysis.collectData()
 ## passed:    float[] sensorDistances 
 ## returns:   nothing
-## calls:	  helperFunctions.getCollinearDistance()
-##			  repositionMachine.moveToOpponent()
-##			  rotateMachine()
+## calls:     helperFunctions.getCollinearDistance()
+##            repositionMachine.moveToOpponent()
+##            rotateMachine()
 ##
 ## Analyze sensor distance data and determine the         *
 ## appropriate course of action for maneuvering the       *
@@ -154,7 +154,7 @@ def interpretData(distanceValues):
                                 ##angles where the opponent is currently 
                                 ##located.
 
-    insertPoint = 0	            ##The position in which an item is added to the
+    insertPoint = 0             ##The position in which an item is added to the
                                 ##activeAngles and activeDistances lists.
 
     wallAnglesCount = 0         ##The amount of adjacent angles on either side
@@ -321,7 +321,7 @@ def interpretData(distanceValues):
 ## called by: none
 ## passed:    nothing 
 ## returns:   nothing
-## calls:	  collectData()
+## calls:     collectData()
 ##
 ## Begins program when user is ready, clearing the        *
 ## console periodically of any print messages before      *
