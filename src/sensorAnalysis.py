@@ -129,7 +129,7 @@ def collectData():
 ## returns:   nothing
 ## calls:     helperFunctions.getCollinearDistance()
 ##            repositionMachine.moveToOpponent()
-##            rotateMachine()
+##                              rotateMachine()
 ##
 ## Analyze sensor distance data and determine the         *
 ## appropriate course of action for maneuvering the       *
@@ -318,10 +318,10 @@ def interpretData(distanceValues):
 
 ## ********************************************************
 ## name:      main
-## called by: none
+## called by: nobody
 ## passed:    nothing 
 ## returns:   nothing
-## calls:     collectData()
+## calls:     sensorAnalysis.collectData()
 ##
 ## Begins program when user is ready, clearing the        *
 ## console periodically of any print messages before      *

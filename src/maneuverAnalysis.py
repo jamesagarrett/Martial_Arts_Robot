@@ -46,7 +46,7 @@ from globals import ANGLE_ERR,\
 ## passed:    int[] activeAngles, float[] activeDistances,
 ##            int opponentAngle, float[] distanceValues
 ## returns:   nothing
-## calls:     getCollinearDistance()
+## calls:     helperFunctions.getCollinearDistance()
 ##            maneuverAnalysis.calculateObjMovement(),
 ##                             findMoveAngle(), 
 ##                             findMoveDistance(), 
