@@ -27,8 +27,8 @@ from maneuverAnalysis import getPathAngles
 
 from globals import DES_OPP_ANGLE,\
                     FRONT_ANGLE_MIN,\
-					FRONT_ANGLE_MAX,\
-					MACH_RADIUS,\
+                    FRONT_ANGLE_MAX,\
+                    MACH_RADIUS,\
                     MAX_SPEED,\
                     MAX_CCW_PWM,\
                     MAX_CW_PWM,\
@@ -41,7 +41,7 @@ from globals import DES_OPP_ANGLE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
                     SPEED_BOOST,\
-					SPEED_CONSTS,\
+                    SPEED_CONSTS,\
                     START_TICK,\
                     STOP_SPEED,\
                     WHEELS,\
@@ -219,7 +219,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                 break
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect
-	    ##data again
+        ##data again
         SENSOR.stop()
         SENSOR.disconnect()
         SENSOR.connect()
@@ -347,7 +347,7 @@ def moveToOpponent():
                     continue
 
                 if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX and
-				   MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+                   MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
                     doneMoving = True
                     break
 
@@ -358,7 +358,7 @@ def moveToOpponent():
                 break 
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
-	    ##data again
+        ##data again
         SENSOR.stop()
         SENSOR.disconnect()
         SENSOR.connect()    
@@ -446,7 +446,7 @@ def rotateMachine(turnCW):
                 break  
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
-	    ##data again
+        ##data again
         SENSOR.stop()
         SENSOR.disconnect()
         SENSOR.connect()

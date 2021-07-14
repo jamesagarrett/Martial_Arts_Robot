@@ -21,7 +21,7 @@ from repositionMachine import moveFromObject, moveToOpponent
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import ANGLE_ERR,\
-					DES_OPP_ANGLE,\
+                    DES_OPP_ANGLE,\
                     MACH_RADIUS,\
                     OPT_DISTANCE,\
                     PATH_ZONE,\
