@@ -21,6 +21,7 @@ from repositionMachine import moveFromObject, moveToOpponent
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import ANGLE_ERR,\
+					DES_OPP_ANGLE,\
                     MACH_RADIUS,\
                     OPT_DISTANCE,\
                     PATH_ZONE,\
@@ -246,7 +247,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
 ## ********************************************************
 ## name:      calculateOppMovement
 ## called by: sensorAnalysis.interpretData()
-## passed:    int[] activeAngles, float[] activeDistances
+## passed:    float[] distanceValues
 ## returns:   nothing
 ## calls:     maneuverAnalysis.getPathAngles(),
 ##                             isPathClear()
@@ -255,7 +256,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
 ## Determine how to reposition when too far from the      *
 ## opponent.                                              *
 ## ********************************************************
-def calculateOppMovement(oppAngles, oppDistances, allDistances):
+def calculateOppMovement(allDistances):
 
     #####################################
     ##
@@ -265,9 +266,6 @@ def calculateOppMovement(oppAngles, oppDistances, allDistances):
     
     clearPath = False       ##Set to True if isPathClear() finds no objects
                             ##within the desired movement path of the machine.
-
-    maneuverAngle = 0       ##The approximate midpoint of the opponent's 
-                            ##location to move at when repositioning.
 
     maneuverDistance = 0.0  ##The distance the machine will travel when 
                             ##repositioning.
@@ -279,26 +277,17 @@ def calculateOppMovement(oppAngles, oppDistances, allDistances):
 
     #####################################
     
-    ##Due to the amount of lateral movement the opponent has at and beyond the 
-    ##MAX_DISTANCE, there is the potential that moving directly toward the 
-    ##DES_OPP_ANGLE could result in the machine not directly facing the opponent
-    ##after moving. This is accounted for by finding the center-most point of
-    ##the opponent, and using that angle as the maneuverAngle.
-    for x in range (0, len(oppAngles)):
-        maneuverAngle += oppAngles[x]
+    pathAngles = getPathAngles(DES_OPP_ANGLE)
 
-    maneuverAngle = floor(maneuverAngle/len(oppAngles))
-    pathAngles = getPathAngles(maneuverAngle)
+    maneuverDistance = allDistances[DES_OPP_ANGLE] - SNS_OPT_DISTANCE
 
-    maneuverDistance = allDistances[maneuverAngle] - SNS_OPT_DISTANCE
-
-    clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
+    clearPath = isPathClear(DES_OPP_ANGLE, pathAngles, allDistances,
                             MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
     if(clearPath):
         #print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
         #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
-        moveToOpponent(maneuverAngle, pathAngles, oppAngles)
+        moveToOpponent(pathAngles)
     #else:
         #print("Maneuver: CAN'T MOVE\n")
         #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")

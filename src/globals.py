@@ -83,9 +83,13 @@ STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
 
 ##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 100
-MAX_CCW_SPEED = MIN_CCW_SPEED + MAX_SPEED
-MAX_CW_SPEED = MIN_CW_SPEED - MAX_SPEED
+MAX_SPEED = 200
+TURN_PERCENT = 0.50
+MAX_CCW_SPEED = round(MIN_CCW_SPEED + MAX_SPEED * TURN_PERCENT)
+MAX_CW_SPEED = round(MIN_CW_SPEED - MAX_SPEED * TURN_PERCENT)
+
+##Additional speed value for wheel(s) with slower spin.
+SPEED_BOOST = 20
 
 ##The amount of sensor scan rotations to perform before for collecting angular
 ##distance values before analyzing them.
@@ -118,21 +122,21 @@ ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 6.0
+MIN_DISTANCE = 1.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 26.0
+MAX_DISTANCE = 36.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 8.0
+OPP_DISTANCE = MAX_DISTANCE + 6.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS

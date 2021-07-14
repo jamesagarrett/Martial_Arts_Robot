@@ -21,33 +21,35 @@ pwm = PCA9685.PCA9685()
 #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 
 pwm.set_pwm_freq(160)
+maxSpeed = 200
+CCW_MIN = 1025
+CW_MIN = 965
 
 x = float(input("Speed: "))
 y = float(input("Speed: "))
 z = float(input("Speed: "))
 
 while(x != 0 and y != 0 and z != 0):
-	if(x < -1):
-		speed = 1025 + (150/(1/x))
+	if(x > 0):
+		speed1 = CCW_MIN + 20 + maxSpeed * x
 	else:
-		speed = 965 + (150/(1/x))
+		speed1 = CW_MIN - 20 + maxSpeed * x
 	
-	if(y < -1):
-		speed2 = 1025 + (150/(1/y))
+	if(y > 0):
+		speed2 = CCW_MIN + maxSpeed * y
 	else:
-		speed2 = 965 + (150/(1/y))
+		speed2 = CW_MIN + maxSpeed * y
 	
-	if(z < -1):
-		speed3 = 1025 + (150/(1/z))
+	if(z > 0):
+		speed3 = CCW_MIN + maxSpeed * z
 	else:
-		speed3 = 965 + (150/(1/z))
+		speed3 = CW_MIN + maxSpeed * z
 
-	print(speed, speed2, speed3)
-	pwm.set_pwm(7, 0, math.floor(speed))
+	print(speed1, speed2, speed3)
+	pwm.set_pwm(7, 0, math.floor(speed1))
 	pwm.set_pwm(6, 0, math.floor(speed2))
 	pwm.set_pwm(5, 0, math.floor(speed3))
 	
-	time.sleep(5)
 	x = float(input("Speed: "))
 	y = float(input("Speed: "))
 	z = float(input("Speed: "))

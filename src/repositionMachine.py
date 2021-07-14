@@ -36,7 +36,8 @@ from globals import DES_OPP_ANGLE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
-                    SPEED_CONSTS,\
+                    SPEED_BOOST,\
+					SPEED_CONSTS,\
                     START_TICK,\
                     STOP_SPEED,\
                     WHEELS,\
@@ -169,10 +170,14 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
+            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED * wheelSpeeds[x])
+			if(x == 0):
+				wheelPWMs[x] += SPEED_BOOST
         else:
-            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
-    
+            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED * wheelSpeeds[x])
+			if(x == 0):
+				wheelPWMs[x] -= SPEED_BOOST
+ 
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
 
@@ -229,8 +234,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 ## ********************************************************
 ## name:      moveToOpponent
 ## called by: maneuverAnalysis.calculateOppMovement()
-## passed:    int maneuverAngle, int[] pathAngles, 
-##            int[] oppAngles
+## passed:    int[] pathAngles
 ## returns:   nothing
 ## calls:     helperFunctions.getCartesianAngle()
 ##
@@ -238,7 +242,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 ## specified angle location until reaching OPT_DISTANCE   *
 ## away.                                                  *
 ## ********************************************************
-def moveToOpponent(repositionAngle, watchAngles, stopAngles):
+def moveToOpponent(watchAngles):
 
     #####################################
     ##
@@ -280,10 +284,10 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    speedVars[0] = sin(radians(repositionAngle)) \
+    speedVars[0] = sin(radians(DES_OPP_ANGLE)) \
                    - rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
 
-    speedVars[1] = cos(radians(repositionAngle)) \
+    speedVars[1] = cos(radians(DES_OPP_ANGLE)) \
                    - rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
 
     wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
@@ -296,16 +300,20 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
 
-    for x in range (3):
+    for x in range (len(WHEELS)):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
-        else:
-            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED/(1/wheelSpeeds[x]))
-    
-    #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
+            wheelPWMs[x] = floor(MIN_CCW_SPEED + MAX_SPEED * wheelSpeeds[x])
+        	if(x == 0):
+				wheelPWMs[x] += SPEED_BOOST
+		else:
+            wheelPWMs[x] = floor(MIN_CW_SPEED + MAX_SPEED * wheelSpeeds[x])
+   			if(x == 0):
+				wheelPWMs[x] -= SPEED_BOOST
+ 
+    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
+    print("Watch:\n", watchAngles)
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
@@ -327,9 +335,8 @@ def moveToOpponent(repositionAngle, watchAngles, stopAngles):
                 else:
                     continue
 
-                index = bisect_left(stopAngles, angle)
-
-                if(MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
+                if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX and
+				   MACH_RADIUS < distance <= SNS_OPT_DISTANCE):
                     doneMoving = True
                     break
 
@@ -392,10 +399,6 @@ def rotateMachine(turnCW):
         #print("Maneuver: Direction - Clockwise\n")
     #else:
         #print("Maneuver: Direction - Counter-Clockwise\n")
-
-    for x in range (1, ceil(opponentSpan/2) + 1):
-        stopAngles.insert(0, DES_OPP_ANGLE-x)
-        stopAngles.append(DES_OPP_ANGLE+x)
 
     try:
         if(turnCW):

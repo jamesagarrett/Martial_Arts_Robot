@@ -113,7 +113,11 @@ def collectData():
 
 		if(i == TOTAL_SCANS - 1 or distancesCount == 360):
 			break
-	
+	A=0
+	while(sensorDistances[DES_OPP_ANGLE] == 0.0):
+		sensorDistances[DES_OPP_ANGLE] = sensorDistances[DES_OPP_ANGLE-A]
+		A+=1
+
 	##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
 	SENSOR.stop()
@@ -278,7 +282,7 @@ def interpretData(distanceValues):
 
 	if(tooFar):
 		print("Status: Too Far\n")
-		#calculateOppMovement(activeAngles, activeDistances, distanceValues)
+		calculateOppMovement(distanceValues)
 
 		return
 
@@ -308,9 +312,9 @@ def interpretData(distanceValues):
 			print("Status: Not Centered")
 			#print(activeAngles)
 			rotateMachine(turningCW)
-		#else:
+		else:
 			print("Status: No Opponent\n")
-	#else:
+	else:
 		print("Status: Good\n")
 
 	return
