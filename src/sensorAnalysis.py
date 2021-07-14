@@ -57,15 +57,15 @@ from globals import DES_OPP_ANGLE,\
 #########################################
 
 ## ********************************************************
-## name:	  collectData
+## name:      collectData
 ## called by: sensorAnalysis.main()
-## passed:	  nothing
+## passed:    nothing
 ## returns:   nothing
 ## calls:	  sensorAnalysis.interpretData()
-##			  helperFunctions.getCartesianAngle()
+##            helperFunctions.getCartesianAngle()
 ##
 ## Retrieve sensor readings and store all angles and	  *
-## associated distances.								  *
+## associated distances.                                  *
 ## ********************************************************
 def collectData():
 
@@ -78,14 +78,14 @@ def collectData():
     sensorDistances = [0.0]*360 ##A list of all measured sensor distances for 
                                 ##each angle, 0-359.
 
-    cartAngle = 0				##The angle measurement returned from 
+    cartAngle = 0               ##The angle measurement returned from 
                                 ##getCartesianAngle().
     
-    distancesCount = 0			##The amount of measured sensor distances from
+    distancesCount = 0          ##The amount of measured sensor distances from
                                 ##the current iteration of the distance 
                                 ##collection loop. 
 
-    listStartPnt = 0			##The position in sensorDistances to begin 
+    listStartPnt = 0            ##The position in sensorDistances to begin 
                                 ##iterating when manually entering values; done
                                 ##when the sensor cannot read a value by itself.
     
@@ -123,17 +123,17 @@ def collectData():
     interpretData(sensorDistances)
 
 ## ********************************************************
-## name:	  interpretData
+## name:      interpretData
 ## called by: sensorAnalysis.collectData()
-## passed:	  float[] sensorDistances 
+## passed:    float[] sensorDistances 
 ## returns:   nothing
 ## calls:	  helperFunctions.getCollinearDistance()
 ##			  repositionMachine.moveToOpponent()
 ##			  rotateMachine()
 ##
-## Analyze sensor distance data and determine the		  *
-## appropriate course of action for maneuvering the		  *
-## machine if applicable.								  *
+## Analyze sensor distance data and determine the         *
+## appropriate course of action for maneuvering the       *
+## machine if applicable.                                 *
 ## ********************************************************
 def interpretData(distanceValues):
 
@@ -143,50 +143,49 @@ def interpretData(distanceValues):
     ##
     #####################################
                             
-    activeDistances = []		##Distances recorded to be outside the desired 
+    activeDistances = []        ##Distances recorded to be outside the desired 
                                 ##range of the machine; that is, a value in 
                                 ##front of the machine > MAX_DISTANCE or a 
                                 ##value recorded anywhere < MIN_DISTANCE.
 
-    activeAngles = []			##The corresponding angles associated with 
+    activeAngles = []           ##The corresponding angles associated with 
                                 ##each activeDistances value, or in the case of
                                 ##turning toward the opponent, the list of 
                                 ##angles where the opponent is currently 
                                 ##located.
 
-    insertPoint = 0				##The position in which an item is added to the
+    insertPoint = 0	            ##The position in which an item is added to the
                                 ##activeAngles and activeDistances lists.
 
-    wallAnglesCount = 0			##The amount of adjacent angles on either side
+    wallAnglesCount = 0         ##The amount of adjacent angles on either side
                                 ##of the current value being added to 
                                 ##activeAngles. These angles will also be added
                                 ##to activeAngles if they are detecting the same
                                 ##object as the original angle.
 
-    adjustedDistance = 0		##The returned value of getCollinearDistance().
-    adjustedDistance2 = 0
+    adjustedDistance = 0        ##The returned value of getCollinearDistance().
 
-    tooClose = False			##Set to True if the machine detects an 
+    tooClose = False            ##Set to True if the machine detects an 
                                 ##object that is too close.
 
-    opponentSpan = 0			##The amount of angles that have corresponding
+    opponentSpan = 0            ##The amount of angles that have corresponding
                                 ##distance values matching the location of the
                                 ##opponent.
                                 
-    opponentAngle = 0			##The average of all angles that are reading the
+    opponentAngle = 0           ##The average of all angles that are reading the
                                 ##opponent.
 
-    tooFar = False				##Set to True if the machine detects the 
+    tooFar = False              ##Set to True if the machine detects the 
                                 ##opponent is too far away.
 
-    opponentFound = False		##Set to True if the machine detects the 
+    opponentFound = False       ##Set to True if the machine detects the 
                                 ##opponent in front and tooClose == tooFar == 
                                 ##False.
 
-    turningCW = False			##Set to True if the machine detects the 
+    turningCW = False           ##Set to True if the machine detects the 
                                 ##opponent too far left of center.
 
-    turningCCW = False			##Set to True if the machine detects the 
+    turningCCW = False          ##Set to True if the machine detects the 
                                 ##opponent too far right of center. 
 
     #####################################
@@ -317,6 +316,17 @@ def interpretData(distanceValues):
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
 
+## ********************************************************
+## name:      main
+## called by: none
+## passed:    nothing 
+## returns:   nothing
+## calls:	  collectData()
+##
+## Begins program when user is ready, clearing the        *
+## console periodically of any print messages before      *
+## terminating on keyboard interrupt.                     *
+## ********************************************************
 def main():
     #####################################
     ##
@@ -324,9 +334,9 @@ def main():
     ##
     #####################################
 
-    clear = lambda:system('clear')		##Used for clearing the terminal screen.
+    clear = lambda:system('clear')      ##Used for clearing the terminal screen.
 
-    reset = 0							##Determines when to reset the terminal
+    reset = 0                           ##Determines when to reset the terminal
                                         ##screen.
     
     #####################################
