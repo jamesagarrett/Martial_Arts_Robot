@@ -2,13 +2,13 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 13, 2021
+##  Last Updated: July 14, 2021
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 13, 2021
+##  Last Updated: July 14, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
-##  the desired ranges described in globals.py.
+##  the desired distance ranges described in globals.py.
 ##
 
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
@@ -245,56 +245,6 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
     return 
 
 ## ********************************************************
-## name:      calculateOppMovement
-## called by: sensorAnalysis.interpretData()
-## passed:    float[] distanceValues
-## returns:   nothing
-## calls:     maneuverAnalysis.getPathAngles(),
-##                             isPathClear()
-##            repositionMachine.moveToOpponent()
-##
-## Determine how to reposition when too far from the      *
-## opponent.                                              *
-## ********************************************************
-def calculateOppMovement(allDistances):
-
-    #####################################
-    ##
-    ##  VARIABLE DECLARATION
-    ##
-    #####################################
-    
-    clearPath = False       ##Set to True if isPathClear() finds no objects
-                            ##within the desired movement path of the machine.
-
-    maneuverDistance = 0.0  ##The distance the machine will travel when 
-                            ##repositioning.
-    
-    pathAngles = []         ##Any angle in the path of the machine when it is
-                            ##repositioning; that is, an angle at which an 
-                            ##object at said angle, if not far enough, could be 
-                            ##contacted by the machine while maneuvering.
-
-    #####################################
-    
-    pathAngles = getPathAngles(DES_OPP_ANGLE)
-
-    maneuverDistance = allDistances[DES_OPP_ANGLE] - SNS_OPT_DISTANCE
-
-    clearPath = isPathClear(DES_OPP_ANGLE, pathAngles, allDistances,
-                            MACH_RADIUS, maneuverDistance + MACH_RADIUS)
-
-    if(clearPath):
-        #print("CAN MOVE\nManeuver: Angle -", maneuverAngle, "\tDistance -", maneuverDistance, "\n")
-        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
-        moveToOpponent(pathAngles)
-    #else:
-        #print("Maneuver: CAN'T MOVE\n")
-        #print("Active Angles:\n\n", oppAngles, "\n\nActive Distances:\n\n", oppDistances, "\n\n")
-            
-    return 
-
-## ********************************************************
 ## name:      findMoveAngle
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int[] objAngles
@@ -500,7 +450,7 @@ def findNewOppDist(maneuverAngle, maneuverDistance, oppAngle, oppDistance):
 ## ********************************************************
 ## name:      getPathAngles
 ## called by: maneuverAnalysis.calculateObjMovement(),
-##                             calculateOppMovement()
+##            repositionMachine.moveToOpponent()
 ## passed:    int maneuverAngle
 ## returns:   int[] pathAngles
 ## calls:     nobody 
@@ -539,7 +489,6 @@ def getPathAngles(maneuverAngle):
 ## ********************************************************
 ## name:      isPathClear
 ## called by: maneuverAnalysis.calculateObjMovement(),
-##                             calculateOppMovement()
 ## passed:    int maneuverAngle, int[] pathAngles, 
 ##            float[] allDistances, float MACH_RADIUS,
 ##            float maneuverDistance + MACH_RADIUS

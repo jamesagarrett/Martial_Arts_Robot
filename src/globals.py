@@ -2,10 +2,10 @@
 ##  James Garrett
 ##
 ##  Martial_Arts_Robot 
-##  Last Updated: July 13, 2021
+##  Last Updated: July 14, 2021
 ##
 ##  globals.py
-##  Last Updated: July 12, 2021
+##  Last Updated: July 13, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -74,25 +74,25 @@ sin(radians(WHEEL_DIRECTIONS[1])) - sin(radians(WHEEL_DIRECTIONS[2]))]
 START_TICK = 0
 
 ##The tick values in which the signal to the wheels transitioning from high to 
-##low will result in no movement. Any value above MIN_CCW_SPEED or below 
-##MIN_CW_SPEED will result in movement by the wheels. STOP_SPEED is the mean of
+##low will result in no movement. Any value above MIN_CCW_PWM or below 
+##MIN_CW_PWM will result in movement by the wheels. STOP_SPEED is the mean of
 ##these values.
-MIN_CCW_SPEED = 1025
-MIN_CW_SPEED = 965
-STOP_SPEED = floor((MIN_CCW_SPEED + MIN_CW_SPEED)/2)
+MIN_CCW_PWM = 1025
+MIN_CW_PWM = 965
+STOP_SPEED = floor((MIN_CCW_PWM + MIN_CW_PWM)/2)
 
-##The desired value above MIN_CCW_SPEED or below MIN_CW_SPEED to be the 
+##The desired value above MIN_CCW_PWM or below MIN_CW_PWM to be the 
 ##maximum speed for the wheels.
 MAX_SPEED = 200
 TURN_PERCENT = 0.50
-MAX_CCW_SPEED = round(MIN_CCW_SPEED + MAX_SPEED * TURN_PERCENT)
-MAX_CW_SPEED = round(MIN_CW_SPEED - MAX_SPEED * TURN_PERCENT)
+MAX_CCW_PWM = round(MIN_CCW_PWM + MAX_SPEED * TURN_PERCENT)
+MAX_CW_PWM = round(MIN_CW_PWM - MAX_SPEED * TURN_PERCENT)
 
 ##Additional speed value for wheel(s) with slower spin.
 SPEED_BOOST = 20
 
-##The amount of sensor scan rotations to perform before for collecting angular
-##distance values before analyzing them.
+##The amount of sensor scan rotations to perform for collecting angular distance
+##values before analyzing them.
 TOTAL_SCANS = 4
 
 ##The front of the machine is considered to be within this angular range and is 

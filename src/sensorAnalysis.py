@@ -2,10 +2,10 @@
 ##	James Garrett
 ##
 ##	Martial_Arts_Robot 
-##  Last Updated: July 13, 2021
+##  Last Updated: July 14, 2021
 ##
 ##	sensorAnalysis.py
-##  Last Updated: July 13, 2021
+##  Last Updated: July 14, 2021
 ##
 ##	Collect and analyze sensor distance data to determine whether repositioning 
 ##	is needed. If so, also determine in what manner the machine needs to 
@@ -113,10 +113,6 @@ def collectData():
 
 		if(i == TOTAL_SCANS - 1 or distancesCount == 360):
 			break
-	A=0
-	while(sensorDistances[DES_OPP_ANGLE] == 0.0):
-		sensorDistances[DES_OPP_ANGLE] = sensorDistances[DES_OPP_ANGLE-A]
-		A+=1
 
 	##Prevents adafruit_rplidar.py runtime error when attempting to collect 
 	##data again
@@ -132,9 +128,8 @@ def collectData():
 ## passed:	  float[] sensorDistances 
 ## returns:   nothing
 ## calls:	  helperFunctions.getCollinearDistance()
-##			  maneuverAnalysis.calculateObjMovement(),
-##							   calculateOppMovement()
-##			  repositionMachine.rotateMachine()
+##			  repositionMachine.moveToOpponent()
+##			  rotateMachine()
 ##
 ## Analyze sensor distance data and determine the		  *
 ## appropriate course of action for maneuvering the		  *
@@ -282,7 +277,7 @@ def interpretData(distanceValues):
 
 	if(tooFar):
 		print("Status: Too Far\n")
-		calculateOppMovement(distanceValues)
+		moveToOpponent()
 
 		return
 
