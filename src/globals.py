@@ -40,8 +40,8 @@ import PCA9685
 ##          practical.
 
 ##Global objects for the LIDAR sensor and pwm driver breakout board.
-WHEELS = PCA9685.PCA9685()
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
+WHEELS = PCA9685.PCA9685()
 
 ##Any distance measurements are in inches.
 ##Any angular measurements are in degrees.

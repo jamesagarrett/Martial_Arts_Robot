@@ -182,6 +182,9 @@ def interpretData(distanceValues):
                                 ##opponent in front and tooClose == tooFar == 
                                 ##False.
 
+    turnMid = 0                 ##The midpoint of both the left and right turn
+                                ##angles min/max values.
+
     turningCW = False           ##Set to True if the machine detects the 
                                 ##opponent too far left of center.
 
@@ -283,20 +286,25 @@ def interpretData(distanceValues):
     ##Analyze turning only after determining nothing is too close or too far 
     ##from the machine.
     if(not opponentFound):
+        turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
+        
         for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
-            y = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
 
-            adjustedDistance = getCollinearDistance(x, y, SNS_MAX_DISTANCE)
+            adjustedDistance = getCollinearDistance(x, turnMid,
+                                                    SNS_MAX_DISTANCE)
 
             if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
                 activeAngles.append(x)
                 turningCCW = True
             
         if(not turningCCW):
+            
+            turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
+
             for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
-                y = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
                 
-                adjustedDistance = getCollinearDistance(x, y, SNS_MAX_DISTANCE)
+                adjustedDistance = getCollinearDistance(x, turnMid, 
+                                                        SNS_MAX_DISTANCE)
                 
                 if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
                     activeAngles.append(x)
@@ -336,7 +344,7 @@ def main():
 
     clear = lambda:system('clear')      ##Used for clearing the terminal screen.
 
-    reset = 0                           ##Determines when to reset the terminal
+    reset = 0                           ##Determines when to clear the terminal
                                         ##screen.
     
     #####################################

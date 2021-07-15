@@ -170,7 +170,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
     
-    for x in range (3):
+    for x in range (len(WHEELS)):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):

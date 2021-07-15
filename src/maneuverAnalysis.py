@@ -280,24 +280,20 @@ def findMoveAngle(objAngles):
     ##largestSpace is where the machine will maneuver itself.
  
     for x in range (-len(objAngles), 0):      
-        if(len(objAngles) == 1):    
-            objectsSpace = 360
-        elif(x == -1):              
-            objectsSpace = 360 - (objAngles[-1] - objAngles[0])
-        else:
-            objectsSpace = objAngles[x+1] - objAngles[x]
+        objectsSpace = objAngles[x+1] - objAngles[x]
+
+        if(objectsSpace <= 0):
+            objectsSpace += 360
 
         if(objectsSpace > largestSpace):
-            largestSpace = objectsSpace 
+            largestSpace = objectsSpace
+            maneuverAngle = floor((objAngles[x+1] + objAngles[x])/2)
+
             if(x == -1):
-                if((objAngles[-1] + objAngles[0])/2 >= 180):
-                    maneuverAngle = floor((objAngles[-1] \
-                                    + objAngles[0])/2 - 180)
+                if(maneuverAngle >= 180):
+                    maneuverAngle -= 180
                 else:
-                    maneuverAngle = floor((objAngles[-1] \
-                                    + objAngles[0])/2 + 180)
-            else:
-                maneuverAngle = floor((objAngles[x+1] + objAngles[x])/2)
+                    maneuverAngle += 180
 
     if(largestSpace < PATH_ZONE):
         maneuverAngle = -1
@@ -358,7 +354,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
         ##accounted for.
 
         if(objDistances[x] - MACH_RADIUS >= desiredDistance 
-                or objDistances[x] <= MACH_RADIUS):
+        or objDistances[x] <= MACH_RADIUS):
             continue
 
         objXComp = cos(radians(objAngles[x])) * (objDistances[x] - MACH_RADIUS)
@@ -517,21 +513,21 @@ def isPathClear(maneuverAngle, pathAngles, allDistances, xBound, yBound):
  
     #####################################
 
-    for x in range (0, len(pathAngles)):
+    for angle in pathAngles:
 
-        if(allDistances[pathAngles[x]] <= MACH_RADIUS):
+        if(allDistances[angle] <= MACH_RADIUS):
             continue
         
-        if(abs(maneuverAngle - pathAngles[x]) > len(pathAngles)//2):
-            if(maneuverAngle < pathAngles[x]):
-                coordAngle = abs(360 + maneuverAngle - pathAngles[x])
+        if(abs(maneuverAngle - angle) > len(pathAngles)//2):
+            if(maneuverAngle < angle):
+                coordAngle = abs(360 + maneuverAngle - angle)
             else:
-                coordAngle = abs(360 + pathAngles[x] - maneuverAngle)
+                coordAngle = abs(360 + angle - maneuverAngle)
         else:
-            coordAngle = abs(maneuverAngle - pathAngles[x])
+            coordAngle = abs(maneuverAngle - angle)
         
-        xCoord = sin(radians(coordAngle))*allDistances[pathAngles[x]]
-        yCoord = cos(radians(coordAngle))*allDistances[pathAngles[x]]
+        xCoord = sin(radians(coordAngle))*allDistances[angle]
+        yCoord = cos(radians(coordAngle))*allDistances[angle]
         
         if(xCoord <= xBound and yCoord < yBound):
             return False
