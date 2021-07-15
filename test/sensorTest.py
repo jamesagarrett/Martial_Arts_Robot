@@ -28,15 +28,16 @@ lidar = RPLidar(None, '/dev/ttyUSB0')
 sensorDistances = [0.0]*360
 count = 0
 prevCount = 0
+totalScans = 5
 scans = 0
 measures = 0
+APS = [0]*totalScans
 
 import time
 start = time.time()
-totalScans = 15
-APS = [0]*totalScans
 
-for i, scan in enumerate(lidar.iter_scans()):
+for i, scan in enumerate(lidar.iter_scans(), start=1):
+ 
  prevCount = count
  measures += len(scan)
 
@@ -50,10 +51,10 @@ for i, scan in enumerate(lidar.iter_scans()):
      sensorDistances[cartAngle] = distance * 0.0393
      count += 1
  
- APS[i] = count - prevCount
+ APS[i-1] = count - prevCount
 
- if i == totalScans-1 or count == 360:
-  scans = i+1
+ if i == totalScans or count == 360:
+  scans = i
   break
 
 end = time.time()

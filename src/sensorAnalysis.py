@@ -91,7 +91,7 @@ def collectData():
     
     #####################################
     
-    for i, scan in enumerate(SENSOR.iter_scans()):
+    for i, scan in enumerate(SENSOR.iter_scans(), start=1):
 
         ##Collect and store sensor data. Distances are stored in such a way
         ##that the corresponding index for each value represents its angle on
@@ -111,7 +111,7 @@ def collectData():
             distancesCount += 1
             sensorDistances[cartAngle] = distance * 0.0393
 
-        if(i == TOTAL_SCANS - 1 or distancesCount == 360):
+        if(i == TOTAL_SCANS or distancesCount == 360):
             break
 
     ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
