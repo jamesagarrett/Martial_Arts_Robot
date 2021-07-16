@@ -1,11 +1,8 @@
 ##  
 ##  James Garrett
 ##
-##  Martial_Arts_Robot 
-##  Last Updated: July 14, 2021
-##
 ##  maneuverAnalysis.py
-##  Last Updated: July 14, 2021
+##  Last Updated: July 15, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -144,7 +141,7 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
         else:
             rightClosestAngle = 0
 
-        for x in range(1, ANGLE_ERR):
+        for _ in range(ANGLE_ERR):
             if(allDistances[leftClosestAngle] <= MACH_RADIUS):
                 if(leftClosestAngle != 0):
                     leftClosestAngle -= 1

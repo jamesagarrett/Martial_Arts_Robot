@@ -1,9 +1,6 @@
 ##  
 ##  James Garrett
 ##
-##  Martial_Arts_Robot 
-##  Last Updated: July 14, 2021
-##
 ##  globals.py
 ##  Last Updated: July 13, 2021
 ##
