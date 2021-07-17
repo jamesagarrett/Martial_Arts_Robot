@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 15, 2021
+##  Last Updated: July 17, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -10,7 +10,7 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
 from bisect import bisect_left                             
-from helperFunctions import getCollinearDistance
+from helperFunctions import getCollinearDistance, getPathAngles
 
 ##Module for performing reposition of the machine, based on sensor data 
 ##collection and analysis.
@@ -43,12 +43,12 @@ from globals import ANGLE_ERR,\
 ## passed:    int[] activeAngles, float[] activeDistances,
 ##            int opponentAngle, float[] distanceValues
 ## returns:   nothing
-## calls:     helperFunctions.getCollinearDistance()
+## calls:     helperFunctions.getCollinearDistance(),
+##                            getPathAngles()
 ##            maneuverAnalysis.calculateObjMovement(),
 ##                             findMoveAngle(), 
 ##                             findMoveDistance(), 
 ##                             findNewOppDist(),
-##                             getPathAngles(),
 ##                             isPathClear()
 ##            repositionMachine.moveFromObject()            
 ##
@@ -439,45 +439,6 @@ def findNewOppDist(maneuverAngle, maneuverDistance, oppAngle, oppDistance):
                           + (oppYComp - maneuverYComp)**2)
 
     return vectorDistance
-
-## ********************************************************
-## name:      getPathAngles
-## called by: maneuverAnalysis.calculateObjMovement(),
-##            repositionMachine.moveToOpponent()
-## passed:    int maneuverAngle
-## returns:   int[] pathAngles
-## calls:     nobody 
-##
-## Determine all angles within the path of the machine    *
-## if repositioning were to occur at the specified angle. * 
-## ********************************************************
-def getPathAngles(maneuverAngle):
-
-    #####################################
-    ##
-    ##  VARIABLE DECLARATION
-    ##
-    #####################################
-
-    pathAngles = [maneuverAngle]    ##List of angles to be returned that include
-                                    ##all angles considered in the maneuvering 
-                                    ##path of the machine as it looks to 
-                                    ##reposition.
-    
-    #####################################
-
-    for x in range (1, PATH_ZONE + 1):
-        if(maneuverAngle-x >= 0):
-            pathAngles.insert(0, maneuverAngle-x)
-        else:
-            pathAngles.insert(0, 360+(maneuverAngle-x))
-
-        if(maneuverAngle+x <= 359):
-            pathAngles.append(maneuverAngle+x)
-        else:
-            pathAngles.append((maneuverAngle+x)-360)
-
-    return pathAngles
 
 ## ********************************************************
 ## name:      isPathClear

@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 14, 2021
+##  Last Updated: July 17, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -14,11 +14,7 @@ from bisect import bisect_left
 from os import system
 
 ##Module that includes functions that are used throughout the project.
-from helperFunctions import getCollinearDistance, getCartesianAngle
-
-##Module to determine how the machine will reposition itself toward or
-##away from the opponent.
-from maneuverAnalysis import getPathAngles
+from helperFunctions import getCollinearDistance, getCartesianAngle, getPathAngles
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 
@@ -237,8 +233,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 ## called by: sensorAnalysis.interpretData()
 ## passed:    nothing
 ## returns:   nothing
-## calls:     helperFunctions.getCartesianAngle()
-##            maneuverAnalysis.getPathAngles()
+## calls:     helperFunctions.getCartesianAngle(),
+##                            getPathAngles()
 ##
 ## Repositions the machine towards the opponent at the    *
 ## DES_OPP_ANGLE location until reaching OPT_DISTANCE     *

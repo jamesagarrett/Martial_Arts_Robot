@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  helperFunctions.py
-##  Last Updated: July 11, 2021
+##  Last Updated: July 17, 2021
 ##
 ##  Functions used to assist in other modules within the project.
 ##
@@ -85,3 +85,43 @@ def getCollinearDistance(newAngle, originAngle, originDistance):
     newDistance = abs(originDistance/cos(radians(coordAngle)))
         
     return newDistance
+
+## ********************************************************
+## name:      getPathAngles
+## called by: maneuverAnalysis.calculateObjMovement(),
+##            repositionMachine.moveToOpponent()
+## passed:    int maneuverAngle/DES_OPP_ANGLE
+## returns:   int[] pathAngles
+## calls:     nobody 
+##
+## Determine all angles within the path of the machine    *
+## if repositioning were to occur at the specified angle. * 
+## ********************************************************
+def getPathAngles(maneuverAngle):
+
+    #####################################
+    ##
+    ##  VARIABLE DECLARATION
+    ##
+    #####################################
+
+    pathAngles = [maneuverAngle]    ##List of angles to be returned that include
+                                    ##all angles considered in the maneuvering 
+                                    ##path of the machine as it looks to 
+                                    ##reposition.
+    
+    #####################################
+
+    for x in range (1, PATH_ZONE + 1):
+        if(maneuverAngle-x >= 0):
+            pathAngles.insert(0, maneuverAngle-x)
+        else:
+            pathAngles.insert(0, 360+(maneuverAngle-x))
+
+        if(maneuverAngle+x <= 359):
+            pathAngles.append(maneuverAngle+x)
+        else:
+            pathAngles.append((maneuverAngle+x)-360)
+
+    return pathAngles
+

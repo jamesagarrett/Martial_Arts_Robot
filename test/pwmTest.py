@@ -4,7 +4,7 @@
 # License: Public Domain
 from __future__ import division
 import time
-import math
+from math import sin, cos, radians
 
 # Import the PCA9685 module.
 import PCA9685
@@ -16,7 +16,7 @@ pwm.set_pwm_freq(160)
 maxSpeed = 200
 CCW_MIN = 1025
 CW_MIN = 965
-speed_boost = 20
+speedBoost = 0
 
 #x = float(input("Speed: "))
 #y = float(input("Speed: "))
@@ -24,9 +24,9 @@ speed_boost = 20
 
 #while(x != 0 and y != 0 and z != 0):
 #	if(x > 0):
-#		speed1 = CCW_MIN + speed_boost + maxSpeed * x
+#		speed1 = CCW_MIN + speedBoost + maxSpeed * x
 #	else:
-#		speed1 = CW_MIN - speed_boost + maxSpeed * x
+#		speed1 = CW_MIN - speedBoost + maxSpeed * x
 	
 #	if(y > 0):
 #		speed2 = CCW_MIN + maxSpeed * y
@@ -72,18 +72,18 @@ sin(radians(WHEEL_DIRECTIONS[1])) - sin(radians(WHEEL_DIRECTIONS[2]))]
 angle = int(input("Angle: "))
 
 speedVars[0] = sin(radians(angle)) \
-                - rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
+				- rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
 
 speedVars[1] = cos(radians(angle)) \
-                - rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
+				- rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
 
 wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
-                    - speedVars[0]*SPEED_CONSTS[2]) \
-                    / (SPEED_CONSTS[0]*SPEED_CONSTS[3] \
-                    - SPEED_CONSTS[1]*SPEED_CONSTS[2]) 
+					- speedVars[0]*SPEED_CONSTS[2]) \
+					/ (SPEED_CONSTS[0]*SPEED_CONSTS[3] \
+					- SPEED_CONSTS[1]*SPEED_CONSTS[2]) 
 
 wheelSpeeds[1] = (speedVars[0] - wheelSpeeds[0]*SPEED_CONSTS[1]) \
-                    / SPEED_CONSTS[3]
+					/ SPEED_CONSTS[3]
 
 wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
 
@@ -103,10 +103,11 @@ print("Speeds: ", wheelSpeeds)
 print("PWMs: ", wheelPWMs)
 
 try:
-    pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
-    pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
-    pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
+	while(True):
+		pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
+		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
+		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
 except KeyboardInterrupt:
-    pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
-    pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
-    pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
+    pwm.set_pwm(PWM_PORTS[0], 0, 995)
+    pwm.set_pwm(PWM_PORTS[1], 0, 995)
+    pwm.set_pwm(PWM_PORTS[2], 0, 995)
