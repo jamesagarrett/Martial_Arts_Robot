@@ -18,7 +18,7 @@ from helperFunctions import getCollinearDistance, getCartesianAngle
 
 ##Module to determine how the machine will reposition itself toward or
 ##away from the opponent.
-from maneuverAnalysis import calculateObjMovement, calculateOppMovement
+from maneuverAnalysis import calculateObjMovement
 
 ##Module for performing repositioning of the machine, based on sensor data 
 ##collection and analysis.

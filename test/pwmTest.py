@@ -13,7 +13,7 @@ import PCA9685
 pwm = PCA9685.PCA9685()
 
 pwm.set_pwm_freq(160)
-maxSpeed = 200
+maxSpeed = 325
 CCW_MIN = 1025
 CW_MIN = 965
 speedBoost = 0
@@ -92,21 +92,18 @@ for x in range (3):
         wheelPWMs[x] = 995
     elif(wheelSpeeds[x] > 0):
         wheelPWMs[x] = round(CCW_MIN + maxSpeed * wheelSpeeds[x])
-        if(x == 0):
-            wheelPWMs[x] += speedBoost
     else:
         wheelPWMs[x] = round(CW_MIN + maxSpeed * wheelSpeeds[x])
-        if(x == 0):
-            wheelPWMs[x] -= speedBoost
  
 print("Speeds: ", wheelSpeeds)
 print("PWMs: ", wheelPWMs)
-
+#90 deg, -10
+#270 deg, +20
 try:
 	while(True):
 		pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
-		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
-		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
+		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1]+00)
+		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2]-00)
 except KeyboardInterrupt:
     pwm.set_pwm(PWM_PORTS[0], 0, 995)
     pwm.set_pwm(PWM_PORTS[1], 0, 995)

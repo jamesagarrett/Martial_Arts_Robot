@@ -14,7 +14,7 @@ from helperFunctions import getCollinearDistance, getPathAngles
 
 ##Module for performing reposition of the machine, based on sensor data 
 ##collection and analysis.
-from repositionMachine import moveFromObject, moveToOpponent
+from repositionMachine import moveFromObject
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import ANGLE_ERR,\
