@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: July 13, 2021
+##  Last Updated: July 19, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -80,8 +80,8 @@ STOP_SPEED = floor((MIN_CCW_PWM + MIN_CW_PWM)/2)
 
 ##The desired value above MIN_CCW_PWM or below MIN_CW_PWM to be the 
 ##maximum speed for the wheels.
-MAX_SPEED = 200
-TURN_PERCENT = 0.50
+MAX_SPEED = 250
+TURN_PERCENT = 0.40
 MAX_CCW_PWM = round(MIN_CCW_PWM + MAX_SPEED * TURN_PERCENT)
 MAX_CW_PWM = round(MIN_CW_PWM - MAX_SPEED * TURN_PERCENT)
 
@@ -126,14 +126,14 @@ SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 36.0
+MAX_DISTANCE = 42.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 6.0
+OPP_DISTANCE = MAX_DISTANCE + 16.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS

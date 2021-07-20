@@ -2,12 +2,15 @@
 ##  James Garrett
 ##
 ##  helperFunctions.py
-##  Last Updated: July 17, 2021
+##  Last Updated: July 19, 2021
 ##
 ##  Functions used to assist in other modules within the project.
 ##
 
 from math import cos, pi, radians
+
+##THESE VALUES ARE NOT TO BE CHANGED!
+from globals import PATH_ZONE
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#

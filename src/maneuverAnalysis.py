@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 17, 2021
+##  Last Updated: July 19, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.

@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 17, 2021
+##  Last Updated: July 19, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -163,7 +163,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
     
-    for x in range (len(WHEELS)):
+    for x in range (3):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
@@ -302,7 +302,7 @@ def moveToOpponent():
 
     wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
 
-    for x in range (len(WHEELS)):
+    for x in range (3):
         if(wheelSpeeds[x] == 0):
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
