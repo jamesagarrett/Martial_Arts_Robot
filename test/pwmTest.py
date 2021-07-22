@@ -97,13 +97,12 @@ for x in range (3):
  
 print("Speeds: ", wheelSpeeds)
 print("PWMs: ", wheelPWMs)
-#90 deg, -10
-#270 deg, +20
+
 try:
 	while(True):
 		pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
-		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1]+00)
-		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2]-00)
+		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
+		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
 except KeyboardInterrupt:
     pwm.set_pwm(PWM_PORTS[0], 0, 995)
     pwm.set_pwm(PWM_PORTS[1], 0, 995)

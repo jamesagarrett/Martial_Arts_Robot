@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 19, 2021
+##  Last Updated: July 21, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -23,8 +23,6 @@ from globals import DES_OPP_ANGLE,\
                     FRONT_ANGLE_MAX,\
                     MACH_RADIUS,\
                     MAX_SPEED,\
-                    MAX_CCW_PWM,\
-                    MAX_CW_PWM,\
                     MIN_CCW_PWM,\
                     MIN_CW_PWM,\
                     PWM_FREQ,\
@@ -33,10 +31,10 @@ from globals import DES_OPP_ANGLE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
-                    SPEED_BOOST,\
                     SPEED_CONSTS,\
                     START_TICK,\
                     STOP_SPEED,\
+                    TURN_SPEED,\
                     WHEELS,\
                     WHEEL_DIRECTIONS 
 
@@ -168,12 +166,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
             wheelPWMs[x] = round(MIN_CCW_PWM + MAX_SPEED * wheelSpeeds[x])
-            if(x == 0):
-                wheelPWMs[x] += SPEED_BOOST
         else:
             wheelPWMs[x] = round(MIN_CW_PWM + MAX_SPEED * wheelSpeeds[x])
-            if(x == 0):
-                wheelPWMs[x] -= SPEED_BOOST
 
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
@@ -307,12 +301,8 @@ def moveToOpponent():
             wheelPWMs[x] = STOP_SPEED 
         elif(wheelSpeeds[x] > 0):
             wheelPWMs[x] = round(MIN_CCW_PWM + MAX_SPEED * wheelSpeeds[x])
-            if(x == 0):
-                wheelPWMs[x] += SPEED_BOOST
         else:
             wheelPWMs[x] = round(MIN_CW_PWM + MAX_SPEED * wheelSpeeds[x])
-            if(x == 0):
-                wheelPWMs[x] -= SPEED_BOOST
  
     watchAngles = getPathAngles(DES_OPP_ANGLE)
 
@@ -406,13 +396,13 @@ def rotateMachine(turnCW):
 
     try:
         if(turnCW):
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CW_PWM)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CW_PWM)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CW_PWM)
+            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MIN_CW_PWM - TURN_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MIN_CW_PWM - TURN_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MIN_CW_PWM - TURN_SPEED)
         else:
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MAX_CCW_PWM)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MAX_CCW_PWM)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MAX_CCW_PWM) 
+            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MIN_CCW_PWM + TURN_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MIN_CCW_PWM + TURN_SPEED)
+            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MIN_CCW_PWM + TURN_SPEED) 
 
         for scan in SENSOR.iter_scans():
         

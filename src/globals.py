@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: July 19, 2021
+##  Last Updated: July 21, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -78,15 +78,10 @@ MIN_CCW_PWM = 1025
 MIN_CW_PWM = 965
 STOP_SPEED = floor((MIN_CCW_PWM + MIN_CW_PWM)/2)
 
-##The desired value above MIN_CCW_PWM or below MIN_CW_PWM to be the 
-##maximum speed for the wheels.
+##The desired value above MIN_CCW_PWM or below MIN_CW_PWM to be the maximum and
+##turning speeds for the wheels.
 MAX_SPEED = 250
-TURN_PERCENT = 0.40
-MAX_CCW_PWM = round(MIN_CCW_PWM + MAX_SPEED * TURN_PERCENT)
-MAX_CW_PWM = round(MIN_CW_PWM - MAX_SPEED * TURN_PERCENT)
-
-##Additional speed value for wheel(s) with slower spin.
-SPEED_BOOST = 20
+TURN_SPEED = 100
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.
