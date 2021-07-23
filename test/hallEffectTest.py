@@ -68,6 +68,11 @@ try:
         time.sleep(0.05)
     pwm.set_pwm(PWM_PORT, 0, 995)
 
+    xMin = 0
+    xMax = max(max(wheelRPMsCCW), max(wheelRPMsCW)) + 50
+    yMin = CW_MIN - maxPWM - 20
+    yMax = CCW_MIN + maxPWM + 20
+
     c = np.polyfit(wheelRPMsCCW, wheelPWMsCCW, 2)
     y = [c[0]*x**2 + c[1]*x + c[2] for x in wheelRPMsCCW]
     for x in range(1, int(maxPWM/step + 1), 5):
@@ -75,7 +80,7 @@ try:
     eq = "CCW: P = %7.4f R^2 + %7.4f R + %9.4f" % (c[0], c[1], c[2])
     plot_CCW = plt.scatter(wheelRPMsCCW, wheelPWMsCCW, color='orange')
     plt.plot(wheelRPMsCCW, y, color='black')
-    plt.text(25, 475, eq, fontsize=6.5)
+    plt.text(xMin + 25, yMin + 75, eq, fontsize=6.5)
 
     for _ in range(2):
         print("\t===================================")
@@ -87,13 +92,13 @@ try:
     eq = "CW:   P = %7.4f R^2 + %7.4f R + %9.4f" % (c[0], c[1], c[2])
     plot_CW = plt.scatter(wheelRPMsCW, wheelPWMsCW, color='violet')
     plt.plot(wheelRPMsCW, y, color='black')
-    plt.text(25, 425, eq, fontsize=6.5)
+    plt.text(xMin + 25, yMin + 25, eq, fontsize=6.5)
 
     plt.title('{}{}{}'.format("Wheel ", PWM_PORT, " Graph"))
     plt.xlabel("RPM")
     plt.ylabel("PWM")
-    plt.xlim([0, max(max(wheelRPMsCCW), max(wheelRPMsCW)) + 50])
-    plt.ylim([CW_MIN - maxPWM - 20, CCW_MIN + maxPWM + 20])
+    plt.xlim([0, xMax])
+    plt.ylim([yMin, yMax])
     plt.legend([plot_CCW, plot_CW], ["Counter-Clockwise","Clockwise"])
     plt.show()
 
