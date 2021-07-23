@@ -16,8 +16,11 @@ maxPWM = 15
 inc = 5
 CCW_MIN = 1085 #25
 CW_MIN = 905 #65
-PWM_PORTS = [5, 7, 6]
-wheelRPMs = [[[0.0 for _ in range(int(maxPWM/inc)+1)] for _ in range(2)] for _ in range(3)]
+PWM_PORT = 5
+wheelRPMsCCW = [0.0] * int(maxPWM/inc) + 1
+wheelRPMsCW = [0.0] * int(maxPWM/inc) + 1
+wheelPWMsCCW = [1085]
+wheelPWMsCW = [905]
 
 def getRPM():
     revolvs = 10
@@ -40,45 +43,40 @@ def getRPM():
     print(average)
     return average
 
-funcCCW = [1085]
-funcCW = [905]
+try:    
+    input('{}{}'.format("CCW Wheel ", PWM_PORT))
+    for z in range(inc, maxPWM + inc, inc):
+        pwm.set_pwm(PWM_PORT, 0, CCW_MIN + z)
+        time.sleep(0.1)
+        wheelRPMsCCW[int(z/inc)] = getRPM()
+        wheelPWMsCCW.append(CCW_MIN + z)
 
-try:
-    for x in range (1):
-    
-        input('{}{}'.format("CCW Wheel ", x+1))
-        for z in range(inc, maxPWM + inc, inc):
-            pwm.set_pwm(PWM_PORTS[x], 0, CCW_MIN + z)
-            time.sleep(0.1)
-            wheelRPMs[x][0][int(z/inc)] = getRPM()
-            funcCCW.append(CCW_MIN + z)
+    for z in range(CCW_MIN + maxPWM, CCW_MIN - inc, -1 * inc):
+        pwm.set_pwm(PWM_PORT, 0, z)
+        time.sleep(0.1)
+    pwm.set_pwm(PWM_PORT, 0, 995)
 
-        pwm.set_pwm(PWM_PORTS[x], 0, 995)
+    input('{}{}'.format("CW Wheel ", PWM_PORT))
+    for z in range(inc , maxPWM + inc, inc):
+        pwm.set_pwm(PWM_PORT, 0, CW_MIN - z)
+        time.sleep(0.1)
+        wheelRPMsCW[int(z/inc)] = getRPM()
+        wheelPWMsCW.append(CW_MIN - z)
 
-        input('{}{}'.format("CW Wheel ", x+1))
-        for z in range(inc , maxPWM + inc, inc):
-            pwm.set_pwm(PWM_PORTS[x], 0, CW_MIN - z)
-            time.sleep(0.1)
-            wheelRPMs[x][1][int(z/inc)] = getRPM()
-            funcCW.append(CW_MIN - z)
+    for z in range(CW_MIN - maxPWM, CW_MIN + inc, inc):
+        pwm.set_pwm(PWM_PORT, 0, z)
+        time.sleep(0.1)
+    pwm.set_pwm(PWM_PORT, 0, 995)
 
-        pwm.set_pwm(PWM_PORTS[x], 0, 995)
-
-    for x in range (1):
-        for y in range (2):
-            print(wheelRPMs[x][y])
-	
-    c = np.polyfit(wheelRPMs[0][0], funcCCW, 2)
-    print(funcCCW, "\n")
+    c = np.polyfit(wheelRPMsCCW, wheelPWMsCCW, 2)
+    print("\n", wheelRPMsCCW, "\n", wheelPWMsCCW, "\n")
     print("\nP = %.3f * R^2 + %.3f * R + %.3f\n" % (c[0], c[1], c[2]))
-    c = np.polyfit(wheelRPMs[0][1], funcCW, 2)
-    print(funcCW, "\n")
+    c = np.polyfit(wheelRPMsCW, wheelPWMsCW, 2)
+    print("\n", wheelRPMsCW, "\n", wheelPWMsCW, "\n")
     print("\nP = %.3f * R^2 + %.3f * R + %.3f\n" % (c[0], c[1], c[2]))
 
     GPIO.cleanup()
 except KeyboardInterrupt:
-    pwm.set_pwm(PWM_PORTS[0], 0, 995)
-    pwm.set_pwm(PWM_PORTS[1], 0, 995)
-    pwm.set_pwm(PWM_PORTS[2], 0, 995)
+    pwm.set_pwm(PWM_PORT, 0, 995)
     GPIO.cleanup()
 
