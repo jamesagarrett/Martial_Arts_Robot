@@ -15,8 +15,8 @@ GPIO.setwarnings(False)
 pwm.set_pwm_freq(160)
 maxPWM = 500
 step = 5
-CCW_MIN = 1080 25
-CW_MIN = 910 65
+CCW_MIN = 1080 #25
+CW_MIN = 910 #65
 PWM_PORT = 5
 wheelRPMsCCW = [0.0] * int(maxPWM/step + 1)
 wheelRPMsCW = [0.0] * int(maxPWM/step + 1)
