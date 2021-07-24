@@ -13,11 +13,11 @@ GPIO.setup(hallPin, GPIO.IN)
 GPIO.setwarnings(False)
 
 pwm.set_pwm_freq(160)
-maxPWM = 500
-step = 5
-CCW_MIN = 1080 #25
-CW_MIN = 910 #65
 PWM_PORT = 5
+maxPWM = 500 
+step = 5
+CCW_MIN = 1030#6 1040 7 1060 5 1030
+CW_MIN = 965#6 950 7 935 5 965
 wheelRPMsCCW = [0.0] * int(maxPWM/step + 1)
 wheelRPMsCW = [0.0] * int(maxPWM/step + 1)
 wheelPWMsCCW = [CCW_MIN]
@@ -53,7 +53,7 @@ try:
 
     for z in range(CCW_MIN + maxPWM, CCW_MIN - step, -1 * step):
         pwm.set_pwm(PWM_PORT, 0, z)
-        time.sleep(0.05)
+        time.sleep(0.1)
     pwm.set_pwm(PWM_PORT, 0, 995)
 
     input('{}{}'.format("CW Wheel ", PWM_PORT))
@@ -65,7 +65,7 @@ try:
 
     for z in range(CW_MIN - maxPWM, CW_MIN + step, step):
         pwm.set_pwm(PWM_PORT, 0, z)
-        time.sleep(0.05)
+        time.sleep(0.1)
     pwm.set_pwm(PWM_PORT, 0, 995)
 
     xMin = 0
@@ -106,4 +106,5 @@ try:
 except KeyboardInterrupt:
     pwm.set_pwm(PWM_PORT, 0, 995)
     GPIO.cleanup()
+    print("\n")
 
