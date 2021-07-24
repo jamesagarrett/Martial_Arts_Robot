@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: July 21, 2021
+##  Last Updated: July 24, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -36,18 +36,12 @@ import PCA9685
 ##      2.  Testing is performed and determines other default values are more
 ##          practical.
 
-##Global objects for the LIDAR sensor and pwm driver breakout board.
+##Global objects for the LIDAR sensor and PWM driver breakout board.
 SENSOR  = adafruit_rplidar.RPLidar(None, '/dev/ttyUSB0')
 WHEELS = PCA9685.PCA9685()
 
 ##Any distance measurements are in inches.
 ##Any angular measurements are in degrees.
-
-##The pwm frequency used for driving the wheels.
-PWM_FREQ = 160
-
-##The pin location of each wheel on the pwm breakout board.
-PWM_PORTS = [7, 5, 6]
 
 ##The physical angular location of each wheel on the machine.
 WHEEL_LOCATIONS = [210, 330, 90]
@@ -67,21 +61,32 @@ sin(radians(WHEEL_DIRECTIONS[0])) - sin(radians(WHEEL_DIRECTIONS[2])),
 cos(radians(WHEEL_DIRECTIONS[1])) - cos(radians(WHEEL_DIRECTIONS[2])),
 sin(radians(WHEEL_DIRECTIONS[1])) - sin(radians(WHEEL_DIRECTIONS[2]))]
 
+##The PWM frequency used for driving the wheels.
+PWM_FREQ = 160
+
+##The pin location of each wheel on the PWM breakout board.
+PWM_PORTS = [7, 5, 6]
+
 ##The tick value in which the signal to the wheels transitions low to high.
 START_TICK = 0
 
-##The tick values in which the signal to the wheels transitioning from high to 
-##low will result in no movement. Any value above MIN_CCW_PWM or below 
-##MIN_CW_PWM will result in movement by the wheels. STOP_SPEED is the mean of
-##these values.
-MIN_CCW_PWM = 1025
-MIN_CW_PWM = 965
-STOP_SPEED = floor((MIN_CCW_PWM + MIN_CW_PWM)/2)
+##The tick values in which the signal to any wheel transitioning from high to 
+##low will result in no movement. 
+STOP_TICK = 1000
 
-##The desired value above MIN_CCW_PWM or below MIN_CW_PWM to be the maximum and
-##turning speeds for the wheels.
-MAX_SPEED = 250
-TURN_SPEED = 100
+##Wheel RPM speeds that will be used for determining PWM values for repositioning.
+MAX_SPEED = 200 #562.5 max
+TURN_SPEED = 75
+
+##The coefficients for the quadratic equations used to determine the correct PWM
+##values for each wheel based on a given RPM speed.
+CCW_COEFS = [[-0.0002, 1.3091, 1051.4177],
+             [-0.0001, 1.2512, 1028.5241],
+             [-0.0000, 1.3511, 1027.8794]]
+
+CW_COEFS = [[0.0003, -1.3877, 958.0234],
+            [0.0000, -1.2198, 968.0393],
+            [0.0001, -1.3325, 963.6987]]
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.

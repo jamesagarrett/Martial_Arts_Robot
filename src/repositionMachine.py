@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 21, 2021
+##  Last Updated: July 24, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -18,13 +18,13 @@ from helperFunctions import getCollinearDistance, getCartesianAngle, getPathAngl
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 
-from globals import DES_OPP_ANGLE,\
+from globals import CCW_COEFS,\
+                    CW_COEFS,\
+                    DES_OPP_ANGLE,\
                     FRONT_ANGLE_MIN,\
                     FRONT_ANGLE_MAX,\
                     MACH_RADIUS,\
                     MAX_SPEED,\
-                    MIN_CCW_PWM,\
-                    MIN_CW_PWM,\
                     PWM_FREQ,\
                     PWM_PORTS,\
                     SENSOR,\
@@ -33,7 +33,7 @@ from globals import DES_OPP_ANGLE,\
                     SNS_OPT_DISTANCE,\
                     SPEED_CONSTS,\
                     START_TICK,\
-                    STOP_SPEED,\
+                    STOP_TICK,\
                     TURN_SPEED,\
                     WHEELS,\
                     WHEEL_DIRECTIONS 
@@ -48,12 +48,49 @@ from globals import DES_OPP_ANGLE,\
 #########################################
 
 ## ********************************************************
+## name:      calculatePWM
+## called by: repositionMachine.moveFromObject()
+##                              moveToOpponent()
+##                              rotateMachine()
+## passed:    int x, float abs(wheelSpeed * MAX_SPEED),
+##            bool True/False
+## returns:   int pwm
+## calls:     nothing
+##
+## Calculates the appropriate PWM output value based on   *
+## the desired RPM value for the specified wheel and      *
+## direction.                                             *      
+## ********************************************************
+def calculatePWM(wheel, rpm, spinCCW):
+    #####################################
+    ##
+    ##  VARIABLE DECLARATION
+    ##
+    #####################################
+
+    pwm = 0     ##The corresponding PWM value for the given wheel RPM.
+    
+    #####################################
+
+    if(spinCCW):
+        pwm = CCW_COEFS[wheel][0] * rpm**2 \
+            + CCW_COEFS[wheel][1] * rpm \
+            + CCW_COEFS[wheel][2]
+    else:
+        pwm = CW_COEFS[wheel][0] * rpm**2 \
+            + CW_COEFS[wheel][1] * rpm \
+            + CW_COEFS[wheel][2]
+    
+    return round(pwm)
+
+## ********************************************************
 ## name:      moveFromObject
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int maneuverAngle, float maneuverDistance,
 ##            float moveObjDistance, int[] pathAngles 
 ## returns:   nothing
-## calls:     helperFunctions.getCartesianAngle()
+## calls:     repositionMachine.calculatePWM()
+##            helperFunctions.getCartesianAngle()
 ##
 ## Repositions the machine away from any object considered*
 ## too close, at the specified angular location and       *     
@@ -114,7 +151,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                                    ##values greater than 0 mean ccw machine
                                    ##rotation, less than zero, cw rotation.
 
-    wheelPWMs = [0]*3              ##The pwm output values for each wheel.
+    wheelPWMs = [0]*3              ##The PWM output values for each wheel.
 
     doneMoving = False             ##Set to True if the new desired position is
                                    ##reached, or an object is detected too
@@ -163,11 +200,11 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     
     for x in range (3):
         if(wheelSpeeds[x] == 0):
-            wheelPWMs[x] = STOP_SPEED 
+            wheelPWMs[x] = STOP_TICK 
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = round(MIN_CCW_PWM + MAX_SPEED * wheelSpeeds[x])
+            wheelPWMs[x] = calculatePWM(x, wheelSpeeds[x] * MAX_SPEED, True)
         else:
-            wheelPWMs[x] = round(MIN_CW_PWM + MAX_SPEED * wheelSpeeds[x])
+            wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x] * MAX_SPEED), False)
 
     #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
     #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
@@ -227,7 +264,8 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 ## called by: sensorAnalysis.interpretData()
 ## passed:    nothing
 ## returns:   nothing
-## calls:     helperFunctions.getCartesianAngle(),
+## calls:     repositionMachine.calculatePWM()
+##            helperFunctions.getCartesianAngle(),
 ##                            getPathAngles()
 ##
 ## Repositions the machine towards the opponent at the    *
@@ -260,7 +298,7 @@ def moveToOpponent():
                                     ##machine rotation, less than zero, cw 
                                     ##rotation.
 
-    wheelPWMs = [0]*3               ##The pwm output values for each wheel.
+    wheelPWMs = [0]*3               ##The PWM output values for each wheel.
 
     watchAngles = []                ##Angular values that are in the path of the
                                     ##machine as it's moving that need to be
@@ -298,11 +336,11 @@ def moveToOpponent():
 
     for x in range (3):
         if(wheelSpeeds[x] == 0):
-            wheelPWMs[x] = STOP_SPEED 
+            wheelPWMs[x] = STOP_TICK
         elif(wheelSpeeds[x] > 0):
-            wheelPWMs[x] = round(MIN_CCW_PWM + MAX_SPEED * wheelSpeeds[x])
+            wheelPWMs[x] = calculatePWM(x, wheelSpeeds[x]*MAX_SPEED, True)
         else:
-            wheelPWMs[x] = round(MIN_CW_PWM + MAX_SPEED * wheelSpeeds[x])
+            wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x]*MAX_SPEED), False)
  
     watchAngles = getPathAngles(DES_OPP_ANGLE)
 
@@ -360,14 +398,15 @@ def moveToOpponent():
 # ********************************************************
 ## name:      rotateMachine
 ## called by: sensorAnalysis.interpretData()
-## passed:    int turningDirection
+## passed:    int turningCCW
 ## returns:   nothing
-## calls:     helperFunctions.getCartesianAngle(),
+## calls:     repositionMachine.calculatePWM()
+##            helperFunctions.getCartesianAngle(),
 ##                            getCollinearDistance()
 ##
 ## Rotate the machine to face the opponent.               *
 ## ********************************************************
-def rotateMachine(turnCW):
+def rotateMachine(turnCCW):
     
     #####################################
     ##
@@ -375,6 +414,8 @@ def rotateMachine(turnCW):
     ##
     #####################################
 
+    wheelPWMs = [0]*3               ##The PWM output values for each wheel.
+    
     doneMoving = False              ##Set to True once the machine is again 
                                     ##facing the opponent, or an object is 
                                     ##detected too close to the machine.
@@ -389,20 +430,21 @@ def rotateMachine(turnCW):
 
     #####################################
 
-    #if(turnCW):
-        #print("Maneuver: Direction - Clockwise\n")
-    #else:
+    #if(turnCCW):
         #print("Maneuver: Direction - Counter-Clockwise\n")
+    #else:
+        #print("Maneuver: Direction - Clockwise\n")
+
+    for x in range (3):
+        if(turnCCW):
+            calculatePWM(x, TURN_SPEED, True)
+        else:
+            calculatePWM(x, TURN_SPEED, False)
 
     try:
-        if(turnCW):
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MIN_CW_PWM - TURN_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MIN_CW_PWM - TURN_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MIN_CW_PWM - TURN_SPEED)
-        else:
-            WHEELS.set_pwm(PWM_PORTS[0], START_TICK, MIN_CCW_PWM + TURN_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[1], START_TICK, MIN_CCW_PWM + TURN_SPEED)
-            WHEELS.set_pwm(PWM_PORTS[2], START_TICK, MIN_CCW_PWM + TURN_SPEED) 
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, wheelPWMs[2])
 
         for scan in SENSOR.iter_scans():
         
@@ -423,9 +465,9 @@ def rotateMachine(turnCW):
                     break
     
             if(doneMoving):
-                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
                 break  
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
@@ -437,9 +479,9 @@ def rotateMachine(turnCW):
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
 

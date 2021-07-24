@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  sensorAnalysis.py
-##  Last Updated: July 19, 2021
+##  Last Updated: July 24, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -310,7 +310,7 @@ def interpretData(distanceValues):
         if(turningCCW or turningCW):
             print("Status: Not Centered")
             #print(activeAngles)
-            rotateMachine(turningCW)
+            rotateMachine(turningCCW)
         else:
             print("Status: No Opponent\n")
     else:

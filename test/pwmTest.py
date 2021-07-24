@@ -9,48 +9,33 @@ from math import sin, cos, radians
 # Import the PCA9685 module.
 import PCA9685
 
+def calculatePWM(wheel, rpm, spinCCW):
+    #####################################
+    ##
+    ##  VARIABLE DECLARATION
+    ##
+    #####################################
+
+    val = 0     ##The corresponding PWM value for the given wheel RPM.
+    
+    #####################################
+
+    if(spinCCW):
+        val = CCW_COEFS[wheel][0] * rpm**2 \
+            + CCW_COEFS[wheel][1] * rpm \
+            + CCW_COEFS[wheel][2]
+    else:
+        val = CW_COEFS[wheel][0] * rpm**2 \
+            + CW_COEFS[wheel][1] * rpm \
+            + CW_COEFS[wheel][2]
+    
+    return round(val)
+
 # Initialize the PCA9685 using the default address (0x40).
 pwm = PCA9685.PCA9685()
-
 pwm.set_pwm_freq(160)
-maxSpeed = 325
-CCW_MIN = 1025
-CW_MIN = 965
-speedBoost = 0
 
-#x = float(input("Speed: "))
-#y = float(input("Speed: "))
-#z = float(input("Speed: "))
-
-#while(x != 0 and y != 0 and z != 0):
-#	if(x > 0):
-#		speed1 = CCW_MIN + speedBoost + maxSpeed * x
-#	else:
-#		speed1 = CW_MIN - speedBoost + maxSpeed * x
-	
-#	if(y > 0):
-#		speed2 = CCW_MIN + maxSpeed * y
-#	else:
-#		speed2 = CW_MIN + maxSpeed * y
-	
-#	if(z > 0):
-#		speed3 = CCW_MIN + maxSpeed * z
-#	else:
-#		speed3 = CW_MIN + maxSpeed * z
-
-#	print(speed1, speed2, speed3)
-#	pwm.set_pwm(7, 0, math.floor(speed1))
-#	pwm.set_pwm(5, 0, math.floor(speed2))
-#	pwm.set_pwm(6, 0, math.floor(speed3))
-	
-#	x = float(input("Speed: "))
-#	y = float(input("Speed: "))
-#	z = float(input("Speed: "))
-
-#pwm.set_pwm(7, 0, 995)
-#pwm.set_pwm(5, 0, 995)
-#pwm.set_pwm(6, 0, 995)
-
+maxSpeed = 200
 wheelSpeeds = [0]*3             
 speedVars = [0]*2
 rotationCoeff = 0
@@ -89,13 +74,14 @@ wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
 
 for x in range (3):
     if(wheelSpeeds[x] == 0):
-        wheelPWMs[x] = 995
+        wheelPWMs[x] = 1000
     elif(wheelSpeeds[x] > 0):
-        wheelPWMs[x] = round(CCW_MIN + maxSpeed * wheelSpeeds[x])
+        wheelPWMs[x] = calculatePWM(x, wheelSpeeds[x]*maxSpeed, True)
     else:
-        wheelPWMs[x] = round(CW_MIN + maxSpeed * wheelSpeeds[x])
+        wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x]*maxSpeed), False)
  
 print("Speeds: ", wheelSpeeds)
+print("RPMs: ", abs(wheelSpeeds[0]*maxSpeed), abs(wheelSpeeds[1]*maxSpeed), abs(wheelSpeeds[2]*maxSpeed))
 print("PWMs: ", wheelPWMs)
 
 try:
@@ -104,6 +90,6 @@ try:
 		pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
 		pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
 except KeyboardInterrupt:
-    pwm.set_pwm(PWM_PORTS[0], 0, 995)
-    pwm.set_pwm(PWM_PORTS[1], 0, 995)
-    pwm.set_pwm(PWM_PORTS[2], 0, 995)
+    pwm.set_pwm(PWM_PORTS[0], 0, 1000)
+    pwm.set_pwm(PWM_PORTS[1], 0, 1000)
+    pwm.set_pwm(PWM_PORTS[2], 0, 1000)
