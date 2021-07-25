@@ -18,8 +18,8 @@ GPIO.setup(10, GPIO.IN)
 GPIO.setwarnings(False)
 
 def calculatePWM(wheel, rpm, spinCCW):
-    val = 0     ##The corresponding PWM value for the given wheel RPM.
-  
+    val = 0     
+    
     CCW_COEFS = [[-0.0002, 1.3091, 1051.4177],
                  [-0.0001, 1.2512, 1028.5241],
                  [-0.0000, 1.3511, 1027.8794]]
@@ -40,7 +40,7 @@ def calculatePWM(wheel, rpm, spinCCW):
     return round(val)
 
 def getRPM(pin):
-    revolvs = 10
+    revolvs = 5
     average = 0
 
     for _ in range (revolvs):
@@ -111,7 +111,7 @@ for x in range (3):
 pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
 pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
 pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
-time.sleep(0.25)
+time.sleep(0.1)
 
 for x in range (3):
     if (wantRPMs[x] < 5):

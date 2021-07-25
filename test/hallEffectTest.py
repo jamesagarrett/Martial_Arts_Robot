@@ -6,24 +6,24 @@ import PCA9685
 
 pwm = PCA9685.PCA9685()
 
-hallPin = 10 #7 21 5 04 6 10
+hallPin = 21 #7 21 5 04 6 10
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(hallPin, GPIO.IN)
 GPIO.setwarnings(False)
 
 pwm.set_pwm_freq(160)
-PWM_PORT = 6
-maxPWM = 500 
+PWM_PORT = 7
+maxPWM = 450 
 step = 5
-CCW_MIN = 1040#6 1040 7 1060 5 1030
-CW_MIN = 950#6 950 7 940 5 965
+CCW_MIN = 1060#6 1040 7 1060 5 1030
+CW_MIN = 940#6 950 7 940 5 965
 wheelRPMsCCW = [0.0] * int(maxPWM/step + 1)
 wheelRPMsCW = [0.0] * int(maxPWM/step + 1)
 wheelPWMsCCW = [CCW_MIN]
 wheelPWMsCW = [CW_MIN]
 
-def getRPM():
+def getRPM(pwmChange):
     revolvs = 10
     average = 0
 
@@ -40,7 +40,7 @@ def getRPM():
         average += revolution
 
     average /= revolvs
-    print(average)
+    print(pwmChange, average)
     return average
 
 try:    
@@ -48,7 +48,7 @@ try:
     for z in range(step, maxPWM + step, step):
         pwm.set_pwm(PWM_PORT, 0, CCW_MIN + z)
         time.sleep(0.1)
-        wheelRPMsCCW[int(z/step)] = getRPM()
+        wheelRPMsCCW[int(z/step)] = getRPM(x)
         wheelPWMsCCW.append(CCW_MIN + z)
 
     for z in range(CCW_MIN + maxPWM, CCW_MIN - step, -1 * step):
@@ -60,7 +60,7 @@ try:
     for z in range(step , maxPWM + step, step):
         pwm.set_pwm(PWM_PORT, 0, CW_MIN - z)
         time.sleep(0.1)
-        wheelRPMsCW[int(z/step)] = getRPM()
+        wheelRPMsCW[int(z/step)] = getRPM(x)
         wheelPWMsCW.append(CW_MIN - z)
 
     for z in range(CW_MIN - maxPWM, CW_MIN + step, step):
@@ -77,7 +77,7 @@ try:
     y = [c[0]*x**2 + c[1]*x + c[2] for x in wheelRPMsCCW]
     for x in range(1, int(maxPWM/step + 1), 5):
         print("\n", wheelRPMsCCW[x:x+5], "\n", wheelPWMsCCW[x:x+5], "\n")
-    eq = "CCW: P = %7.4f R^2 + %7.4f R + %9.4f" % (c[0], c[1], c[2])
+    eq = "CCW: P = %8.5f R^2 + %8.5f R + %10.5f" % (c[0], c[1], c[2])
     plot_CCW = plt.scatter(wheelRPMsCCW, wheelPWMsCCW, color='orange')
     plt.plot(wheelRPMsCCW, y, color='black')
     plt.text(xMin + 25, yMin + 75, eq, fontsize=6.5)
@@ -89,7 +89,7 @@ try:
     y = [c[0]*x**2 + c[1]*x + c[2] for x in wheelRPMsCW]
     for x in range(1, int(maxPWM/step + 1), 5):
         print("\n", wheelRPMsCW[x:x+5], "\n", wheelPWMsCW[x:x+5], "\n")
-    eq = "CW:   P = %7.4f R^2 + %7.4f R + %9.4f" % (c[0], c[1], c[2])
+    eq = "CW:   P = %8.5f R^2 + %8.5f R + %10.5f" % (c[0], c[1], c[2])
     plot_CW = plt.scatter(wheelRPMsCW, wheelPWMsCW, color='violet')
     plt.plot(wheelRPMsCW, y, color='black')
     plt.text(xMin + 25, yMin + 25, eq, fontsize=6.5)
