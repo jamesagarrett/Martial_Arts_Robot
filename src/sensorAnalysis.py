@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  sensorAnalysis.py
-##  Last Updated: July 24, 2021
+##  Last Updated: July 25, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -40,8 +40,8 @@ from globals import DES_OPP_ANGLE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPP_DISTANCE,\
                     START_TICK,\
-                    STOP_SPEED,\
-                    TOTAL_SCANS, \
+                    STOP_TICK,\
+                    TOTAL_SCANS,\
                     WHEELS
 
 #--------------------------------------  --------------------------------------#
@@ -361,9 +361,9 @@ def main():
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
 
