@@ -18,8 +18,8 @@ maxPWM = 460
 step = 5
 CCW_MIN = 1060#7 1060 5 1030 6 1040 
 CW_MIN = 940#7 940 5 965 6 950 
-wheelRPMsCCW = [0.0] * int(maxPWM/step)
-wheelRPMsCW = [0.0] * int(maxPWM/step)
+wheelRPMsCCW = []
+wheelRPMsCW = []
 wheelPWMsCCW = []
 wheelPWMsCW = []
 
@@ -29,7 +29,7 @@ def getRPM(pwmChange):
 
     for _ in range (revolvs):
         while(GPIO.input(hallPin) == True):
-            continues
+            continue
 
         while(GPIO.input(hallPin) == False):
             start = time.time()
@@ -48,7 +48,7 @@ try:
     for z in range(step, maxPWM + step, step):
         pwm.set_pwm(PWM_PORT, 0, CCW_MIN + z)
         time.sleep(0.1)
-        wheelRPMsCCW[int(z/step)] = getRPM(z)
+        wheelRPMsCCW.append(getRPM(z))
         wheelPWMsCCW.append(CCW_MIN + z)
 
     for z in range(CCW_MIN + maxPWM, CCW_MIN - step, -1 * step):
@@ -60,7 +60,7 @@ try:
     for z in range(step , maxPWM + step, step):
         pwm.set_pwm(PWM_PORT, 0, CW_MIN - z)
         time.sleep(0.1)
-        wheelRPMsCW[int(z/step)] = getRPM(z)
+        wheelRPMsCW.append(getRPM(z))
         wheelPWMsCW.append(CW_MIN - z)
 
     for z in range(CW_MIN - maxPWM, CW_MIN + step, step):
