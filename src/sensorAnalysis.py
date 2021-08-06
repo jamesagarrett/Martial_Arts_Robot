@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  sensorAnalysis.py
-##  Last Updated: July 25, 2021
+##  Last Updated: July 27, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -276,7 +276,7 @@ def interpretData(distanceValues):
 
     if(tooFar):
         print("Status: Too Far\n")
-        moveToOpponent()
+        #moveToOpponent()
 
         return
 

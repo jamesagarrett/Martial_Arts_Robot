@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: July 24, 2021
+##  Last Updated: July 27, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -75,18 +75,18 @@ START_TICK = 0
 STOP_TICK = 1000
 
 ##Wheel RPM speeds that will be used for determining PWM values for repositioning.
-MAX_SPEED = 200 #562.5 max
-TURN_SPEED = 75
+MAX_SPEED = 300 #562.5 max
+TURN_SPEED = 250#125
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
 ##values for each wheel based on a given RPM speed.
-CCW_COEFS = [[-0.0002, 1.3091, 1051.4177],
-             [-0.0001, 1.2512, 1028.5241],
-             [-0.0000, 1.3511, 1027.8794]]
+CCW_COEFS = [[-0.00025, 1.36191, 1044.37192],
+             [0.00004, 1.26774, 1028.70953],
+             [-0.00012, 1.48888, 1020.06205]]
 
-CW_COEFS = [[0.0003, -1.3877, 958.0234],
-            [0.0000, -1.2198, 968.0393],
-            [0.0001, -1.3325, 963.6987]]
+CW_COEFS = [[0.00029, -1.40433, 961.66443],
+            [0.00002, -1.25530, 968.15763],
+            [0.00028, -1.46364, 979.17510]]
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.

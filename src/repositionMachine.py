@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 24, 2021
+##  Last Updated: July 27, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -251,9 +251,9 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
             
@@ -373,9 +373,9 @@ def moveToOpponent():
                     break
 
             if(doneMoving):
-                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
                 break 
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
@@ -387,9 +387,9 @@ def moveToOpponent():
     except KeyboardInterrupt:
         clear()
         print("TERMINATING")
-        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+        WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+        WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
 
@@ -437,9 +437,9 @@ def rotateMachine(turnCCW):
 
     for x in range (3):
         if(turnCCW):
-            calculatePWM(x, TURN_SPEED, True)
+            wheelPWMs[x] = calculatePWM(x, TURN_SPEED, True)
         else:
-            calculatePWM(x, TURN_SPEED, False)
+            wheelPWMs[x] = calculatePWM(x, TURN_SPEED, False)
 
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])

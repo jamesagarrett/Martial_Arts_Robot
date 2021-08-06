@@ -6,7 +6,7 @@ import PCA9685
 
 pwm = PCA9685.PCA9685()
 
-hallPin = 21 #7 21 5 04 6 10
+hallPin = 4 #7 pin4 5 pin10 6 pin21
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(hallPin, GPIO.IN)
@@ -16,8 +16,8 @@ pwm.set_pwm_freq(160)
 PWM_PORT = 7
 maxPWM = 460 
 step = 5
-CCW_MIN = 1060#7 1060 5 1030 6 1040 
-CW_MIN = 940#7 940 5 965 6 950 
+CCW_MIN = 1050#7 1035 5 1030 6 1025 
+CW_MIN = 935#7 940 5 955 6 955 
 wheelRPMsCCW = []
 wheelRPMsCW = []
 wheelPWMsCCW = []
