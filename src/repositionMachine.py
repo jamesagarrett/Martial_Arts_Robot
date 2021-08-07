@@ -243,7 +243,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         SENSOR.connect()
 
     except KeyboardInterrupt:
-        clear()
+        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
@@ -376,7 +376,7 @@ def moveToOpponent():
         SENSOR.connect()    
 
     except KeyboardInterrupt:
-        clear()
+        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
@@ -463,7 +463,7 @@ def rotateMachine(turnCCW):
         SENSOR.connect()
 
     except KeyboardInterrupt:
-        clear()
+        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)

@@ -245,10 +245,9 @@ def interpretData(distanceValues):
         else:
             opponentAngle = DES_OPP_ANGLE
 
-        print("Status: Too Close\n")
+        #print("Status: Too Close\n")
         calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
         					  distanceValues)
-
         return
 
     ##Barring any objects too close to the machine, look for the opponent being
@@ -274,47 +273,45 @@ def interpretData(distanceValues):
             activeDistances.append(distanceValues[x])	
             tooFar = True	 
 
-    if(tooFar):
-        print("Status: Too Far\n")
-        moveToOpponent()
-
-        return
-
     ##Analyze turning only after determining nothing is too close or too far 
     ##from the machine.
-    if(not opponentFound):
-        turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
+    turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
         
-        for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
+    for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
 
-            adjustedDistance = getCollinearDistance(x, turnMid,
+        adjustedDistance = getCollinearDistance(x, turnMid,
+                                                SNS_MAX_DISTANCE)
+
+        if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
+            activeAngles.append(x)
+            turningCCW = True
+            
+    if(not turningCCW):
+            
+        turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
+
+        for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
+            
+            adjustedDistance = getCollinearDistance(x, turnMid, 
                                                     SNS_MAX_DISTANCE)
-
+                
             if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
                 activeAngles.append(x)
-                turningCCW = True
-            
-        if(not turningCCW):
-            
-            turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
+                turningCW = True
 
-            for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
-                
-                adjustedDistance = getCollinearDistance(x, turnMid, 
-                                                        SNS_MAX_DISTANCE)
-                
-                if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
-                    activeAngles.append(x)
-                    turningCW = True
-
+    if(not opponentFound):
         if(turningCCW or turningCW):
-            print("Status: Not Centered")
-            #print(activeAngles)
+            #print("Status: Not Centered\n")
             rotateMachine(turningCCW)
-        else:
-            print("Status: No Opponent\n")
-    else:
-        print("Status: Good\n")
+            return
+        elif(tooFar):
+            #print("Status: Too Far\n")
+            moveToOpponent()
+            return
+        #else:
+    #        print("Status: No Opponent\n")
+    #else:
+    #    print("Status: Good\n")
 
     return
 
@@ -346,6 +343,7 @@ def main():
     
     #####################################
     
+    clear()
     input("PRESS <ENTER> TO BEGIN")
     WHEELS.set_pwm_freq(PWM_FREQ)
     
@@ -359,7 +357,7 @@ def main():
             collectData()
 
     except KeyboardInterrupt:
-        clear()
+        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)

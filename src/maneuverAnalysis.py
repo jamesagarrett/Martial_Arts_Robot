@@ -117,8 +117,8 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        #print("Maneuver: CAN'T MOVE\n")
-        #print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        print("Maneuver: CAN'T MOVE\n")
+        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value
@@ -184,8 +184,8 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
                               MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
     oppInRange = SNS_MIN_DISTANCE <= newOppDistance <= SNS_MAX_DISTANCE
-
-    if(clearPath and oppInRange):
+    objInRange = SNS_MIN_DISTANCE <= moveObjDistance - maneuverDistance    
+    if(clearPath and objInRange):# and oppInRange):
         maneuverFound = True
     else:
         ##Check SUF_DISTANCE maneuverability.
@@ -200,8 +200,8 @@ def calculateObjMovement(objAngles, objDistances, oppAngle, allDistances):
                                   MACH_RADIUS, maneuverDistance + MACH_RADIUS)
 
         oppInRange = SNS_MIN_DISTANCE <= newOppDistance <= SNS_MAX_DISTANCE
-
-        if(clearPath and oppInRange):
+        objInRange = SNS_MIN_DISTANCE <= moveObjDistance - maneuverDistance    
+        if(clearPath and objInRange):#and oppInRange):
             maneuverFound = True
         
         else:

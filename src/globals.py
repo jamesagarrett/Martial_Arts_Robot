@@ -75,19 +75,11 @@ START_TICK = 0
 STOP_TICK = 1000
 
 ##Wheel RPM speeds that will be used for determining PWM values for repositioning.
-MAX_SPEED = 150 #562.5 max
-TURN_SPEED = 75
+MAX_SPEED = 175 #562.5 max
+TURN_SPEED = 80
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
 ##values for each wheel based on a given RPM speed.
-CCW_COEFS = [[-0.00025, 1.36191, 1044.37192],
-             [0.00004, 1.26774, 1028.70953],
-             [-0.00012, 1.48888, 1020.06205]]
-
-CW_COEFS = [[0.00029, -1.40433, 961.66443],
-            [0.00002, -1.25530, 968.15763],
-            [0.00028, -1.46364, 979.17510]]
-
 CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
              [0.00006, 1.12871, 1017.63192],
              [0.00007, 1.09813, 1015.55372]]
@@ -102,8 +94,8 @@ TOTAL_SCANS = 4
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
-FRONT_ANGLE_MIN = 240
-FRONT_ANGLE_MAX = 299
+FRONT_ANGLE_MIN = 245
+FRONT_ANGLE_MAX = 294
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
@@ -112,13 +104,13 @@ DES_OPP_ANGLE = ceil((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 ##The positions of the opponent in which the machine will turn to face them, are
 ##considered to be within these angular ranges.
 LEFT_TURN_ANGLE_MIN = 180
-LEFT_TURN_ANGLE_MAX = 239
-RIGHT_TURN_ANGLE_MIN = 300
+LEFT_TURN_ANGLE_MAX = 244
+RIGHT_TURN_ANGLE_MIN = 295
 RIGHT_TURN_ANGLE_MAX = 359
 
 ##The distance from the perimeter of the sensor to the outside of the machine 
 ##wheels; note: NOT to the machine frame.
-MACH_RADIUS = 20.0
+MACH_RADIUS = 18.0
 
 ##The number of angles permitted beyond any given angle that all have an 
 #associated distance that is unknown - value of 0 - or is less than or equal to 
@@ -127,14 +119,14 @@ ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 8.0
+MIN_DISTANCE = 12.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 30.0
+MAX_DISTANCE = 36.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
@@ -153,11 +145,11 @@ PATH_ZONE = 90
 
 ##The optimal and preferred distance for the machine to be from any given 
 ##object, including the opponent.
-OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/2
+OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/1.7
 
 ##The optimal distance sensor reading.
 SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
 
 ##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
 ##repositioning.
-SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/1.5
+SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/3
