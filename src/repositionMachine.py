@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: July 27, 2021
+##  Last Updated: August 6, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -123,10 +123,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     stopDist = 0                   ##The current value being added to 
                                    ##stopDistances.
 
-    objectDistances = \
-        [objectDistance]           ##The distance of the object being moved 
-                                   ##toward for each stopAngles value.
-
     angleBound = 0                 ##The angle with respect to repositionAngle
                                    ##in which the x-coordinate boundary - 
                                    ##MACH_RADIUS - and y-coordinate boundary - 
@@ -170,7 +166,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    angleBound = floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
+    angleBound = 5#floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
 
     for x in range(1, angleBound + 1):
         stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])
@@ -206,9 +202,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         else:
             wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x] * MAX_SPEED), False)
 
-    #print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    #print("Watch:\n", watchAngles, "\n\nStop:\n", stopAngles)
-
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -232,14 +225,15 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
                 index = bisect_left(stopAngles, angle)
 
-                if(MACH_RADIUS < distance <= stopDistances[index]):
-                    doneMoving = True
-                    break
+                if(index < len(stopAngles) and angle == stopAngles[index]):
+                    if(MACH_RADIUS < distance <= stopDistances[index]):
+                        doneMoving = True
+                        break
 
             if(doneMoving):
-                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_SPEED)
-                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_SPEED)
+                WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
+                WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
                 break
 
         ##Prevents adafruit_rplidar.py runtime error when attempting to collect
@@ -344,9 +338,6 @@ def moveToOpponent():
  
     watchAngles = getPathAngles(DES_OPP_ANGLE)
 
-    print("Wheels: ", wheelSpeeds, wheelPWMs, "\n")
-    #print("Watch:\n", watchAngles)
-
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -429,11 +420,6 @@ def rotateMachine(turnCCW):
     clear = lambda:system('clear')  ##Used for clearing the terminal screen.
 
     #####################################
-
-    #if(turnCCW):
-        #print("Maneuver: Direction - Counter-Clockwise\n")
-    #else:
-        #print("Maneuver: Direction - Clockwise\n")
 
     for x in range (3):
         if(turnCCW):

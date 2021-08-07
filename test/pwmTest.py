@@ -21,11 +21,11 @@ GPIO.setwarnings(False)
 def calculatePWM(wheel, rpm, spinCCW):
     val = 0     
     
-    CCW_COEFS = [[-0.00008, 1.24511, 1023.03103],
+    CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
                  [0.00006, 1.12871, 1017.63192],
                  [0.00007, 1.09813, 1015.55372]]
 
-    CW_COEFS = [[0.00001, -1.17093, 963.06060],
+    CW_COEFS = [[0.00001, -1.14710, 965.04630],
                 [-0.00002, -1.11866, 976.48713],
                 [-0.00007, -1.09435, 973.99764]]
 
@@ -67,7 +67,7 @@ def getRPM(pin):
         pwm.set_pwm(PWM_PORTS[2], 0, 1000)
         quit()
 	
-maxSpeed = 200
+maxSpeed = 250
 wheelSpeeds = [0]*3             
 speedVars = [0]*2
 rotationCoeff = 0
@@ -75,7 +75,7 @@ wheelPWMs = [0]*3
 wantRPMs = [0]*3
 realRPMs = [0]*3
 errRPMs = [0]*3
-pins = [10, 21, 4]
+pins = [4, 10, 21]
 
 WHEEL_LOCATIONS = [210, 330, 90]
 

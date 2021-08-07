@@ -16,8 +16,8 @@ pwm.set_pwm_freq(160)
 PWM_PORT = 7
 maxPWM = 460 
 step = 5
-CCW_MIN = 1050#7 1035 5 1030 6 1025 
-CW_MIN = 935#7 940 5 955 6 955 
+CCW_MIN = 1045#7 1045 5 1030 6 1025 
+CW_MIN = 940#7 940 5 955 6 955 
 wheelRPMsCCW = []
 wheelRPMsCW = []
 wheelPWMsCCW = []

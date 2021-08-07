@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: July 27, 2021
+##  Last Updated: August 6, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -75,8 +75,8 @@ START_TICK = 0
 STOP_TICK = 1000
 
 ##Wheel RPM speeds that will be used for determining PWM values for repositioning.
-MAX_SPEED = 300 #562.5 max
-TURN_SPEED = 250#125
+MAX_SPEED = 150 #562.5 max
+TURN_SPEED = 75
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
 ##values for each wheel based on a given RPM speed.
@@ -87,6 +87,14 @@ CCW_COEFS = [[-0.00025, 1.36191, 1044.37192],
 CW_COEFS = [[0.00029, -1.40433, 961.66443],
             [0.00002, -1.25530, 968.15763],
             [0.00028, -1.46364, 979.17510]]
+
+CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
+             [0.00006, 1.12871, 1017.63192],
+             [0.00007, 1.09813, 1015.55372]]
+
+CW_COEFS = [[0.00001, -1.14710, 965.04630],
+            [-0.00002, -1.11866, 976.48713],
+            [-0.00007, -1.09435, 973.99764]]
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.
@@ -119,14 +127,14 @@ ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 1.0
+MIN_DISTANCE = 8.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
 
 ##The maximum permitted distance for the machine to be from the opponent it is 
 ##tracking.
-MAX_DISTANCE = 42.0
+MAX_DISTANCE = 30.0
 
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
@@ -145,11 +153,11 @@ PATH_ZONE = 90
 
 ##The optimal and preferred distance for the machine to be from any given 
 ##object, including the opponent.
-OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/3
+OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/2
 
 ##The optimal distance sensor reading.
 SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
 
 ##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
 ##repositioning.
-SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/2
+SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/1.5
