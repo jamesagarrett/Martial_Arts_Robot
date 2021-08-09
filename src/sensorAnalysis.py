@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  sensorAnalysis.py
-##  Last Updated: August 6, 2021
+##  Last Updated: August 8, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -182,10 +182,10 @@ def interpretData(distanceValues, lastCCW, lastCW):
     turnMid = 0                 ##The midpoint of both the left and right turn
                                 ##angles min/max values.
 
-    turningCW = False           ##Set to True if the machine detects the 
+    turningCW = 0               ##Set to True if the machine detects the 
                                 ##opponent too far left of center.
 
-    turningCCW = False          ##Set to True if the machine detects the 
+    turningCCW = 0              ##Set to True if the machine detects the 
                                 ##opponent too far right of center. 
 
     #####################################
@@ -231,7 +231,7 @@ def interpretData(distanceValues, lastCCW, lastCW):
     if(tooClose):
         #print("Status: Too Close\n")
         calculateObjMovement(activeAngles, activeDistances, distanceValues)
-        return False, False
+        return 0, 0
 
     ##Barring any objects too close to the machine, look for the opponent being
     ##too far away. getCollinearDistance() is used here as to allow the opponent
@@ -267,48 +267,47 @@ def interpretData(distanceValues, lastCCW, lastCW):
 
         if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
             activeAngles.append(x)
-            turningCCW = True
+            turningCCW = 1
             
-    if(not turningCCW):
-            
-        turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
+    turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
 
-        for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
+    for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
             
-            adjustedDistance = getCollinearDistance(x, turnMid, 
-                                                    SNS_MAX_DISTANCE)
+        adjustedDistance = getCollinearDistance(x, turnMid, 
+                                                SNS_MAX_DISTANCE)
                 
-            if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
-                activeAngles.append(x)
-                turningCW = True
+        if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
+            activeAngles.append(x)
+            turningCW = 1
 
+    #print(lastCCW, lastCW)
     if(not opponentFound):
-        if(lastCCW and lastCW):
+        if(lastCCW > 1 and lastCW > 1):
             if(tooFar):
                 moveToOpponent()
             elif(turningCCW):
                 rotateMachine(True)
             elif(turningCW):
                 rotateMachine(False)
-            return False, False
+            return 0, 0
 
-        elif(lastCCW):
+        elif(lastCCW > 1):
             if(turningCW):
                 rotateMachine(False)
             elif(tooFar):
                 moveToOpponent()
             elif(turningCCW):
                 rotateMachine(True)
-            return False, False
+            return 0, 0
 
-        elif(lastCW):
+        elif(lastCW > 1):
             if(turningCCW):
                 rotateMachine(True)
             elif(tooFar):
                 moveToOpponent()
             elif(turningCW):
                 rotateMachine(False)
-            return False, False
+            return 0, 0
 
         else:
             if(turningCCW):
@@ -317,9 +316,9 @@ def interpretData(distanceValues, lastCCW, lastCW):
                 rotateMachine(False)
             elif(tooFar):
                 moveToOpponent()
-            return False, False
+            return 0, 0
 
-    return turningCCW, turningCW
+    return lastCCW * turningCCW + turningCCW, lastCW * turningCW + turningCW
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -347,7 +346,7 @@ def main():
     reset = 0                           ##Determines when to clear the terminal
                                         ##screen.
     
-    lastCCW = lastCW = None             ##Keep track of the turning statuses
+    lastCCW = lastCW = 0                ##Keep track of the turning statuses
                                         ##from the last iteration of analyzing
                                         ##sensor data.
 
@@ -359,7 +358,7 @@ def main():
     
     try:
         while(True):
-            if(reset % 10 == 0):
+            if(reset % 100 == 0):
                 clear()
                 reset = 0
             reset += 1

@@ -76,7 +76,7 @@ STOP_TICK = 1000
 
 ##Wheel RPM speeds that will be used for determining PWM values for
 ##repositioning.
-MAX_SPEED = 175 #562.5 max
+MAX_SPEED = 200 #562.5 max
 TURN_SPEED = 80
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
@@ -95,8 +95,8 @@ TOTAL_SCANS = 4
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
-FRONT_ANGLE_MIN = 245
-FRONT_ANGLE_MAX = 294
+FRONT_ANGLE_MIN = 250
+FRONT_ANGLE_MAX = 289
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
@@ -105,13 +105,13 @@ DES_OPP_ANGLE = round((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 ##The positions of the opponent in which the machine will turn to face them, are
 ##considered to be within these angular ranges.
 LEFT_TURN_ANGLE_MIN = 180
-LEFT_TURN_ANGLE_MAX = 244
-RIGHT_TURN_ANGLE_MIN = 295
+LEFT_TURN_ANGLE_MAX = 249
+RIGHT_TURN_ANGLE_MIN = 290
 RIGHT_TURN_ANGLE_MAX = 359
 
 ##The distance from the perimeter of the sensor to the outside of the machine 
 ##wheels; note: NOT to the machine frame.
-MACH_RADIUS = 18.0
+MACH_RADIUS = 19.0
 
 ##The number of angles permitted beyond any given angle that all have an 
 #associated distance that is unknown - value of 0 - or is less than or equal to 
@@ -120,7 +120,7 @@ ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 12.0
+MIN_DISTANCE = 7.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
@@ -132,9 +132,20 @@ MAX_DISTANCE = 36.0
 ##The maximum permitted distance sensor reading.
 SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
 
+##The optimal and preferred distance for the machine to be from any given 
+##object, including the opponent.
+OPT_DISTANCE = 24.0
+
+##The optimal distance sensor reading.
+SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
+
+##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
+##repositioning.
+SUF_DISTANCE = 14.0
+
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 16.0
+OPP_DISTANCE = MAX_DISTANCE + 18.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
@@ -144,13 +155,4 @@ SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
 ##repositioning.
 PATH_ZONE = 90
 
-##The optimal and preferred distance for the machine to be from any given 
-##object, including the opponent.
-OPT_DISTANCE = (MAX_DISTANCE + MIN_DISTANCE)/1.7
 
-##The optimal distance sensor reading.
-SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
-
-##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
-##repositioning.
-SUF_DISTANCE = (OPT_DISTANCE + MIN_DISTANCE)/3

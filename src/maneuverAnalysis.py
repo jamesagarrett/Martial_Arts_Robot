@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: July 19, 2021
+##  Last Updated: August 8, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -107,8 +107,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        print("Maneuver: CAN'T MOVE\n")
-        print("Active Angles:\n\n", objAngles, "\n\nActive Distances:\n\n", objDistances, "\n\n")
+        #print("Maneuver: CAN'T MOVE\n")
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value
