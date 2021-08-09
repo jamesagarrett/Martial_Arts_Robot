@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: August 8, 2021
+##  Last Updated: August 9, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -23,7 +23,6 @@ from globals import ANGLE_ERR,\
                     PATH_ZONE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
-                    SNS_OPT_DISTANCE,\
                     SUF_DISTANCE
 
 #--------------------------------------  --------------------------------------#

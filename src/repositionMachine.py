@@ -14,7 +14,8 @@ from bisect import bisect_left
 from os import system
 
 ##Module that includes functions that are used throughout the project.
-from helperFunctions import getCollinearDistance, getCartesianAngle, getPathAngles
+from helperFunctions import getCollinearDistance, getCartesianAngle,\
+                            getPathAngles
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 
