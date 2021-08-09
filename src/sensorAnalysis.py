@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  sensorAnalysis.py
-##  Last Updated: August 8, 2021
+##  Last Updated: August 9, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -56,15 +56,15 @@ from globals import DES_OPP_ANGLE,\
 ## ********************************************************
 ## name:      collectData
 ## called by: sensorAnalysis.main()
-## passed:    nothing
-## returns:   nothing
+## passed:    int lastFar, int lastCCW, lastCW 
+## returns:   int lastFar, int lastCCW, lastCW 
 ## calls:     sensorAnalysis.interpretData()
 ##            helperFunctions.getCartesianAngle()
 ##
 ## Retrieve sensor readings and store all angles and	  *
 ## associated distances.                                  *
 ## ********************************************************
-def collectData(lastCCW, lastCW):
+def collectData(lastFar, lastCCW, lastCW):
 
     #####################################
     ##
@@ -78,14 +78,6 @@ def collectData(lastCCW, lastCW):
     cartAngle = 0               ##The angle measurement returned from 
                                 ##getCartesianAngle().
     
-    distancesCount = 0          ##The amount of measured sensor distances from
-                                ##the current iteration of the distance 
-                                ##collection loop. 
-
-    listStartPnt = 0            ##The position in sensorDistances to begin 
-                                ##iterating when manually entering values; done
-                                ##when the sensor cannot read a value by itself.
-    
     #####################################
     
     for i, scan in enumerate(SENSOR.iter_scans(), start=1):
@@ -93,22 +85,21 @@ def collectData(lastCCW, lastCW):
         ##Collect and store sensor data. Distances are stored in such a way
         ##that the corresponding index for each value represents its angle on
         ##the standard Cartesian plane. Due to the clockwise rotation of the 
-        ##sensor, values are also initially read in this manner before being 
-        ##adjusted here. Distances are converted from millimeters to inches.
+        ##sensor, values are also read in clockwise before being adjusted here.
+        ##Distances are converted from millimeters to inches.
         for (_, angle, distance) in scan:
-            if(distance <= 0.0):
+            if(distance == 0.0):
                 continue
 
             cartAngle = getCartesianAngle(floor(angle))
             if(sensorDistances[cartAngle] > 0.0):
                 cartAngle = getCartesianAngle(ceil(angle))
                 if(sensorDistances[cartAngle] > 0.0):
-                    continue
+                    cartAngle = getCartesianAngle(round(angle))
 
-            distancesCount += 1
             sensorDistances[cartAngle] = distance * 0.0393
 
-        if(i == TOTAL_SCANS or distancesCount == 360):
+        if(i == TOTAL_SCANS):
             break
 
     ##Prevents adafruit_rplidar.py runtime error when attempting to collect 
@@ -117,13 +108,14 @@ def collectData(lastCCW, lastCW):
     SENSOR.disconnect()
     SENSOR.connect()
 
-    return interpretData(sensorDistances, lastCCW, lastCW)
+    return interpretData(sensorDistances, lastFar, lastCCW, lastCW)
 
 ## ********************************************************
 ## name:      interpretData
 ## called by: sensorAnalysis.collectData()
-## passed:    float[] sensorDistances 
-## returns:   nothing
+## passed:    float[] sensorDistances, int lastFar,
+##            int lastCCW, int lastCW
+## returns:   int lastFar, int lastCCW, lastCW 
 ## calls:     helperFunctions.getCollinearDistance()
 ##            repositionMachine.moveToOpponent()
 ##                              rotateMachine()
@@ -132,7 +124,7 @@ def collectData(lastCCW, lastCW):
 ## appropriate course of action for maneuvering the       *
 ## machine if applicable.                                 *
 ## ********************************************************
-def interpretData(distanceValues, lastCCW, lastCW):
+def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 
     #####################################
     ##
@@ -140,16 +132,12 @@ def interpretData(distanceValues, lastCCW, lastCW):
     ##
     #####################################
                             
-    activeDistances = []        ##Distances recorded to be outside the desired 
-                                ##range of the machine; that is, a value in 
-                                ##front of the machine > MAX_DISTANCE or a 
-                                ##value recorded anywhere < MIN_DISTANCE.
+    activeDistances = []        ##Distances recorded to be too close too the 
+                                ##machine; that is, a value recorded at any
+                                ##angle that is less than MIN_DISTANCE.
 
     activeAngles = []           ##The corresponding angles associated with 
-                                ##each activeDistances value, or in the case of
-                                ##turning toward the opponent, the list of 
-                                ##angles where the opponent is currently 
-                                ##located.
+                                ##each activeDistances value.
 
     insertPoint = 0             ##The position in which an item is added to the
                                 ##activeAngles and activeDistances lists.
@@ -182,11 +170,15 @@ def interpretData(distanceValues, lastCCW, lastCW):
     turnMid = 0                 ##The midpoint of both the left and right turn
                                 ##angles min/max values.
 
-    turningCW = 0               ##Set to True if the machine detects the 
+    turningCW = False           ##Set to True if the machine detects the 
                                 ##opponent too far left of center.
 
-    turningCCW = 0              ##Set to True if the machine detects the 
+    turningCCW = False          ##Set to True if the machine detects the 
                                 ##opponent too far right of center. 
+
+    minLast = 0                 ##The minimum value of the three function
+                                ##parameters that keep track of how long an 
+                                ##object has been tracked at a particular area.
 
     #####################################
     
@@ -231,7 +223,7 @@ def interpretData(distanceValues, lastCCW, lastCW):
     if(tooClose):
         #print("Status: Too Close\n")
         calculateObjMovement(activeAngles, activeDistances, distanceValues)
-        return 0, 0
+        return 0, 0, 0
 
     ##Barring any objects too close to the machine, look for the opponent being
     ##too far away. getCollinearDistance() is used here as to allow the opponent
@@ -242,19 +234,16 @@ def interpretData(distanceValues, lastCCW, lastCW):
                                                 SNS_MAX_DISTANCE)
 
         if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
-            activeAngles.clear()
-            activeDistances.clear()
-            tooFar = False
             opponentFound = True
-            break
 
         adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE,
                                                  SNS_OPP_DISTANCE)
 
         if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
-            activeAngles.append(x)
-            activeDistances.append(distanceValues[x])	
-            tooFar = True	 
+            tooFar = True
+
+        if(opponentFound and tooFar):
+            break
 
     ##Analyze the potential to need to turn toward the opponent and prioritize
     ##this movement over moving forward to the opponent.
@@ -266,8 +255,8 @@ def interpretData(distanceValues, lastCCW, lastCW):
                                                 SNS_MAX_DISTANCE)
 
         if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
-            activeAngles.append(x)
-            turningCCW = 1
+            turningCCW = True
+            break
             
     turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
 
@@ -277,48 +266,32 @@ def interpretData(distanceValues, lastCCW, lastCW):
                                                 SNS_MAX_DISTANCE)
                 
         if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
-            activeAngles.append(x)
-            turningCW = 1
+            turningCW = True
+            break
 
-    #print(lastCCW, lastCW)
+    #print(lastFar, lastCCW, lastCW)
+    ##Account for objects that could be mistaken for the opponent by moving in
+    ##the direction which has seen an object for the least amount of time. This
+    ##will most likely be the opponent repositioning themselves.
     if(not opponentFound):
-        if(lastCCW > 1 and lastCW > 1):
-            if(tooFar):
-                moveToOpponent()
-            elif(turningCCW):
-                rotateMachine(True)
-            elif(turningCW):
-                rotateMachine(False)
-            return 0, 0
+        lastFar = None if (not tooFar) else lastFar
+        lastCCW = None if (not turnCCW) else lastCCW
+        lastCW = None if (not turnCW) else lastCW
 
-        elif(lastCCW > 1):
-            if(turningCW):
-                rotateMachine(False)
-            elif(tooFar):
-                moveToOpponent()
-            elif(turningCCW):
-                rotateMachine(True)
-            return 0, 0
+        minLast = min(x for x in [lastFar, lastCCW, lastCW] if x is not None)
 
-        elif(lastCW > 1):
-            if(turningCCW):
-                rotateMachine(True)
-            elif(tooFar):
-                moveToOpponent()
-            elif(turningCW):
-                rotateMachine(False)
-            return 0, 0
+        if(turnCCW and minLast == lastCCW):
+            rotateMachine(True)
+        elif(turnCW and minLast == lastCW):
+            rotateMachine(False)
+        elif(tooFar and minLast == lastFar):
+            moveToOpponent()
 
-        else:
-            if(turningCCW):
-                rotateMachine(True)
-            elif(turningCW):
-                rotateMachine(False)
-            elif(tooFar):
-                moveToOpponent()
-            return 0, 0
+        return 0, 0, 0
 
-    return lastCCW * turningCCW + turningCCW, lastCW * turningCW + turningCW
+    return (lastFar * tooFar + tooFar, 
+            lastCCW * turningCCW + turningCCW, 
+            lastCW * turningCW + turningCW)
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -346,7 +319,7 @@ def main():
     reset = 0                           ##Determines when to clear the terminal
                                         ##screen.
     
-    lastCCW = lastCW = 0                ##Keep track of the turning statuses
+    lastFar = lastCCW = lastCW = 0      ##Keep track of the position statuses
                                         ##from the last iteration of analyzing
                                         ##sensor data.
 
@@ -363,9 +336,9 @@ def main():
                 reset = 0
             reset += 1
 
-            lastCCW, lastCW = collectData(lastCCW, lastCW)
+            lastFar, lastCCW, lastCW = collectData(lastFar, lastCCW, lastCW)
 
-    except KeyboardInterrupt:
+    except:
         #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)

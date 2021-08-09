@@ -1,10 +1,7 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src",
-    "\\test",
-    "\\test\\rpm_graphs"
+    "\\src"
   ],
-  "SelectedNode": "\\test\\rpm_graphs\\wheel5.png",
   "PreviewInSolutionExplorer": false
 }

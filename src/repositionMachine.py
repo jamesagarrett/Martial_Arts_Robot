@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 6, 2021
+##  Last Updated: August 9, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -140,14 +140,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     speedVars = [0]*2              ##Variables used to determine wheelSpeeds
                                    ##values.
 
-    rotationCoeff = 0              ##Value used to change wheelSpeeds values to
-                                   ##allow for machine rotation in order to
-                                   ##face the opponent while repositioning; set
-                                   ##to 0 when only linear movement is desired;
-                                   ##this value will act as a percentage,
-                                   ##values greater than 0 mean ccw machine
-                                   ##rotation, less than zero, cw rotation.
-
     wheelPWMs = [0]*3              ##The PWM output values for each wheel.
 
     doneMoving = False             ##Set to True if the new desired position is
@@ -179,11 +171,9 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         stopDistances.insert(0, stopDist)
         stopDistances.append(stopDist)
 
-    speedVars[0] = sin(radians(repositionAngle)) \
-                   - rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
+    speedVars[0] = sin(radians(repositionAngle))
 
-    speedVars[1] = cos(radians(repositionAngle)) \
-                   - rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
+    speedVars[1] = cos(radians(repositionAngle))
 
     wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
                      - speedVars[0]*SPEED_CONSTS[2]) \
@@ -193,7 +183,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     wheelSpeeds[1] = (speedVars[0] - wheelSpeeds[0]*SPEED_CONSTS[1]) \
                      / SPEED_CONSTS[3]
 
-    wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
+    wheelSpeeds[2] = -wheelSpeeds[1] - wheelSpeeds[0]
     
     for x in range (3):
         if(wheelSpeeds[x] == 0):
@@ -243,7 +233,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         SENSOR.disconnect()
         SENSOR.connect()
 
-    except KeyboardInterrupt:
+    except:
         #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
@@ -284,15 +274,6 @@ def moveToOpponent():
     speedVars = [0]*2               ##Variables used to determine wheelSpeeds 
                                     ##values.
 
-    rotationCoeff = 0               ##Value used to change wheelSpeeds values to
-                                    ##allow for machine rotation in order to
-                                    ###face the opponent while repositioning;
-                                    ###set to 0 when only linear movement is
-                                    ##desired. This value will act as a
-                                    ##percentage; values greater than 0 mean ccw
-                                    ##machine rotation, less than zero, cw 
-                                    ##rotation.
-
     wheelPWMs = [0]*3               ##The PWM output values for each wheel.
 
     watchAngles = []                ##Angular values that are in the path of the
@@ -313,11 +294,9 @@ def moveToOpponent():
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    speedVars[0] = sin(radians(DES_OPP_ANGLE)) \
-                   - rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
+    speedVars[0] = sin(radians(DES_OPP_ANGLE)) 
 
-    speedVars[1] = cos(radians(DES_OPP_ANGLE)) \
-                   - rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
+    speedVars[1] = cos(radians(DES_OPP_ANGLE))
 
     wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
                      - speedVars[0]*SPEED_CONSTS[2]) \
@@ -327,7 +306,7 @@ def moveToOpponent():
     wheelSpeeds[1] = (speedVars[0] - wheelSpeeds[0]*SPEED_CONSTS[1]) \
                      / SPEED_CONSTS[3]
 
-    wheelSpeeds[2] = (-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff)
+    wheelSpeeds[2] = -wheelSpeeds[1] - wheelSpeeds[0]
 
     for x in range (3):
         if(wheelSpeeds[x] == 0):
@@ -376,7 +355,7 @@ def moveToOpponent():
         SENSOR.disconnect()
         SENSOR.connect()    
 
-    except KeyboardInterrupt:
+    except:
         #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
@@ -463,7 +442,7 @@ def rotateMachine(turnCCW):
         SENSOR.disconnect()
         SENSOR.connect()
 
-    except KeyboardInterrupt:
+    except:
         #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
