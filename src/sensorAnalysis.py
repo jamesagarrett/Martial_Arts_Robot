@@ -245,8 +245,8 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
         if(opponentFound and tooFar):
             break
 
-    ##Analyze the potential to need to turn toward the opponent and prioritize
-    ##this movement over moving forward to the opponent.
+    ##Analyze the potential need to turn toward the opponent in either
+    ##direction.
     turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
         
     for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
@@ -269,7 +269,8 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
             turningCW = True
             break
 
-    #print(lastFar, lastCCW, lastCW)
+    print(lastFar, tooFar, lastCCW, turnCCW, lastCW, turnCW)
+
     ##Account for objects that could be mistaken for the opponent by moving in
     ##the direction which has seen an object for the least amount of time. This
     ##will most likely be the opponent repositioning themselves.
@@ -281,10 +282,13 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
         minLast = min(x for x in [lastFar, lastCCW, lastCW] if x is not None)
 
         if(turnCCW and minLast == lastCCW):
+            print("Turn CCW")
             rotateMachine(True)
         elif(turnCW and minLast == lastCW):
+            print("Turn CW")
             rotateMachine(False)
         elif(tooFar and minLast == lastFar):
+            print("Move Forward")
             moveToOpponent()
 
         return 0, 0, 0

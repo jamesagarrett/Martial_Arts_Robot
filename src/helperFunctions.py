@@ -2,9 +2,9 @@
 ##  James Garrett
 ##
 ##  helperFunctions.py
-##  Last Updated: July 19, 2021
+##  Last Updated: August 9, 2021
 ##
-##  Functions used to assist in other modules within the project.
+##  Functions used to assist with other modules within the project.
 ##
 
 from math import cos, pi, radians
