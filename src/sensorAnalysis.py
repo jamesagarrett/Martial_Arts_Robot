@@ -307,7 +307,7 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 ## passed:    nothing 
 ## returns:   nothing
 ## calls:     sensorAnalysis.collectData()
-##                          .interpretData()
+##                           interpretData()
 ##
 ## Begins program when user is ready, clearing the        *
 ## console periodically of any print messages before      *
