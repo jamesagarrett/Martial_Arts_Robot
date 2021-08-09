@@ -64,7 +64,7 @@ from globals import DES_OPP_ANGLE,\
 ## Retrieve sensor readings and store all angles and	  *
 ## associated distances.                                  *
 ## ********************************************************
-def collectData():
+def collectData(lastCCW, lastCW):
 
     #####################################
     ##
@@ -117,7 +117,7 @@ def collectData():
     SENSOR.disconnect()
     SENSOR.connect()
 
-    interpretData(sensorDistances)
+    return interpretData(sensorDistances, lastCCW, lastCW)
 
 ## ********************************************************
 ## name:      interpretData
@@ -132,7 +132,7 @@ def collectData():
 ## appropriate course of action for maneuvering the       *
 ## machine if applicable.                                 *
 ## ********************************************************
-def interpretData(distanceValues):
+def interpretData(distanceValues, lastCCW, lastCW):
 
     #####################################
     ##
@@ -229,26 +229,9 @@ def interpretData(distanceValues):
             tooClose = True
 
     if(tooClose):
-        ##The opponent's location is needed to make sure that when moving away
-        ##from objects that are currently too close, the machine is not in turn
-        ##too far from the opponent after moving.
-        for x in range (FRONT_ANGLE_MIN, FRONT_ANGLE_MAX + 1):
-            adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE, 
-                                                    SNS_MAX_DISTANCE)
-
-            if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
-                opponentAngle += x
-                opponentSpan += 1
-        
-        if(opponentSpan > 0):
-            opponentAngle = floor(opponentAngle/opponentSpan)
-        else:
-            opponentAngle = DES_OPP_ANGLE
-
         #print("Status: Too Close\n")
-        calculateObjMovement(activeAngles, activeDistances, opponentAngle, 
-        					  distanceValues)
-        return
+        calculateObjMovement(activeAngles, activeDistances, distanceValues)
+        return False, False
 
     ##Barring any objects too close to the machine, look for the opponent being
     ##too far away. getCollinearDistance() is used here as to allow the opponent
@@ -273,8 +256,8 @@ def interpretData(distanceValues):
             activeDistances.append(distanceValues[x])	
             tooFar = True	 
 
-    ##Analyze turning only after determining nothing is too close or too far 
-    ##from the machine.
+    ##Analyze the potential to need to turn toward the opponent and prioritize
+    ##this movement over moving forward to the opponent.
     turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
         
     for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
@@ -300,20 +283,43 @@ def interpretData(distanceValues):
                 turningCW = True
 
     if(not opponentFound):
-        if(turningCCW or turningCW):
-            #print("Status: Not Centered\n")
-            rotateMachine(turningCCW)
-            return
-        elif(tooFar):
-            #print("Status: Too Far\n")
-            moveToOpponent()
-            return
-        #else:
-    #        print("Status: No Opponent\n")
-    #else:
-    #    print("Status: Good\n")
+        if(lastCCW and lastCW):
+            if(tooFar):
+                moveToOpponent()
+            elif(turningCCW):
+                rotateMachine(True)
+            elif(turningCW):
+                rotateMachine(False)
+            return False, False
 
-    return
+        elif(lastCCW):
+            if(turningCW):
+                rotateMachine(False)
+            elif(tooFar):
+                moveToOpponent()
+            elif(turningCCW):
+                rotateMachine(True)
+            return False, False
+
+        elif(lastCW):
+            if(turningCCW):
+                rotateMachine(True)
+            elif(tooFar):
+                moveToOpponent()
+            elif(turningCW):
+                rotateMachine(False)
+            return False, False
+
+        else:
+            if(turningCCW):
+                rotateMachine(True)
+            elif(turningCW):
+                rotateMachine(False)
+            elif(tooFar):
+                moveToOpponent()
+            return False, False
+
+    return turningCCW, turningCW
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -341,6 +347,10 @@ def main():
     reset = 0                           ##Determines when to clear the terminal
                                         ##screen.
     
+    lastCCW = lastCW = None             ##Keep track of the turning statuses
+                                        ##from the last iteration of analyzing
+                                        ##sensor data.
+
     #####################################
     
     clear()
@@ -354,7 +364,7 @@ def main():
                 reset = 0
             reset += 1
 
-            collectData()
+            lastCCW, lastCW = collectData(lastCCW, lastCW)
 
     except KeyboardInterrupt:
         #clear()

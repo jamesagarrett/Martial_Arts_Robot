@@ -2,13 +2,13 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 6, 2021
+##  Last Updated: August 8, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
 ##
 
-from math import ceil, cos, floor, radians, sin 
+from math import cos, floor, radians, sin 
 
 ##Slamtec RPLIDAR A1 - 360 Laser Range Scanner Library;
 ##Created by MIT Skoltech, edited by and retrieved through Adafruit;
@@ -74,7 +74,8 @@ START_TICK = 0
 ##low will result in no movement. 
 STOP_TICK = 1000
 
-##Wheel RPM speeds that will be used for determining PWM values for repositioning.
+##Wheel RPM speeds that will be used for determining PWM values for
+##repositioning.
 MAX_SPEED = 175 #562.5 max
 TURN_SPEED = 80
 
@@ -99,7 +100,7 @@ FRONT_ANGLE_MAX = 294
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
-DES_OPP_ANGLE = ceil((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
+DES_OPP_ANGLE = round((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 
 ##The positions of the opponent in which the machine will turn to face them, are
 ##considered to be within these angular ranges.

@@ -62,6 +62,7 @@ from globals import CCW_COEFS,\
 ## direction.                                             *      
 ## ********************************************************
 def calculatePWM(wheel, rpm, spinCCW):
+
     #####################################
     ##
     ##  VARIABLE DECLARATION
