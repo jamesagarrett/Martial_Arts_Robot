@@ -56,15 +56,14 @@ from globals import DES_OPP_ANGLE,\
 ## ********************************************************
 ## name:      collectData
 ## called by: sensorAnalysis.main()
-## passed:    int lastFar, int lastCCW, lastCW 
-## returns:   int lastFar, int lastCCW, lastCW 
-## calls:     sensorAnalysis.interpretData()
-##            helperFunctions.getCartesianAngle()
+## passed:    nothing
+## returns:   float[] sensorDistances
+## calls:     helperFunctions.getCartesianAngle()
 ##
 ## Retrieve sensor readings and store all angles and	  *
 ## associated distances.                                  *
 ## ********************************************************
-def collectData(lastFar, lastCCW, lastCW):
+def collectData():
 
     #####################################
     ##
@@ -108,14 +107,16 @@ def collectData(lastFar, lastCCW, lastCW):
     SENSOR.disconnect()
     SENSOR.connect()
 
-    return interpretData(sensorDistances, lastFar, lastCCW, lastCW)
+    return sensorDistances
 
 ## ********************************************************
 ## name:      interpretData
-## called by: sensorAnalysis.collectData()
+## called by: sensorAnalysis.main()
 ## passed:    float[] sensorDistances, int lastFar,
 ##            int lastCCW, int lastCW
-## returns:   int lastFar, int lastCCW, lastCW 
+## returns:   int lastFar * tooFar + tooFar, 
+##            int lastCCW * turnCCW + turnCCW,
+##            int lastCW * turnCW + turnCW
 ## calls:     helperFunctions.getCollinearDistance()
 ##            repositionMachine.moveToOpponent()
 ##                              rotateMachine()
@@ -271,9 +272,9 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 
     print(lastFar, tooFar, lastCCW, turnCCW, lastCW, turnCW)
 
-    ##Account for objects that could be mistaken for the opponent by moving in
-    ##the direction which has seen an object for the least amount of time. This
-    ##will most likely be the opponent repositioning themselves.
+    ##Account for objects that could be mistaken for the opponent by choosing to
+    ##move in the direction where an object has been seen for the least amount 
+    ##of time. This will most likely be the opponent repositioning themselves.
     if(not opponentFound):
         lastFar = None if (not tooFar) else lastFar
         lastCCW = None if (not turnCCW) else lastCCW
@@ -306,6 +307,7 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 ## passed:    nothing 
 ## returns:   nothing
 ## calls:     sensorAnalysis.collectData()
+##                          .interpretData()
 ##
 ## Begins program when user is ready, clearing the        *
 ## console periodically of any print messages before      *
@@ -323,6 +325,9 @@ def main():
     reset = 0                           ##Determines when to clear the terminal
                                         ##screen.
     
+    sensorDistances = []                ##A list of all measured sensor
+                                        ##distances for each angle, 0-359.
+
     lastFar = lastCCW = lastCW = 0      ##Keep track of the position statuses
                                         ##from the last iteration of analyzing
                                         ##sensor data.
@@ -340,7 +345,9 @@ def main():
                 reset = 0
             reset += 1
 
-            lastFar, lastCCW, lastCW = collectData(lastFar, lastCCW, lastCW)
+            sensorDistances = collectData()
+            lastFar, lastCCW, lastCW = interpretData(sensorDistances, lastFar, 
+                                                     lastCCW, lastCW)
 
     except:
         #clear()
