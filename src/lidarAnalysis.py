@@ -1,8 +1,8 @@
 ##	
 ##  James Garrett
 ##
-##  sensorAnalysis.py
-##  Last Updated: August 9, 2021
+##  lidarAnalysis.py
+##  Last Updated: August 10, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -55,7 +55,7 @@ from globals import DES_OPP_ANGLE,\
 
 ## ********************************************************
 ## name:      collectData
-## called by: sensorAnalysis.main()
+## called by: lidarAnalysis.main()
 ## passed:    nothing
 ## returns:   float[] sensorDistances
 ## calls:     helperFunctions.getCartesianAngle()
@@ -111,7 +111,7 @@ def collectData():
 
 ## ********************************************************
 ## name:      interpretData
-## called by: sensorAnalysis.main()
+## called by: lidarAnalysis.main()
 ## passed:    float[] sensorDistances, int lastFar,
 ##            int lastCCW, int lastCW
 ## returns:   int lastFar * tooFar + tooFar, 
@@ -222,7 +222,6 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
             tooClose = True
 
     if(tooClose):
-        #print("Status: Too Close\n")
         calculateObjMovement(activeAngles, activeDistances, distanceValues)
         return 0, 0, 0
 
@@ -270,8 +269,6 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
             turningCW = True
             break
 
-    #print(lastFar, tooFar, lastCCW, turningCCW, lastCW, turningCW)
-
     ##Account for objects that could be mistaken for the opponent by choosing to
     ##move in the direction where an object has been seen for the least amount 
     ##of time. This will most likely be the opponent repositioning themselves.
@@ -279,19 +276,15 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
         lastFar = -1 if (not tooFar) else lastFar
         lastCCW = -1 if (not turningCCW) else lastCCW
         lastCW = -1 if (not turningCW) else lastCW
-        #print([lastFar, lastCCW, lastCW])
-        L = [x for x in [lastFar, lastCCW, lastCW] if x >= 0] 
-        #print(L)
-        minLast = min(L, default=0)
+
+        minLast = min([x for x in [lastFar, lastCCW, lastCW] if x >= 0], 
+                      default=0)
 
         if(tooFar and minLast == lastFar):
-            #print("Forward")
             moveToOpponent()
         elif(turningCCW and minLast == lastCCW):
-            #print("C-Clockwise")
             rotateMachine(True)
         elif(turningCW and minLast == lastCW):
-            #print("Clockwise")
             rotateMachine(False)
        
         return 0, 0, 0
@@ -308,8 +301,8 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 ## called by: nobody
 ## passed:    nothing 
 ## returns:   nothing
-## calls:     sensorAnalysis.collectData()
-##                           interpretData()
+## calls:     lidarAnalysis.collectData()
+##                          interpretData()
 ##
 ## Begins program when user is ready, clearing the        *
 ## console periodically of any print messages before      *
@@ -336,7 +329,7 @@ def main():
 
     #####################################
     
-    #clear()
+    clear()
     WHEELS.set_pwm_freq(PWM_FREQ)
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
@@ -346,8 +339,8 @@ def main():
         
     try:
         while(True):
-            if(reset % 100 == 0):
-                #clear()
+            if(reset % 10 == 0):
+                clear()
                 reset = 0
             reset += 1
 
@@ -355,8 +348,7 @@ def main():
             lastFar, lastCCW, lastCW = interpretData(sensorDistances, lastFar, 
                                                      lastCCW, lastCW)
 
-    except KeyboardInterrupt:
-        #clear()
+    except:
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)

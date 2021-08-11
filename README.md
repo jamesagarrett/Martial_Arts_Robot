@@ -18,7 +18,7 @@ Module Functionality:
 * **Adafruit_rplidar.py:** Created by Adafruit as a tool for retrieving raw data from the Slamtec RPLIDAR sensor  
 * **globals.py:** Constant declarations that are used throughout other modules
 * **helperFunctions.py:** A single location for frequent data calculations that are utilized in more than one module
-* **sensorAnalysis.py:** Contains main() and is where LIDAR sensor data is collected and analyzed to see if and how the robot should reposition
+* **lidarAnalysis.py:** Contains main() and is where LIDAR sensor data is collected and analyzed to see if and how the robot should reposition
 * **maneuverAnalysis.py:** Determines the best angle and distance to move at in order to be a safe distance from the user and environmental obstacle
 * **repositionMachine.py:** Gives output to the wheels, moving the robot to the desired position  
 # Video Demos  
@@ -34,5 +34,5 @@ A showcase of the robot reacting to a distance measurement deemed too low, causi
 Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
 Both programs, which contain their respective licenses, can be found under the "src" and "test" folders along with all other .py files.  
 They can also be found at their original GitHub links:  
-* PCA9685.py: https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685    
-* Adafruit_rplidar.py: https://github.com/adafruit/rplidar
+* [PCA9685.py]: https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685    
+* [Adafruit_rplidar.py]: https://github.com/adafruit/rplidar

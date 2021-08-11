@@ -23,7 +23,7 @@ from globals import PATH_ZONE
 
 ## ********************************************************
 ## name:      getCartesianAngle
-## called by: sensorAnalysis.interpretData()
+## called by: lidarAnalysis.interpretData()
 ##            repositionMachine.moveFromObject()
 ##                              moveToOpponent()
 ##                              rotateMachine()
@@ -55,7 +55,7 @@ def getCartesianAngle(angle):
 
 ## ********************************************************
 ## name:      getCollinearDistance
-## called by: sensorAnalysis.interpretData()
+## called by: lidarAnalysis.interpretData()
 ##            maneuverAnalysis.calculateObjMovement()
 ##            repositionMachine.rotateMachine()
 ## passed:    int x, float SNS_MIN_DISTANCE/SNS_MAX_DISTANCE/

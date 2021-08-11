@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 8, 2021
+##  Last Updated: August 10, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -42,6 +42,10 @@ WHEELS = PCA9685.PCA9685()
 
 ##Any distance measurements are in inches.
 ##Any angular measurements are in degrees.
+
+##The amount of sensor scan rotations to perform for collecting angular distance
+##values before analyzing them.
+TOTAL_SCANS = 3
 
 ##The physical angular location of each wheel on the machine.
 WHEEL_LOCATIONS = [210, 330, 90]
@@ -88,10 +92,6 @@ CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
 CW_COEFS = [[0.00001, -1.14710, 965.04630],
             [-0.00002, -1.11866, 976.48713],
             [-0.00007, -1.09435, 973.99764]]
-
-##The amount of sensor scan rotations to perform for collecting angular distance
-##values before analyzing them.
-TOTAL_SCANS = 3
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
@@ -145,7 +145,7 @@ SUF_DISTANCE = 14.0
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 18.0
+OPP_DISTANCE = MAX_DISTANCE + 16.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS

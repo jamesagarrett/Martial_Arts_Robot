@@ -36,7 +36,7 @@ from globals import ANGLE_ERR,\
 
 ## ********************************************************
 ## name:      calculateObjMovement
-## called by: sensorAnalysis.interpretData()
+## called by: lidarAnalysis.interpretData()
 ##            maneuverAnalysis.calculateObjMovement()
 ## passed:    int[] activeAngles, float[] activeDistances,
 ##            float[] distanceValues
@@ -106,7 +106,6 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        #print("Maneuver: CAN'T MOVE\n")
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value

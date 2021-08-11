@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 9, 2021
+##  Last Updated: August 10, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -11,7 +11,6 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
-from os import system
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle,\
@@ -19,7 +18,8 @@ from helperFunctions import getCollinearDistance, getCartesianAngle,\
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 
-from globals import CCW_COEFS,\
+from globals import ANGLE_ERR,\
+                    CCW_COEFS,\
                     CW_COEFS,\
                     DES_OPP_ANGLE,\
                     FRONT_ANGLE_MIN,\
@@ -125,13 +125,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     stopDist = 0                   ##The current value being added to 
                                    ##stopDistances.
 
-    angleBound = 0                 ##The angle with respect to repositionAngle
-                                   ##in which the x-coordinate boundary - 
-                                   ##MACH_RADIUS - and y-coordinate boundary - 
-                                   ##repositionDistance - intersect. Angles 
-                                   ##between repositionAngle and angleBound are
-                                   ##added to stopAngles.
-
     wheelSpeeds = [0]*3            ##The speed for each wheel in order to
                                    ##reposition at the desired angle; this
                                    ##value will act as a percentage, values
@@ -153,16 +146,12 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     index = 0                      ##The index of a given list in which a value
                                    ##is stored if present.
     
-    clear = lambda:system('clear') ##Used for clearing the terminal screen.
-
     #####################################
 
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    angleBound = 1#floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
-
-    for x in range(1, angleBound + 1):
+    for x in range(1, ANGLE_ERR):
         stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])
         stopAngles.append(watchAngles[len(watchAngles)//2 + x])
 
@@ -235,7 +224,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         SENSOR.connect()
 
     except:
-        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
@@ -247,7 +235,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 
 ## ********************************************************
 ## name:      moveToOpponent
-## called by: sensorAnalysis.interpretData()
+## called by: lidarAnalysis.interpretData()
 ## passed:    nothing
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
@@ -287,8 +275,6 @@ def moveToOpponent():
 
     index = 0                       ##The index of a given list in which a value
                                     ##is stored if present.
-
-    clear = lambda:system('clear')  ##Used for clearing the terminal screen.
 
     #####################################
 
@@ -357,7 +343,6 @@ def moveToOpponent():
         SENSOR.connect()    
 
     except:
-        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
@@ -369,7 +354,7 @@ def moveToOpponent():
 
 # ********************************************************
 ## name:      rotateMachine
-## called by: sensorAnalysis.interpretData()
+## called by: lidarAnalysis.interpretData()
 ## passed:    int turningCCW
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
@@ -397,8 +382,6 @@ def rotateMachine(turnCCW):
 
     index = 0                       ##The index of a given list in which a value
                                     ##is stored if present.
-
-    clear = lambda:system('clear')  ##Used for clearing the terminal screen.
 
     #####################################
 
@@ -444,7 +427,6 @@ def rotateMachine(turnCCW):
         SENSOR.connect()
 
     except:
-        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
