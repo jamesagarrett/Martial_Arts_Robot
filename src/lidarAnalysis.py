@@ -12,7 +12,7 @@
 from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
-from playsound import playsound
+from pygame import mixer
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
@@ -363,14 +363,19 @@ def main():
     #####################################
     
     clear()
+    mixer.init()
     WHEELS.set_pwm_freq(PWM_FREQ)
+
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-    playsound('sounds/standby.wav')
+    
+    mixer.music.load("sounds/standby.wav")
+    mixer.music.play()
 
     input("PRESS <ENTER> TO BEGIN")
-    playsound('sounds/begin.wav')
+    mixer.music.load("sounds/begin.wav")
+    mixer.music.play()
 
     import time  
     try:
@@ -397,7 +402,8 @@ def main():
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
-        playsound('sounds/finished.wav')
+        mixer.music.load("sounds/finished.wav")
+        mixer.music.play()
 
     return
 

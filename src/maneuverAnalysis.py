@@ -10,7 +10,7 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
 from bisect import bisect_left   
-from playsound import playsound
+from pygame import mixer
 
 from helperFunctions import getCollinearDistance, getPathAngles
 
@@ -108,7 +108,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        playsound('sounds/blocked.wav')
+        mixer.music.load("sounds/blocked.wav")
+        mixer.music.play()        
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value
