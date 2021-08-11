@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 10, 2021
+##  Last Updated: August 11, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -85,29 +85,37 @@ TURN_SPEED = 90
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
 ##values for each wheel based on a given RPM speed.
-CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
-             [0.00006, 1.12871, 1017.63192],
-             [0.00007, 1.09813, 1015.55372]]
-
 CW_COEFS = [[0.00001, -1.14710, 965.04630],
             [-0.00002, -1.11866, 976.48713],
             [-0.00007, -1.09435, 973.99764]]
 
+CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
+             [0.00006, 1.12871, 1017.63192],
+             [0.00007, 1.09813, 1015.55372]]
+
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
 FRONT_ANGLE_MIN = 250
-FRONT_ANGLE_MAX = 289
+FRONT_ANGLE_MAX = 290
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
 DES_OPP_ANGLE = round((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 
-##The positions of the opponent in which the machine will turn to face them, are
-##considered to be within these angular ranges.
-LEFT_TURN_ANGLE_MIN = 180
+##The positions of the opponent in which the machine will turn to face them are
+##within these angular ranges.
+LEFT_TURN_ANGLE_MIN = 200
 LEFT_TURN_ANGLE_MAX = 249
-RIGHT_TURN_ANGLE_MIN = 290
-RIGHT_TURN_ANGLE_MAX = 359
+RIGHT_TURN_ANGLE_MIN = 291
+RIGHT_TURN_ANGLE_MAX = 340
+
+##If the opponent is unable to move backward, allowing the machine to move
+##forward to them, the machine can turn to face them if they are within these
+##angular ranges.
+STUCK_LEFT_TURN_MIN = 181
+STUCK_LEFT_TURN_MAX = 199
+STUCK_RIGHT_TURN_MIN = 341
+STUCK_RIGHT_TURN_MAX = 359
 
 ##The distance from the perimeter of the sensor to the outside of the machine 
 ##wheels; note: NOT to the machine frame.

@@ -8,7 +8,7 @@ A maneuverable, robotic machine powered by a Raspberry Pi that uses LIDAR detect
 **Jaguar Motor Controllers (3):** PWM speed controllers used to specify output current for the wheels  
 **Adafruit 16-Channel 12-Bit PWM/Servo Driver:** Breakout board connected to the Pi used to output PWM signals to the motor controllers 
 ## Program Details  
-This program is split into modules, all contributing to 3 primary tasks:  
+This program is split into modules, all contributing to three primary tasks:  
 1. Sensor data collection and analysis
 2. Optimal angle and distance maneuvering calculations
 3. Repositioning of the robot to its new, desired location  
@@ -18,8 +18,8 @@ Module Functionality:
 * **Adafruit_rplidar.py:** Created by Adafruit as a tool for retrieving raw data from the Slamtec RPLIDAR sensor  
 * **globals.py:** Constant declarations that are used throughout other modules
 * **helperFunctions.py:** A single location for frequent data calculations that are utilized in more than one module
-* **lidarAnalysis.py:** Contains main() and is where LIDAR sensor data is collected and analyzed to see if and how the robot should reposition
-* **maneuverAnalysis.py:** Determines the best angle and distance to move at in order to be a safe distance from the user and environmental obstacle
+* **lidarAnalysis.py:** Contains main() and is where LIDAR sensor data is collected and analyzed to see if the robot should reposition itself
+* **maneuverAnalysis.py:** Determines the best angle and distance to move at in order to be a safe distance from the user and any environmental obstacles
 * **repositionMachine.py:** Gives output to the wheels, moving the robot to the desired position  
 # Video Demos  
 A test of the ultrasonic sensors used before switching to a single LIDAR sensor, as the robot approaches an obstacle  

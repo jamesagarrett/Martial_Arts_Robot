@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  lidarAnalysis.py
-##  Last Updated: August 10, 2021
+##  Last Updated: August 11, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -41,6 +41,10 @@ from globals import DES_OPP_ANGLE,\
                     SNS_OPP_DISTANCE,\
                     START_TICK,\
                     STOP_TICK,\
+                    STUCK_LEFT_TURN_MIN,\
+                    STUCK_LEFT_TURN_MAX,\
+                    STUCK_RIGHT_TURN_MIN,\
+                    STUCK_RIGHT_TURN_MAX,\
                     TOTAL_SCANS,\
                     WHEELS
 
@@ -113,10 +117,10 @@ def collectData():
 ## name:      interpretData
 ## called by: lidarAnalysis.main()
 ## passed:    float[] sensorDistances, int lastFar,
-##            int lastCCW, int lastCW
+##            int lastCW, int lastCCW
 ## returns:   int lastFar * tooFar + tooFar, 
-##            int lastCCW * turnCCW + turnCCW,
-##            int lastCW * turnCW + turnCW
+##            int lastCW * turnCW + turnCW,
+##            int lastCCW * turnCCW + turnCCW
 ## calls:     helperFunctions.getCollinearDistance()
 ##            repositionMachine.moveToOpponent()
 ##                              rotateMachine()
@@ -125,7 +129,7 @@ def collectData():
 ## appropriate course of action for maneuvering the       *
 ## machine if applicable.                                 *
 ## ********************************************************
-def interpretData(distanceValues, lastFar, lastCCW, lastCW):
+def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 
     #####################################
     ##
@@ -176,6 +180,14 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
 
     turningCCW = False          ##Set to True if the machine detects the 
                                 ##opponent too far right of center. 
+
+    canMoveForward = False      ##Set to True if the machine is able to detect
+                                ##objects beyond MAX_DISTANCE. If none are
+                                ##detected, allow for turning at any time.
+    
+    turnMin = turnMax = 0       ##The minimum and maximum angular values used to
+                                ##determine if turning toward the opponent is
+                                ##required. 
 
     minLast = 0                 ##The minimum value of the three function
                                 ##parameters that keep track of how long an 
@@ -236,37 +248,51 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
         if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
             opponentFound = True
 
-        adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE,
-                                                 SNS_OPP_DISTANCE)
+        if(distanceValues[x] > adjustedDistance):
+            canMoveForward = True
 
-        if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
+        if(MACH_RADIUS < distanceValues[x] <= SNS_OPP_DISTANCE):
             tooFar = True
 
-        if(opponentFound and tooFar):
+        if(opponentFound and tooFar and canMoveForward):
             break
 
     ##Analyze the potential need to turn toward the opponent in either
     ##direction.
-    turnMid = ceil((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX) / 2)
+    if(canMoveForward):
+        turnMin = LEFT_TURN_ANGLE_MIN
+        turnMax = LEFT_TURN_ANGLE_MAX
+    else:
+        turnMin = STUCK_LEFT_TURN_MIN
+        turnMax = STUCK_LEFT_TURN_MAX
+
+    turnMid = ceil((turnMin + turnMax) / 2)
         
-    for x in range (LEFT_TURN_ANGLE_MIN, LEFT_TURN_ANGLE_MAX + 1):
+    for x in range (turnMin, turnMax + 1):
 
         adjustedDistance = getCollinearDistance(x, turnMid,
                                                 SNS_MAX_DISTANCE)
 
-        if(SNS_MIN_DISTANCE <= distanceValues[x] <= SNS_MAX_DISTANCE):
-            turningCCW = True
+        if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
+            turningCW = True
             break
             
-    turnMid = ceil((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX) / 2)
+    if(canMoveForward):
+        turnMin = RIGHT_TURN_ANGLE_MIN
+        turnMax = RIGHT_TURN_ANGLE_MAX
+    else:
+        turnMin = STUCK_RIGHT_TURN_MIN
+        turnMax = STUCK_RIGHT_TURN_MAX
 
-    for x in range (RIGHT_TURN_ANGLE_MIN, RIGHT_TURN_ANGLE_MAX + 1):
+    turnMid = ceil((turnMin + turnMax) / 2)
+
+    for x in range (turnMin, turnMax + 1):
             
         adjustedDistance = getCollinearDistance(x, turnMid, 
                                                 SNS_MAX_DISTANCE)
                 
-        if(SNS_MIN_DISTANCE <= distanceValues[x] <= SNS_MAX_DISTANCE):
-            turningCW = True
+        if(SNS_MIN_DISTANCE <= distanceValues[x] <= adjustedDistance):
+            turningCCW = True
             break
 
     ##Account for objects that could be mistaken for the opponent by choosing to
@@ -274,24 +300,30 @@ def interpretData(distanceValues, lastFar, lastCCW, lastCW):
     ##of time. This will most likely be the opponent repositioning themselves.
     if(not opponentFound):
         lastFar = -1 if (not tooFar) else lastFar
-        lastCCW = -1 if (not turningCCW) else lastCCW
         lastCW = -1 if (not turningCW) else lastCW
+        lastCCW = -1 if (not turningCCW) else lastCCW
 
-        minLast = min([x for x in [lastFar, lastCCW, lastCW] if x >= 0], 
+        minLast = min([x for x in [lastFar, lastCW, lastCCW] if x >= 0], 
                       default=0)
 
         if(tooFar and minLast == lastFar):
             moveToOpponent()
-        elif(turningCCW and minLast == lastCCW):
-            rotateMachine(True)
         elif(turningCW and minLast == lastCW):
+            rotateMachine(True)
+        elif(turningCCW and minLast == lastCCW):
             rotateMachine(False)
-       
+        return 0, 0, 0
+
+    elif (not canMoveForward):
+        if(turningCW):
+            rotateMachine(True)
+        elif(turningCCW):
+            rotateMachine(False)
         return 0, 0, 0
 
     return (lastFar * tooFar + tooFar, 
-            lastCCW * turningCCW + turningCCW, 
-            lastCW * turningCW + turningCW)
+            lastCW * turningCW + turningCW, 
+            lastCCW * turningCCW + turningCCW)
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -323,7 +355,7 @@ def main():
     sensorDistances = []                ##A list of all measured sensor
                                         ##distances for each angle, 0-359.
 
-    lastFar = lastCCW = lastCW = 0      ##Keep track of the position statuses
+    lastFar = lastCW = lastCCW = 0      ##Keep track of the position statuses
                                         ##from the last iteration of analyzing
                                         ##sensor data.
 
@@ -336,17 +368,23 @@ def main():
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
      
     input("PRESS <ENTER> TO BEGIN")
-        
+      import time  
     try:
         while(True):
             if(reset % 10 == 0):
-                clear()
+                #clear()
                 reset = 0
             reset += 1
 
+            start = time.time()
             sensorDistances = collectData()
-            lastFar, lastCCW, lastCW = interpretData(sensorDistances, lastFar, 
-                                                     lastCCW, lastCW)
+            end = time.time()
+            print("Sensor: %.4f", % (end-start))
+            start = time.time()
+            lastFar, lastCW, lastCCW = interpretData(sensorDistances, lastFar, 
+                                                     lastCW, lastCCW)
+            end = time.time()
+            print("Action: %.4f", % (end-start))
 
     except:
         print("TERMINATING")
