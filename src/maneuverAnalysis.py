@@ -108,7 +108,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        playsound('sounds/blocked.mp3')
+        playsound('sounds/blocked.wav')
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value

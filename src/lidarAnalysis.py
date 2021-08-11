@@ -367,10 +367,10 @@ def main():
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-    playsound('sounds/standby.mp3')
+    playsound('sounds/standby.wav')
 
     input("PRESS <ENTER> TO BEGIN")
-    playsound('sounds/begin.mp3')
+    playsound('sounds/begin.wav')
 
     import time  
     try:
@@ -397,7 +397,7 @@ def main():
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
-        playsound('sounds/finished.mp3')
+        playsound('sounds/finished.wav')
 
     return
 

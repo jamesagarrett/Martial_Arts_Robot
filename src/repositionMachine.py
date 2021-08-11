@@ -232,7 +232,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
-        playsound('sounds/finished.mp3')
+        playsound('sounds/finished.wav')
             
     return
 
@@ -352,7 +352,7 @@ def moveToOpponent():
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
-        playsound('sounds/finished.mp3')
+        playsound('sounds/finished.wav')
 
     return
 
@@ -437,6 +437,6 @@ def rotateMachine(turnCW):
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
-        playsound('sounds/finished.mp3')
+        playsound('sounds/finished.wav')
 
     return
