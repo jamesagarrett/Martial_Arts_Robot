@@ -160,7 +160,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    angleBound = 5#floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
+    angleBound = 1#floor(degrees(atan(MACH_RADIUS/repositionDistance))) 
 
     for x in range(1, angleBound + 1):
         stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])

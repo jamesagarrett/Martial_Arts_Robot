@@ -76,8 +76,8 @@ STOP_TICK = 1000
 
 ##Wheel RPM speeds that will be used for determining PWM values for
 ##repositioning.
-MAX_SPEED = 200 #562.5 max
-TURN_SPEED = 80
+MAX_SPEED = 400 
+TURN_SPEED = 90
 
 ##The coefficients for the quadratic equations used to determine the correct PWM
 ##values for each wheel based on a given RPM speed.
@@ -91,7 +91,7 @@ CW_COEFS = [[0.00001, -1.14710, 965.04630],
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.
-TOTAL_SCANS = 4
+TOTAL_SCANS = 3
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
