@@ -11,6 +11,7 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
+from playsound import playsound
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle,\
@@ -231,6 +232,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
+        playsound('sounds/finished.mp3')
             
     return
 
@@ -350,6 +352,7 @@ def moveToOpponent():
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
+        playsound('sounds/finished.mp3')
 
     return
 
@@ -434,5 +437,6 @@ def rotateMachine(turnCW):
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
+        playsound('sounds/finished.mp3')
 
     return

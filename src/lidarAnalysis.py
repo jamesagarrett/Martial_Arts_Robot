@@ -12,6 +12,7 @@
 from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
+from playsound import playsound
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
@@ -366,9 +367,12 @@ def main():
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-     
+    playsound('sounds/standby.mp3')
+
     input("PRESS <ENTER> TO BEGIN")
-      import time  
+    playsound('sounds/begin.mp3')
+
+    import time  
     try:
         while(True):
             if(reset % 10 == 0):
@@ -379,12 +383,12 @@ def main():
             start = time.time()
             sensorDistances = collectData()
             end = time.time()
-            print("Sensor: %.4f", % (end-start))
+            print("Sensor: %.4f" % (end-start))
             start = time.time()
             lastFar, lastCW, lastCCW = interpretData(sensorDistances, lastFar, 
                                                      lastCW, lastCCW)
             end = time.time()
-            print("Action: %.4f", % (end-start))
+            print("Action: %.4f" % (end-start))
 
     except:
         print("TERMINATING")
@@ -393,6 +397,7 @@ def main():
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
         SENSOR.stop()
         SENSOR.disconnect()
+        playsound('sounds/finished.mp3')
 
     return
 
