@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  lidarAnalysis.py
-##  Last Updated: August 11, 2021
+##  Last Updated: August 12, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -12,11 +12,10 @@
 from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
-from pygame import mixer
 from time import sleep
 
 ##Module that includes functions that are used throughout the project.
-from helperFunctions import getCollinearDistance, getCartesianAngle
+from helperFunctions import getCollinearDistance, getCartesianAngle, playSoundEff
 
 ##Module to determine how the machine will reposition itself toward or
 ##away from the opponent.
@@ -40,6 +39,7 @@ from globals import BEGIN_SOUND,\
                     RIGHT_TURN_ANGLE_MAX,\
                     RIGHT_TURN_ANGLE_MIN,\
                     SENSOR,\
+                    SLEEP_TIME,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPP_DISTANCE,\
@@ -338,7 +338,8 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 ## called by: nobody
 ## passed:    nothing 
 ## returns:   nothing
-## calls:     lidarAnalysis.collectData()
+## calls:     helperFunctions.playSoundEff()
+##            lidarAnalysis.collectData()
 ##                          interpretData()
 ##
 ## Begins program when user is ready, clearing the        *
@@ -367,28 +368,20 @@ def main():
     #####################################
     
     clear()
-    mixer.init()
     WHEELS.set_pwm_freq(PWM_FREQ)
-
     WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
     
-    mixer.music.load(STNDBY_SOUND)
-    mixer.music.play()
+    mixer.init()
+    playSoundEff(STNDBY_SOUND)
     
     try:
         input("PRESS <ENTER> TO BEGIN")
-        mixer.music.load(BEGIN_SOUND)
-        mixer.music.play()
-        sleep(2.32)
+        playSoundEff(BEGIN_SOUND)
+        sleep(SLEEP_TIME)
  
         while(True):
-            if(reset % 10 == 0):
-                clear()
-                reset = 0
-            reset += 1
-
             sensorDistances = collectData()
             lastFar, lastCW, lastCCW = interpretData(sensorDistances, lastFar, 
                                                      lastCW, lastCCW)
@@ -399,11 +392,10 @@ def main():
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-        mixer.music.load(FIN_SOUND)
-        mixer.music.play()
+        playSoundEff(FIN_SOUND)
         SENSOR.stop()
         SENSOR.disconnect()
-        sleep(1)
+        sleep(SLEEP_TIME)
                 
     return
 

@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: August 11, 2021
+##  Last Updated: August 12, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -10,9 +10,8 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
 from bisect import bisect_left   
-from pygame import mixer
 
-from helperFunctions import getCollinearDistance, getPathAngles
+from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
 
 ##Module for performing reposition of the machine, based on sensor data 
 ##collection and analysis.
@@ -109,8 +108,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        mixer.music.load(BLOKD_SOUND)
-        mixer.music.play()        
+        playSoundEff(BLOKD_SOUND)
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value

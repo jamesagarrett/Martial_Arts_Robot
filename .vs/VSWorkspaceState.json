@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\src\\sounds",
+    "\\test"
   ],
-  "SelectedNode": "\\src\\helperFunctions.py",
+  "SelectedNode": "\\src\\sounds",
   "PreviewInSolutionExplorer": false
 }

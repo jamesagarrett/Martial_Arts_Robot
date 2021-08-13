@@ -2,12 +2,13 @@
 ##  James Garrett
 ##
 ##  helperFunctions.py
-##  Last Updated: August 9, 2021
+##  Last Updated: August 12, 2021
 ##
 ##  Functions used to assist with other modules within the project.
 ##
 
 from math import cos, pi, radians
+from pygame import mixer
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import PATH_ZONE
@@ -128,3 +129,22 @@ def getPathAngles(maneuverAngle):
 
     return pathAngles
 
+## ********************************************************
+## name:      playSoundEff
+## called by: lidarAnalysis.main()
+##            maneuverAnalysis.calculateObjMovement()
+##            repositionMachine.moveFromObject()
+##                              moveToOpponent()
+##                              rotateMachine()
+## passed:    str audioFile
+## returns:   nothing
+## calls:     nobody
+##
+## Plays the audio file passed into the function.         *
+## ********************************************************
+def playSoundEff(audioFile):
+
+    mixer.music.load(audioFile)
+    mixer.music.play()
+    
+    return

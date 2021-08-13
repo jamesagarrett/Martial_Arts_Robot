@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 11, 2021
+##  Last Updated: August 12, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -48,6 +48,9 @@ BEGIN_SOUND = "sounds/begin.wav"
 FIN_SOUND = "sounds/finished.wav"
 BLOKD_SOUND = "sounds/blocked.wav"
 STNDBY_SOUND = "sounds/standby.wav"
+
+##Time delay time used before starting and exiting the program.
+SLEEP_TIME = 2.33
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.

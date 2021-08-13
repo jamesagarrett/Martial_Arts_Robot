@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 11, 2021
+##  Last Updated: August 12, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -11,12 +11,11 @@
 
 from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
-from pygame import mixer
 from time import sleep
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle,\
-                            getPathAngles
+                            getPathAngles, playSoundEff
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 
@@ -32,6 +31,7 @@ from globals import ANGLE_ERR,\
                     PWM_FREQ,\
                     PWM_PORTS,\
                     SENSOR,\
+                    SLEEP_TIME,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
@@ -114,7 +114,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                                     ##to stop moving once at repositionDistance;
                                     ##repositionAngle is the center-point for 
                                     ##the movement path, and thus the preferred
-                                    ##angle used, however multiple values are
+                                    ##angle used. However multiple values are
                                     ##used as a failsafe in case an angle
                                     ##doesn't return a distance value.
 
@@ -154,7 +154,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
-    for x in range(1, ANGLE_ERR):
+    for x in range(1, ANGLE_ERR + 1):
         stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])
         stopAngles.append(watchAngles[len(watchAngles)//2 + x])
 
@@ -232,11 +232,10 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-        mixer.music.load(FIN_SOUND)
-        mixer.music.play()
+        playSoundEff(FIN_SOUND)
         SENSOR.stop()
         SENSOR.disconnect()
-        sleep(1)
+        sleep(SLEEP_TIME)
         
     return
 
@@ -354,11 +353,10 @@ def moveToOpponent():
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-        mixer.music.load(FIN_SOUND)
-        mixer.music.play()
+        playSoundEff(FIN_SOUND)
         SENSOR.stop()
         SENSOR.disconnect()
-        sleep(1)
+        sleep(SLEEP_TIME)
         
     return
 
@@ -381,6 +379,14 @@ def rotateMachine(turnCW):
     ##
     #####################################
 
+    stopAngles = [DES_OPP_ANGLE]    ##The angles in which the machine will look 
+                                    ##to stop moving once facing the opponent 
+                                    ##again; DES_OPP_ANGLE is the center-point 
+                                    ##for the front of the machine, and thus the
+                                    ##preferred angle used. However multiple 
+                                    #@values are used as a failsafe in case an
+                                    ##angle doesn't return a distance value.
+    
     wheelPWMs = [0]*3               ##The PWM output values for each wheel.
     
     doneMoving = False              ##Set to True once the machine is again 
@@ -394,6 +400,10 @@ def rotateMachine(turnCW):
                                     ##is stored if present.
 
     #####################################
+
+    for x in range(1, ANGLE_ERR + 1):
+        stopAngles.insert(0, DES_OPP_ANGLE - x)
+        stopAngles.append(DES_OPP_ANGLE + x)
 
     for x in range (3):
         if(turnCW):
@@ -419,8 +429,8 @@ def rotateMachine(turnCW):
                 adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
                                                         SNS_MAX_DISTANCE)
 
-                if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX and
-                  MACH_RADIUS < distance <= adjustedDistance):
+                if(DES_OPP_ANGLE-ANGLE_ERR <= angle <= DES_OPP_ANGLE+ANGLE_ERR 
+                   and MACH_RADIUS < distance <= adjustedDistance):
                     doneMoving = True
                     break
     
@@ -441,10 +451,9 @@ def rotateMachine(turnCW):
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
-        mixer.music.load(FIN_SOUND)
-        mixer.music.play()
+        playSoundEff(FIN_SOUND)
         SENSOR.stop()
         SENSOR.disconnect()
-        sleep(1)
+        sleep(SLEEP_TIME)
             
     return
