@@ -130,14 +130,13 @@ STUCK_RIGHT_TURN_MAX = 359
 ##wheels; note: NOT to the machine frame.
 MACH_RADIUS = 18.0
 
-##The number of angles permitted beyond any given angle that all have an 
-#associated distance that is unknown - value of 0 - or is less than or equal to 
-#the MACH_RADIUS.
+##Used for data collection and analysis of angles adjacent to a given angle
+##which may not have a usable distance value.
 ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 7.0
+MIN_DISTANCE = 8.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
