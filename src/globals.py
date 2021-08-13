@@ -43,6 +43,12 @@ WHEELS = PCA9685.PCA9685()
 ##Any distance measurements are in inches.
 ##Any angular measurements are in degrees.
 
+##File directories for indication sounds used throughout the project.
+BEGIN_SOUND = "sounds/begin.wav"
+FIN_SOUND = "sounds/finished.wav"
+BLOKD_SOUND = "sounds/blocked.wav"
+STNDBY_SOUND = "sounds/standby.wav"
+
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.
 TOTAL_SCANS = 3
@@ -119,7 +125,7 @@ STUCK_RIGHT_TURN_MAX = 359
 
 ##The distance from the perimeter of the sensor to the outside of the machine 
 ##wheels; note: NOT to the machine frame.
-MACH_RADIUS = 19.0
+MACH_RADIUS = 18.0
 
 ##The number of angles permitted beyond any given angle that all have an 
 #associated distance that is unknown - value of 0 - or is less than or equal to 

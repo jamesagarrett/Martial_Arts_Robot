@@ -12,6 +12,7 @@
 from math import atan, ceil, cos, degrees, floor, radians, sin 
 from bisect import bisect_left  
 from pygame import mixer
+from time import sleep
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle,\
@@ -23,6 +24,7 @@ from globals import ANGLE_ERR,\
                     CCW_COEFS,\
                     CW_COEFS,\
                     DES_OPP_ANGLE,\
+                    FIN_SOUND,\
                     FRONT_ANGLE_MIN,\
                     FRONT_ANGLE_MAX,\
                     MACH_RADIUS,\
@@ -184,7 +186,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         else:
             wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x] * MAX_SPEED), 
                                         True)
-    #return
+    
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -230,11 +232,12 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
+        mixer.music.load(FIN_SOUND)
+        mixer.music.play()
         SENSOR.stop()
         SENSOR.disconnect()
-        mixer.music.load("sounds/finished.wav")
-        mixer.music.play()
-
+        sleep(1)
+        
     return
 
 ## ********************************************************
@@ -308,7 +311,7 @@ def moveToOpponent():
             wheelPWMs[x] = calculatePWM(x, abs(wheelSpeeds[x]*MAX_SPEED), True)
  
     watchAngles = getPathAngles(DES_OPP_ANGLE)
-    #return
+
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -351,11 +354,12 @@ def moveToOpponent():
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
+        mixer.music.load(FIN_SOUND)
+        mixer.music.play()
         SENSOR.stop()
         SENSOR.disconnect()
-        mixer.music.load("sounds/finished.wav")
-        mixer.music.play()
-
+        sleep(1)
+        
     return
 
 # ********************************************************
@@ -393,10 +397,10 @@ def rotateMachine(turnCW):
 
     for x in range (3):
         if(turnCW):
-            wheelPWMs[x] = calculatePWM(x, TURN_SPEED, True)
-        else:
             wheelPWMs[x] = calculatePWM(x, TURN_SPEED, False)
-    #return
+        else:
+            wheelPWMs[x] = calculatePWM(x, TURN_SPEED, True)
+
     try:
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, wheelPWMs[0])
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, wheelPWMs[1])
@@ -437,9 +441,10 @@ def rotateMachine(turnCW):
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
+        mixer.music.load(FIN_SOUND)
+        mixer.music.play()
         SENSOR.stop()
         SENSOR.disconnect()
-        mixer.music.load("sounds/finished.wav")
-        mixer.music.play()
-
+        sleep(1)
+            
     return

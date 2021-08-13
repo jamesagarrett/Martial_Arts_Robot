@@ -20,6 +20,7 @@ from repositionMachine import moveFromObject
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
 from globals import ANGLE_ERR,\
+                    BLOKD_SOUND,\
                     MACH_RADIUS,\
                     OPT_DISTANCE,\
                     PATH_ZONE,\
@@ -108,7 +109,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        mixer.music.load("sounds/blocked.wav")
+        mixer.music.load(BLOKD_SOUND)
         mixer.music.play()        
         return
 

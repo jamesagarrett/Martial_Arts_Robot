@@ -13,6 +13,7 @@ from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
 from pygame import mixer
+from time import sleep
 
 ##Module that includes functions that are used throughout the project.
 from helperFunctions import getCollinearDistance, getCartesianAngle
@@ -26,7 +27,9 @@ from maneuverAnalysis import calculateObjMovement
 from repositionMachine import moveToOpponent, rotateMachine
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
-from globals import DES_OPP_ANGLE,\
+from globals import BEGIN_SOUND,\
+                    DES_OPP_ANGLE,\
+                    FIN_SOUND,\
                     FRONT_ANGLE_MAX,\
                     FRONT_ANGLE_MIN,\
                     LEFT_TURN_ANGLE_MAX,\
@@ -40,6 +43,7 @@ from globals import DES_OPP_ANGLE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPP_DISTANCE,\
+                    STNDBY_SOUND,\
                     START_TICK,\
                     STOP_TICK,\
                     STUCK_LEFT_TURN_MIN,\
@@ -370,41 +374,37 @@ def main():
     WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
     WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
     
-    mixer.music.load("sounds/standby.wav")
+    mixer.music.load(STNDBY_SOUND)
     mixer.music.play()
-
-    input("PRESS <ENTER> TO BEGIN")
-    mixer.music.load("sounds/begin.wav")
-    mixer.music.play()
-
-    import time  
+    
     try:
+        input("PRESS <ENTER> TO BEGIN")
+        mixer.music.load(BEGIN_SOUND)
+        mixer.music.play()
+        sleep(2.32)
+ 
         while(True):
             if(reset % 10 == 0):
-                #clear()
+                clear()
                 reset = 0
             reset += 1
 
-            start = time.time()
             sensorDistances = collectData()
-            end = time.time()
-            print("Sensor: %.4f" % (end-start))
-            start = time.time()
             lastFar, lastCW, lastCCW = interpretData(sensorDistances, lastFar, 
                                                      lastCW, lastCCW)
-            end = time.time()
-            print("Action: %.4f" % (end-start))
 
     except:
+        clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[2], START_TICK, STOP_TICK)
+        mixer.music.load(FIN_SOUND)
+        mixer.music.play()
         SENSOR.stop()
         SENSOR.disconnect()
-        mixer.music.load("sounds/finished.wav")
-        mixer.music.play()
-
+        sleep(1)
+                
     return
 
 main()
