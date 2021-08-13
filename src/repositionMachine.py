@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 12, 2021
+##  Last Updated: August 13, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -126,6 +126,9 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                                    ##moved appropriately once these distance
                                    ##values have been reached.
 
+    stopAngle = 0                  ##The current value being added to
+                                   ##stopAngles.
+                                   
     stopDist = 0                   ##The current value being added to 
                                    ##stopDistances.
 
@@ -152,18 +155,29 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     
     #####################################
 
-    ##See documentation for explanation on how the following equations were 
-    ##determined.
-
     for x in range(1, ANGLE_ERR + 1):
-        stopAngles.insert(0, watchAngles[len(watchAngles)//2 - x])
-        stopAngles.append(watchAngles[len(watchAngles)//2 + x])
+        stopAngle = watchAngles[len(watchAngles)//2 - x]
 
+        if(stopAngle >= 0):
+            stopAngles.insert(0, stopAngle)
+        else:
+            stopAngles.insert(0, stopAngle + 360)
+
+        stopAngle = watchAngles[len(watchAngles)//2 + x]
+
+        if(stopAngle <= 359):
+            stopAngles.append(stopAngle)
+        else:
+            stopAngles.append(stopAngle - 360)        
+            
         stopDist = objectDistance/cos(radians(x)) - \
                    repositionDistance/cos(radians(x))
 
         stopDistances.insert(0, stopDist)
         stopDistances.append(stopDist)
+
+    ##See documentation for explanation on how the following equations were 
+    ##determined.
 
     speedVars[0] = sin(radians(repositionAngle))
 
@@ -382,14 +396,6 @@ def rotateMachine(turnCW):
     ##
     #####################################
 
-    stopAngles = [DES_OPP_ANGLE]    ##The angles in which the machine will look 
-                                    ##to stop moving once facing the opponent 
-                                    ##again; DES_OPP_ANGLE is the center-point 
-                                    ##for the front of the machine, and thus the
-                                    ##preferred angle used. However multiple 
-                                    #@values are used as a failsafe in case an
-                                    ##angle doesn't return a distance value.
-    
     wheelPWMs = [0]*3               ##The PWM output values for each wheel.
     
     doneMoving = False              ##Set to True once the machine is again 
@@ -403,10 +409,6 @@ def rotateMachine(turnCW):
                                     ##is stored if present.
 
     #####################################
-
-    for x in range(1, ANGLE_ERR + 1):
-        stopAngles.insert(0, DES_OPP_ANGLE - x)
-        stopAngles.append(DES_OPP_ANGLE + x)
 
     for x in range (3):
         if(turnCW):
