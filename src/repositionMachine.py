@@ -96,6 +96,7 @@ def calculatePWM(wheel, rpm, spinCW):
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle()
+##                            playSoundEff()
 ##
 ## Repositions the machine away from any object considered*
 ## too close, at the specified angular location and       *     
@@ -247,6 +248,7 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle(),
 ##                            getPathAngles()
+##                            playSoundEff()
 ##
 ## Repositions the machine towards the opponent at the    *
 ## DES_OPP_ANGLE location until reaching OPT_DISTANCE     *
@@ -368,6 +370,7 @@ def moveToOpponent():
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle(),
 ##                            getCollinearDistance()
+##                            playSoundEff()
 ##
 ## Rotate the machine to face the opponent.               *
 ## ********************************************************

@@ -45,6 +45,7 @@ from globals import ANGLE_ERR,\
 ## returns:   nothing
 ## calls:     helperFunctions.getCollinearDistance(),
 ##                            getPathAngles()
+##                            playSoundEff()
 ##            maneuverAnalysis.calculateObjMovement(),
 ##                             findMoveAngle(), 
 ##                             findMoveDistance(), 

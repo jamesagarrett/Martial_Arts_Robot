@@ -342,9 +342,9 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 ##            lidarAnalysis.collectData()
 ##                          interpretData()
 ##
-## Begins program when user is ready, clearing the        *
-## console periodically of any print messages before      *
-## terminating on keyboard interrupt.                     *
+## Begins program when user is ready, clearing the console*
+## periodically of any print messages before terminating  *
+## on keyboard interrupt.                                 *
 ## ********************************************************
 def main():
     #####################################
