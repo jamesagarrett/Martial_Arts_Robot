@@ -104,7 +104,7 @@ CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
 
 ##The maximum distance value that can be recorded by the lidar sensor according
 ##to its specifications.
-SNS_RANGE = 236.22
+SNS_RANGE = 236.2200
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
