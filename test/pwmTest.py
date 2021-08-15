@@ -67,7 +67,7 @@ def getRPM(pin):
         pwm.set_pwm(PWM_PORTS[2], 0, 1000)
         quit()
 	
-maxSpeed = 250
+maxSpeed = 400
 wheelSpeeds = [0]*3             
 speedVars = [0]*2
 rotationCoeff = 0
@@ -112,34 +112,34 @@ for x in range (3):
         wantRPMs[x] = 0
     elif(wheelSpeeds[x] > 0):
         wantRPMs[x] = wheelSpeeds[x]*maxSpeed
-        #wheelPWMs[x] = round(1045 + wantRPMs[x])
         wheelPWMs[x] = calculatePWM(x, wantRPMs[x], True)
     else:
         wantRPMs[x] = abs(wheelSpeeds[x]*maxSpeed)
-        #wheelPWMs[x] = round(955 - wantRPMs[x])
         wheelPWMs[x] = calculatePWM(x, wantRPMs[x], False)
 
 pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
 pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
 pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
-time.sleep(0.1)
+time.sleep(3)
 print("Speeds: ", wheelSpeeds)
 print("PWMs: ", wheelPWMs)
-
-for x in range (3):
-    if (wantRPMs[x] < 1):
-        realRPMs[x] = 0
-    else:
-        realRPMs[x] = getRPM(pins[x])
-
-for x in range (3):
-	if(wantRPMs[x] != 0):
-		errRPMs[x] = ((realRPMs[x]-wantRPMs[x])/wantRPMs[x])*100 
-	else:
-		errRPMs[x] = realRPMs[x]
-
-print("RPMs (Actual/Expected): %.2f/%.2f (%.2f%%), %.2f/%.2f (%.2f%%), %.2f/%.2f (%.2f%%)" % (realRPMs[0], wantRPMs[0], errRPMs[0], realRPMs[1], wantRPMs[1], errRPMs[1], realRPMs[2], wantRPMs[2], errRPMs[2]))
 
 pwm.set_pwm(PWM_PORTS[0], 0, 1000)
 pwm.set_pwm(PWM_PORTS[1], 0, 1000)
 pwm.set_pwm(PWM_PORTS[2], 0, 1000)
+
+#for x in range (3):
+#    if (wantRPMs[x] < 1):
+#        realRPMs[x] = 0
+#    else:
+#        realRPMs[x] = getRPM(pins[x])
+
+#for x in range (3):
+#	if(wantRPMs[x] != 0):
+#		errRPMs[x] = ((realRPMs[x]-wantRPMs[x])/wantRPMs[x])*100 
+#	else:
+#		errRPMs[x] = realRPMs[x]
+
+#print("RPMs (Actual/Expected): %.2f/%.2f (%.2f%%), %.2f/%.2f (%.2f%%), %.2f/%.2f (%.2f%%)" % (realRPMs[0], wantRPMs[0], errRPMs[0], realRPMs[1], wantRPMs[1], errRPMs[1], realRPMs[2], wantRPMs[2], errRPMs[2]))
+
+

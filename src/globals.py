@@ -54,7 +54,7 @@ SLEEP_TIME = 1.33
 
 ##The amount of sensor scan rotations to perform for collecting angular distance
 ##values before analyzing them.
-TOTAL_SCANS = 3
+TOTAL_SCANS = 4
 
 ##The physical angular location of each wheel on the machine.
 WHEEL_LOCATIONS = [210, 330, 90]
@@ -102,6 +102,10 @@ CCW_COEFS = [[-0.00003, 1.19735, 1026.95720],
              [0.00006, 1.12871, 1017.63192],
              [0.00007, 1.09813, 1015.55372]]
 
+##The maximum distance value that can be recorded by the lidar sensor according
+##to its specifications.
+SNS_RANGE = 236.22
+
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
 FRONT_ANGLE_MIN = 250
@@ -136,7 +140,7 @@ ANGLE_ERR = 4
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 8.0
+MIN_DISTANCE = 7.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
@@ -161,7 +165,7 @@ SUF_DISTANCE = 14.0
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
-OPP_DISTANCE = MAX_DISTANCE + 16.0
+OPP_DISTANCE = MAX_DISTANCE + 18.0
 
 ##The opponent distance sensor reading.
 SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS

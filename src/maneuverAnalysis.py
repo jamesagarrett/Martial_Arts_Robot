@@ -110,6 +110,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
 
     if(maneuverAngle == -1):
         playSoundEff(BLOKD_SOUND)
+        print(objAngles)
         return
 
     ##Retrieve the distance value at the associated maneuverAngle. If this value
@@ -132,7 +133,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         else:
             rightClosestAngle = 0
 
-        for _ in range(ANGLE_ERR):
+        for _ in range(1, ANGLE_ERR):
             if(allDistances[leftClosestAngle] <= MACH_RADIUS):
                 if(leftClosestAngle != 0):
                     leftClosestAngle -= 1
@@ -150,7 +151,16 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                                 + allDistances[rightClosestAngle]) / 2
                 break
 
-    if(moveObjDistance == 0.0):
+            elif(allDistances[leftClosestAngle] > MACH_RADIUS):
+                maneuverAngle = leftClosestAngle
+                moveObjDistance = allDistances[leftClosestAngle]
+
+            elif(allDistances[rightClosestAngle] > MACH_RADIUS):
+                maneuverAngle = rightClosestAngle
+                moveObjDistance = allDistances[rightClosestAngle]
+ 
+    if(moveObjDistance == 0.0): 
+        print("can't find")
         insertPoint = bisect_left(objAngles, maneuverAngle)
         objAngles.insert(insertPoint, maneuverAngle)
         objDistances.insert(insertPoint, allDistances[maneuverAngle])
@@ -170,7 +180,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         
     clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                               MACH_RADIUS, maneuverDistance + SNS_MIN_DISTANCE)
-
+    print("O:", clearPath)
     if(clearPath):
         maneuverFound = True
     else:
@@ -182,7 +192,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                                 MACH_RADIUS, maneuverDistance + 
                                 SNS_MIN_DISTANCE)
-
+        print("S:", clearPath)
         if(clearPath):
             maneuverFound = True
         
@@ -214,6 +224,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                         objDistances.insert(insertPoint, allDistances[x])
 
     if(maneuverFound):
+       print("Move at", maneuverAngle, "to object", moveObjDistance, "away, for", maneuverDistance) 
        moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
                        pathAngles)
     else:
@@ -274,7 +285,7 @@ def findMoveAngle(objAngles):
 
     if(largestSpace < PATH_ZONE):
         maneuverAngle = -1
-
+    print(maneuverAngle)
     return maneuverAngle
 
 ## ********************************************************
@@ -420,6 +431,7 @@ def isPathClear(maneuverAngle, pathAngles, allDistances, xBound, yBound):
         yCoord = cos(radians(coordAngle))*allDistances[angle]
         
         if(xCoord <= xBound and yCoord < yBound):
+            #print(angle, allDistances[angle])
             return False
 
     return True

@@ -434,7 +434,7 @@ def rotateMachine(turnCW):
                 adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
                                                         SNS_MAX_DISTANCE)
 
-                if(DES_OPP_ANGLE-ANGLE_ERR <= angle <= DES_OPP_ANGLE+ANGLE_ERR 
+                if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX 
                    and MACH_RADIUS < distance <= adjustedDistance):
                     doneMoving = True
                     break

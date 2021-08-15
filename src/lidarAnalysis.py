@@ -12,6 +12,7 @@
 from math import atan, ceil, degrees, floor
 from bisect import bisect_left	
 from os import system
+from pygame import mixer
 from time import sleep
 
 ##Module that includes functions that are used throughout the project.
@@ -43,6 +44,7 @@ from globals import BEGIN_SOUND,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPP_DISTANCE,\
+                    SNS_RANGE,\
                     STNDBY_SOUND,\
                     START_TICK,\
                     STOP_TICK,\
@@ -80,11 +82,11 @@ def collectData():
     ##
     #####################################
 
-    sensorDistances = [0.0]*360 ##A list of all measured sensor distances for 
-                                ##each angle, 0-359.
+    sensorDistances = [SNS_RANGE]*360  ##A list of all measured sensor distances
+                                       ##for each angle, 0-359.
 
-    cartAngle = 0               ##The angle measurement returned from 
-                                ##getCartesianAngle().
+    cartAngle = 0                      ##The angle measurement returned from 
+                                       ##getCartesianAngle().
     
     #####################################
     
@@ -100,9 +102,9 @@ def collectData():
                 continue
 
             cartAngle = getCartesianAngle(floor(angle))
-            if(sensorDistances[cartAngle] > 0.0):
+            if(sensorDistances[cartAngle] < SNS_RANGE):
                 cartAngle = getCartesianAngle(ceil(angle))
-                if(sensorDistances[cartAngle] > 0.0):
+                if(sensorDistances[cartAngle] < SNS_RANGE):
                     cartAngle = getCartesianAngle(round(angle))
 
             sensorDistances[cartAngle] = distance * 0.0393
@@ -387,7 +389,7 @@ def main():
                                                      lastCW, lastCCW)
 
     except:
-        clear()
+        #clear()
         print("TERMINATING")
         WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
         WHEELS.set_pwm(PWM_PORTS[1], START_TICK, STOP_TICK)
