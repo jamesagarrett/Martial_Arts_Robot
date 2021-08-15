@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 13, 2021
+##  Last Updated: August 14, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -136,7 +136,7 @@ MACH_RADIUS = 18.0
 
 ##Used for data collection and analysis of angles adjacent to a given angle
 ##which may not have a usable distance value.
-ANGLE_ERR = 4
+ANGLE_ERR = 5
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
