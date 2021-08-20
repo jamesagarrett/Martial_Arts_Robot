@@ -1,6 +1,6 @@
 # Martial Arts Robot
 ## Introduction
-A maneuverable, robotic machine powered by a Raspberry Pi that uses LIDAR detection to autonomously navigate its environment. This machine is designed to simulate martial arts sparring for users who want a dynamic training experience when unaccompanied by another human opponent. Built to support the weight of a punching bag, this machine navigates its surroundings while also keeping track of its user's position and maintaining a close but safe distance from them at all times.
+A maneuverable, robotic machine that uses LIDAR detection to autonomously navigate its environment. This machine is controlled through a Raspberry Pi and is designed to simulate martial arts sparring for users who want a dynamic training experience when unaccompanied by another human opponent. Built to support the weight of a punching bag, the robot navigates its surroundings while also keeping track of its user's position and maintaining a close but safe distance from them at all times.
 ## Robot Features
 **Raspberry Pi 4.0:** Single-board computer used for code execution  
 **Slamtec RPLIDAR A1:** 360° distancing detection sensor used for analyzing robot surroundings  
