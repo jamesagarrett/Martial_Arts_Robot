@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  helperFunctions.py
-##  Last Updated: August 12, 2021
+##  Last Updated: September 1, 2021
 ##
 ##  Functions used to assist with other modules within the project.
 ##
@@ -120,12 +120,14 @@ def getPathAngles(maneuverAngle):
         if(maneuverAngle-x >= 0):
             pathAngles.insert(0, maneuverAngle-x)
         else:
-            pathAngles.insert(0, 360+(maneuverAngle-x))
+            pathAngles.insert(0, maneuverAngle - x + 360)
 
         if(maneuverAngle+x <= 359):
             pathAngles.append(maneuverAngle+x)
         else:
-            pathAngles.append((maneuverAngle+x)-360)
+            pathAngles.append(maneuverAngle + x - 360)
+
+    pathAngles.sort()
 
     return pathAngles
 

@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 30, 2021
+##  Last Updated: August 31, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -108,8 +108,8 @@ SNS_RANGE = 236.2200
 
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
-FRONT_ANGLE_MIN = 250
-FRONT_ANGLE_MAX = 290
+FRONT_ANGLE_MIN = 245
+FRONT_ANGLE_MAX = 285
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
@@ -118,8 +118,8 @@ DES_OPP_ANGLE = round((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 ##The positions of the opponent in which the machine will turn to face them are
 ##within these angular ranges.
 LEFT_TURN_ANGLE_MIN = 200
-LEFT_TURN_ANGLE_MAX = 249
-RIGHT_TURN_ANGLE_MIN = 291
+LEFT_TURN_ANGLE_MAX = 244
+RIGHT_TURN_ANGLE_MIN = 286
 RIGHT_TURN_ANGLE_MAX = 340
 
 ##If the opponent is unable to move backward, allowing the machine to move
@@ -136,7 +136,7 @@ MACH_RADIUS = 18.0
 
 ##Used for data collection and analysis of angles adjacent to a given angle
 ##which may not have a usable distance value.
-ANGLE_ERR = 5
+ANGLE_ERR = 7
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.

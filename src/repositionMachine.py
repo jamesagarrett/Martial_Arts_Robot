@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 31, 2021
+##  Last Updated: September 1, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -35,6 +35,7 @@ from globals import ANGLE_ERR,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
+                    SNS_RANGE,\
                     SPEED_CONSTS,\
                     START_TICK,\
                     STOP_TICK,\
@@ -119,13 +120,7 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                                    ##as a failsafe in case the targetAngle value
                                    ##does not return a distance.
 
-    stopDistances = \
-    [desiredDistance]              ##The distance values that correspond with
-                                   ##the stopAngles values, in which the machine
-                                   ##will look to stop repositioning itself.
-
-    currDistances = \
-    [allDistances[targetAngle]]    ##The current distance values for the
+    currDistances = []             ##The current distance values for the
                                    ##stopAngles values before repositioning and
                                    ##updated as repositioning occurs.
 
@@ -165,20 +160,10 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
         if(stopAngles[len(stopAngles)-1] > 359):
             stopAngles[len(stopAngles)-1] -= 360
 
-        stopDistances.insert(0, desiredDistance/cos(radians(x)))
-        stopDistances.append(desiredDistance/cos(radians(x)))
-
-        if(targetAngle - x < 0):
-            currDistances.insert(0, allDistances[targetAngle - x + 360])
-        else:
-            currDistances.insert(0, allDistances[targetAngle - x])
-
-        if(targetAngle + x > 359):
-            currDistances.append(allDistances[targetAngle + x - 360])
-        else:
-            currDistances.append(allDistances[targetAngle + x])
-
-    if(sum(x > stopDistances[x] for x in currDistances) > ANGLE_ERR):
+    stopAngles.sort()
+    currDistances.append(allDistances[x]) for x in stopAngles
+    
+    if(sum(x > desiredDistance for x in currDistances) > ANGLE_ERR):
         lookForShorter = True
 
     ##See documentation for explanation on how the following equations were 
@@ -229,14 +214,17 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                 index = bisect_left(stopAngles, angle)
 
                 if(index < len(stopAngles) and angle == stopAngles[index]):
-                    currDistances[index] = distance
+                    if(distance == 0.0):
+                        distance = SNS_RANGE 
+					currDistances[index] = distance
+
                     if(lookForShorter):
-                        if(sum(x <= stopDistances[x] for x in currDistances) > 
+                        if(sum(x <= desiredDistance for x in currDistances) > 
                         ANGLE_ERR):
                             doneMoving = True
                             break
                     else:
-                        if(sum(x >= stopDistances[x] for x in currDistances) > 
+                        if(sum(x >= desiredDistance for x in currDistances) > 
                         ANGLE_ERR):
                             doneMoving = True
                             break
@@ -390,7 +378,8 @@ def moveToOpponent():
 # ********************************************************
 ## name:      rotateMachine
 ## called by: lidarAnalysis.interpretData()
-## passed:    bool True/False
+## passed:    bool True/False, int MIN area value,
+##            int MAX area value
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle(),
@@ -399,7 +388,7 @@ def moveToOpponent():
 ##
 ## Rotate the machine to face the opponent.               *
 ## ********************************************************
-def rotateMachine(turnCW):
+def rotateMachine(turnCW, stopMin, stopMax):
     
     #####################################
     ##
@@ -445,8 +434,8 @@ def rotateMachine(turnCW):
                 adjustedDistance = getCollinearDistance(angle, DES_OPP_ANGLE, 
                                                         SNS_MAX_DISTANCE)
 
-                if(FRONT_ANGLE_MIN <= angle <= FRONT_ANGLE_MAX 
-                   and MACH_RADIUS < distance <= adjustedDistance):
+                if(stopMin <= angle <= stopMax and MACH_RADIUS 
+                   < distance <= adjustedDistance):
                     doneMoving = True
                     break
     

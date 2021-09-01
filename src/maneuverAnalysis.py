@@ -130,8 +130,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
 
     if(clearPath):
         moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
-                       MACH_RADIUS, closeObjAngle, allDistances[closeObjAngle], 
-                       SNS_OPT_DISTANCE)
+                       MACH_RADIUS, closeObjAngle, allDistances[closeObjAngle])
         desiredDistance = SNS_OPT_DISTANCE
         maneuverFound = True
     else:
@@ -147,7 +146,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         if(clearPath):
             moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
                            MACH_RADIUS, closeObjAngle, allDistances
-                           [closeObjAngle], SNS_SUF_DISTANCE)
+                           [closeObjAngle])
             desiredDistance = SNS_SUF_DISTANCE
             maneuverFound = True
         
@@ -308,7 +307,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
                             - abs(objYComp)
             if(maneuverYComp > maneuverDistance):
                 maneuverDistance = maneuverYComp
-                closestObjAngle = x
+                closestObjAngle = objAngles[x]
         else:
             a = tan(radians(maneuverAngle))**2 + 1.0
             b = -2*objXComp - 2*objYComp*tan(radians(maneuverAngle))
@@ -325,7 +324,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
                 if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
                         > maneuverDistance):
                     maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
-                    closestObjAngle = x
+                    closestObjAngle = objAngles[x]
 
             #Recalculate maneuverXComp if in the incorrect quadrant.
             elif((maneuverXComp > 0 and 90 < maneuverAngle < 270) 
@@ -336,7 +335,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
                 if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
                         > maneuverDistance):
                     maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
-                    closestObjAngle = x
+                    closestObjAngle = objAngles[x]
 
     return maneuverDistance, closestObjAngle
 
@@ -345,8 +344,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int maneuverAngle, float maneuverDistance +
 ##            MACH_RADIUS, int closeObjAngle, 
-##            float closeObjDistance,
-##            float SNS_OPT_DISTANCE/SNS_SUF_DISTANCE
+##            float closeObjDistance
 ## returns:   int targetAngle
 ## calls:     nobody 
 ##
@@ -355,8 +353,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
 ## repositioning an appropriate distance away from said   *
 ## object.                                                *
 ## ********************************************************
-def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance, 
-                    desiredDistance):
+def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
 
     #####################################
     ##
@@ -368,6 +365,9 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance,
                                 ##object at closeAngle after repositioning with
                                 ##moveAngle and moveDistance.
  
+    targetDistance = 0.0        ##The corresponding distance value associatd
+                                ##with the targetAngle value.
+
     compMoveAngle = moveAngle   ##The complement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
@@ -391,22 +391,22 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance,
     vecTarg[0] = vector1[0] + vector2[0]
     vecTarg[1] = vector1[1] + vector2[1]
 
+    targetDistance = sqrt(vecTarg[0]**2 + vecTarg[1]**2)  
+
     if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
-        targetAngle = degrees(acos(round(vecTarg[0]/desiredDistance, 3)))
+        targetAngle = degrees(acos(round(vecTarg[0]/targetDistance, 3)))
     elif(vecTarg[0] < 0 and vecTarg[1] < 0):
         targetAngle = 180 + (180 - degrees(acos(round(vecTarg[0]/
-                                                      desiredDistance, 3))))
+                                                      targetDistance, 3))))
     elif(vecTarg[0] < 0):
-        print(round(vecTarg[0]/desiredDistance, 3))
-        targetAngle = degrees(acos(round(vecTarg[0]/desiredDistance, 3)))
+        targetAngle = degrees(acos(round(vecTarg[0]/targetDistance, 3)))
     else:
-        targetAngle = 360 + degrees(asin(round(vecTarg[1]/desiredDistance, 3)))
+        targetAngle = 360 + degrees(asin(round(vecTarg[1]/targetDistance, 3)))
 
-    print(vector1, vector2, vecTarg)
-    print(sqrt(vecTarg[0]**2 + vecTarg[1]**2), desiredDistance)
-    print(targetAngle)
+    #print(vector1, vector2, vecTarg)
+    #print(objDistance, targetAngle, targetDistance, '\n')
 
-    return round(targetAngle)
+    return floor(targetAngle)
 
 ## ********************************************************
 ## name:      isPathClear
