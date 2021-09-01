@@ -161,7 +161,7 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
             stopAngles[len(stopAngles)-1] -= 360
 
     stopAngles.sort()
-    currDistances.append(allDistances[x]) for x in stopAngles
+    currDistances = [allDistances[x] for x in stopAngles]
     
     if(sum(x > desiredDistance for x in currDistances) > ANGLE_ERR):
         lookForShorter = True
@@ -216,7 +216,7 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                 if(index < len(stopAngles) and angle == stopAngles[index]):
                     if(distance == 0.0):
                         distance = SNS_RANGE 
-					currDistances[index] = distance
+                    currDistances[index] = distance
 
                     if(lookForShorter):
                         if(sum(x <= desiredDistance for x in currDistances) > 
