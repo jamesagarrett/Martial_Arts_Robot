@@ -181,7 +181,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                         objDistances.insert(insertPoint, allDistances[x])
 
     if(maneuverFound):
-       moveFromObject(maneuverAngle, pathAngles, moveObjAngle, desiredDistance)
+        moveFromObject(maneuverAngle, pathAngles, moveObjAngle, desiredDistance,
+                       allDistances)
     else:
         calculateObjMovement(objAngles, objDistances, allDistances)
 
@@ -370,9 +371,10 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance,
     compMoveAngle = moveAngle   ##The complement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
-    vector1 = [0,0]             ##The x and y components for compMoveAngle,
-    vector2 = [0,0]             ##objAngle, and targetAngle.
-    vecTarg = [0,0]
+    vector1 = [0,0]             
+    vector2 = [0,0]             
+    vecTarg = [0,0]             ##The x and y components for compMoveAngle,
+                                ##objAngle, and targetAngle.
 
     #####################################
 

@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 30, 2021
+##  Last Updated: August 31, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -92,7 +92,8 @@ def calculatePWM(wheel, rpm, spinCW):
 ## name:      moveFromObject
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int maneuverAngle, int[] pathAngles,
-##            int newObjAngle, int desiredDistance
+##            int newObjAngle, int desiredDistance,
+##            float[] allDistances
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle()
@@ -102,7 +103,8 @@ def calculatePWM(wheel, rpm, spinCW):
 ## too close, at the specified angular location and       *     
 ## distance.                                              *        
 ## ********************************************************
-def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance):
+def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
+                   allDistances):
 
     #####################################
     ##
@@ -118,9 +120,18 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance):
                                    ##does not return a distance.
 
     stopDistances = \
-        [desiredDistance]          ##The distance values that correspond with
+    [desiredDistance]              ##The distance values that correspond with
                                    ##the stopAngles values, in which the machine
                                    ##will look to stop repositioning itself.
+
+    currDistances = \
+    [allDistances[targetAngle]]    ##The current distance values for the
+                                   ##stopAngles values before repositioning and
+                                   ##updated as repositioning occurs.
+
+    lookForShorter = False         ##Set to True if majority of currDistances
+                                   ##values are already greater than the
+                                   ##desiredDistance value.
 
     wheelSpeeds = [0]*3            ##The speed for each wheel in order to
                                    ##reposition at the desired angle; this
@@ -156,6 +167,19 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance):
 
         stopDistances.insert(0, desiredDistance/cos(radians(x)))
         stopDistances.append(desiredDistance/cos(radians(x)))
+
+        if(targetAngle - x < 0):
+            currDistances.insert(0, allDistances[targetAngle - x + 360])
+        else:
+            currDistances.insert(0, allDistances[targetAngle - x])
+
+        if(targetAngle + x > 359):
+            currDistances.append(allDistances[targetAngle + x - 360])
+        else:
+            currDistances.append(allDistances[targetAngle + x])
+
+    if(sum(x > stopDistances[x] for x in currDistances) > ANGLE_ERR):
+        lookForShorter = True
 
     ##See documentation for explanation on how the following equations were 
     ##determined.
@@ -205,9 +229,17 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance):
                 index = bisect_left(stopAngles, angle)
 
                 if(index < len(stopAngles) and angle == stopAngles[index]):
-                    if(MACH_RADIUS < distance <= stopDistances[index]):
-                        doneMoving = True
-                        break
+                    currDistances[index] = distance
+                    if(lookForShorter):
+                        if(sum(x <= stopDistances[x] for x in currDistances) > 
+                        ANGLE_ERR):
+                            doneMoving = True
+                            break
+                    else:
+                        if(sum(x >= stopDistances[x] for x in currDistances) > 
+                        ANGLE_ERR):
+                            doneMoving = True
+                            break
 
             if(doneMoving):
                 WHEELS.set_pwm(PWM_PORTS[0], START_TICK, STOP_TICK)
