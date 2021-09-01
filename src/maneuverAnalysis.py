@@ -2,13 +2,14 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: August 12, 2021
+##  Last Updated: August 31, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
 ##
 
-from math import atan, ceil, cos, degrees, floor, radians, sin, sqrt, tan 
+from math import acos, asin, atan, ceil, cos, degrees, floor, radians, sin, \
+                 sqrt, tan 
 from bisect import bisect_left   
 
 from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
@@ -25,6 +26,8 @@ from globals import ANGLE_ERR,\
                     PATH_ZONE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
+                    SNS_OPT_DISTANCE,\
+                    SNS_SUF_DISTANCE,\
                     SUF_DISTANCE
 
 #--------------------------------------  --------------------------------------#
@@ -48,7 +51,8 @@ from globals import ANGLE_ERR,\
 ##                            playSoundEff()
 ##            maneuverAnalysis.calculateObjMovement(),
 ##                             findMoveAngle(), 
-##                             findMoveDistance(), 
+##                             findMoveDistance(),
+##                             findTargetAngle(),
 ##                             isPathClear()
 ##            repositionMachine.moveFromObject()            
 ##
@@ -66,21 +70,15 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = 0           ##The angle the machine will move at when
                                 ##repositioning.
 
-    maneuverDistance = 0.0      ##The distance the machine will travel when 
-                                ##repositioning.
+    maneuverDistance = 0.0      ##The approximate distance the machine will 
+                                ##travel when repositioning.
 
     maneuverFound = False       ##Set to True once maneuverAngle and
                                 ##maneuverDistance have been determined.
 
-    moveObjDistance = 0.0       ##The distance to the nearest object in the
-                                ##direction of maneuverAngle.
-
-    leftClosestAngle = \
-    rightClosestAngle = 0       ##Used to find the closest angles to 
-                                ##maneuverAngle if its corresponding distance
-                                ##value is less than MACH_RADIUS; the average is
-                                ##then used, so long as they are not too far 
-                                ##from the original angle.
+    moveObjAngle = 0            ##The angle of the object closest to the machine
+                                ##after repositioning with maneuverAngle and
+                                ##maneuverDIstance.
 
     pathAngles = []             ##Any angle in the path of the machine when  
                                 ##repositioning; that is, an angle at which an 
@@ -92,6 +90,13 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     clearPath = False           ##Set to True if isPathClear() returns True, 
                                 ##finding no objects within the desired movement
                                 ##path of the machine. 
+
+    desiredDistance = 0         ##The distance the machine will look to be away
+                                ##from the object closest to itself when
+                                ##repositioning.
+    
+    manObjDistance = 0          ##The distance of the nearest object in the
+                                ##direction of maneuverAngle.
 
     insertPoint = 0             ##The position in which an item is added to the
                                 ##objAngles and objDistances lists.
@@ -113,95 +118,47 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         print(objAngles)
         return
 
-    ##Retrieve the distance value at the associated maneuverAngle. If this value
-    ##is detecting an object within the radius of the machine - such as a
-    ##mechanical support beam - use the adjacent angles to estimate the 
-    ##distance. If still not calculable, add maneuverAngle and its distance 
-    ##to objAngles and objDistances respectively, and recursively call 
-    ##calculateObjMovement() until maneuverAngle and manueverDistance can be
-    ##determined.
-    if(allDistances[maneuverAngle] > MACH_RADIUS):
-        moveObjDistance = allDistances[maneuverAngle]
-    else:
-        if(maneuverAngle != 0):
-            leftClosestAngle = maneuverAngle - 1
-        else:
-            leftClosestAngle = 359
-
-        if(maneuverAngle != 359):
-            rightClosestAngle = maneuverAngle + 1
-        else:
-            rightClosestAngle = 0
-
-        for _ in range(1, ANGLE_ERR):
-            if(allDistances[leftClosestAngle] <= MACH_RADIUS):
-                if(leftClosestAngle != 0):
-                    leftClosestAngle -= 1
-                else:
-                    leftClosestAngle = 359
-            if(allDistances[rightClosestAngle] <= MACH_RADIUS):
-                if(rightClosestAngle != 359):
-                    rightClosestAngle += 1
-                else:
-                    rightClosestAngle = 0
-
-            if(allDistances[leftClosestAngle] > MACH_RADIUS 
-                    < allDistances[rightClosestAngle]):
-                moveObjDistance = (allDistances[leftClosestAngle] 
-                                + allDistances[rightClosestAngle]) / 2
-                break
-
-            elif(allDistances[leftClosestAngle] > MACH_RADIUS):
-                maneuverAngle = leftClosestAngle
-                moveObjDistance = allDistances[leftClosestAngle]
-
-            elif(allDistances[rightClosestAngle] > MACH_RADIUS):
-                maneuverAngle = rightClosestAngle
-                moveObjDistance = allDistances[rightClosestAngle]
- 
-    if(moveObjDistance == 0.0): 
-        print("can't find")
-        insertPoint = bisect_left(objAngles, maneuverAngle)
-        objAngles.insert(insertPoint, maneuverAngle)
-        objDistances.insert(insertPoint, allDistances[maneuverAngle])
-        calculateObjMovement(objAngles, objDistances, allDistances)
-        return
-
-    ##Once the best angle to traverse at is determined, find all additional 
-    ##angles in the path of the machine when traveling in the direction of 
-    ##maneuverAngle.
-
     pathAngles = getPathAngles(maneuverAngle)
 
     ##Check OPT_DISTANCE maneuverability.
 
-    maneuverDistance = findMoveDistance(objAngles, objDistances, 
-                                        maneuverAngle, OPT_DISTANCE)
+    maneuverDistance, closeObjAngle = findMoveDistance(objAngles, objDistances, 
+                                                    maneuverAngle, OPT_DISTANCE)
         
     clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                               MACH_RADIUS, maneuverDistance + SNS_MIN_DISTANCE)
-    print("O:", clearPath)
+
     if(clearPath):
+        moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
+                       MACH_RADIUS, closeObjAngle, allDistances[closeObjAngle], 
+                       SNS_OPT_DISTANCE)
+        desiredDistance = SNS_OPT_DISTANCE
         maneuverFound = True
     else:
         ##Check SUF_DISTANCE maneuverability.
 
-        maneuverDistance = findMoveDistance(objAngles, objDistances, 
-                                                maneuverAngle, SUF_DISTANCE) 
+        maneuverDistance, closeObjAngle = findMoveDistance(objAngles, 
+                                      objDistances, maneuverAngle, SUF_DISTANCE)
 
         clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                                 MACH_RADIUS, maneuverDistance + 
                                 SNS_MIN_DISTANCE)
-        print("S:", clearPath)
+
         if(clearPath):
+            moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
+                           MACH_RADIUS, closeObjAngle, allDistances
+                           [closeObjAngle], SNS_SUF_DISTANCE)
+            desiredDistance = SNS_SUF_DISTANCE
             maneuverFound = True
         
         else:
+            manObjDistance = allDistances[maneuverAngle]
             insertPoint = bisect_left(objAngles, maneuverAngle)
-            objAngles.insert(insertPoint, maneuverAngle)
-            objDistances.insert(insertPoint, moveObjDistance)
 
-            wallAnglesCount = ceil(degrees(atan(MACH_RADIUS/moveObjDistance)))
+            objAngles.insert(insertPoint, maneuverAngle)
+            objDistances.insert(insertPoint, manObjDistance)
+
+            wallAnglesCount = ceil(degrees(atan(MACH_RADIUS/manObjDistance)))
 
             for x in range (maneuverAngle - wallAnglesCount, maneuverAngle
                             + wallAnglesCount + 1):
@@ -212,7 +169,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                     x -= 360
                 
                 adjustedDistance = getCollinearDistance(x, maneuverAngle,
-                                                        moveObjDistance)
+                                                        manObjDistance)
 
                 if(MACH_RADIUS < allDistances[x] <= adjustedDistance):
 
@@ -224,9 +181,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                         objDistances.insert(insertPoint, allDistances[x])
 
     if(maneuverFound):
-       print("Move at", maneuverAngle, "to object", moveObjDistance, "away, for", maneuverDistance) 
-       moveFromObject(maneuverAngle, maneuverDistance, moveObjDistance,
-                       pathAngles)
+       moveFromObject(maneuverAngle, pathAngles, moveObjAngle, desiredDistance)
     else:
         calculateObjMovement(objAngles, objDistances, allDistances)
 
@@ -285,19 +240,20 @@ def findMoveAngle(objAngles):
 
     if(largestSpace < PATH_ZONE):
         maneuverAngle = -1
-    print(maneuverAngle)
+    
     return maneuverAngle
 
 ## ********************************************************
 ## name:      findMoveDistance
 ## called by: maneuverAnalysis.calculateObjMovement()
 ## passed:    int[] objAngles, float[] objDistances,
-##            int maneuverAngle, float OPT_DISTANCE/SUF_DISTANCE
-## returns:   float maneuverDistance
+##            int maneuverAngle, 
+##            float OPT_DISTANCE/SUF_DISTANCE
+## returns:   float maneuverDistance, int closestObjAngle
 ## calls:     nobody 
 ##
 ## Determine the required distance for the machine to     *
-## travel while repositioning itself away from an object  *                  
+## travel while repositioning itself away from an object  * 
 ## or opponent considered too close.                      *
 ## ********************************************************
 def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
@@ -310,6 +266,9 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     
     maneuverDistance = 0.0      ##The distance the machine will travel when 
                                 ##repositioning.
+
+    closestObjAngle = 0         ##The objAngle value that results in the largest
+                                ##maneuverDistance value.
 
     objXComp = 0.0              ##The x(horizontal) component of an object's 
                                 ##location relative to the machine.
@@ -333,13 +292,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     ##close. The amount of movement required to reach the desiredDistance away
     ##from this object is our maneuverDistance.
         
-    for x in range (0, len(objAngles)):
-        
-        ##Ignore values that were added to objAngles in calculateObjMovement()
-        ##due to the fact that they - or their corresponding angles - were not 
-        ##adequate for proper reposition. These distances were not originally  
-        ##found as being too close to the machine, and thus do not need to be  
-        ##accounted for.
+    for x in range (len(objAngles)):
 
         if(objDistances[x] - MACH_RADIUS >= desiredDistance 
         or objDistances[x] <= MACH_RADIUS):
@@ -353,7 +306,8 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
             maneuverYComp = sqrt(desiredDistance**2 - objXComp**2) \
                             - abs(objYComp)
             if(maneuverYComp > maneuverDistance):
-                maneuverDistance = maneuverYComp   
+                maneuverDistance = maneuverYComp
+                closestObjAngle = x
         else:
             a = tan(radians(maneuverAngle))**2 + 1.0
             b = -2*objXComp - 2*objYComp*tan(radians(maneuverAngle))
@@ -370,6 +324,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
                 if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
                         > maneuverDistance):
                     maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
+                    closestObjAngle = x
 
             #Recalculate maneuverXComp if in the incorrect quadrant.
             elif((maneuverXComp > 0 and 90 < maneuverAngle < 270) 
@@ -380,8 +335,76 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
                 if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
                         > maneuverDistance):
                     maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
-        
-    return maneuverDistance
+                    closestObjAngle = x
+
+    return maneuverDistance, closestObjAngle
+
+## ********************************************************
+## name:      findTargetAngle
+## called by: maneuverAnalysis.calculateObjMovement()
+## passed:    int maneuverAngle, float maneuverDistance +
+##            MACH_RADIUS, int closeObjAngle, 
+##            float closeObjDistance,
+##            float SNS_OPT_DISTANCE/SNS_SUF_DISTANCE
+## returns:   int targetAngle
+## calls:     nobody 
+##
+## Determine the angle that the machine will find the     *
+## object that it is currently the closest to after       *
+## repositioning an appropriate distance away from said   *
+## object.                                                *
+## ********************************************************
+def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance, 
+                    desiredDistance):
+
+    #####################################
+    ##
+    ##  VARIABLE DECLARATION
+    ##
+    #####################################
+
+    targetAngle = 0             ##The angle in which the machine will find the
+                                ##object at closeAngle after repositioning with
+                                ##moveAngle and moveDistance.
+ 
+    compMoveAngle = moveAngle   ##The complement of the moveAngle value, that
+                                ##is, the angle 180 degrees from moveAngle.
+
+    vector1 = [0,0]             ##The x and y components for compMoveAngle,
+    vector2 = [0,0]             ##objAngle, and targetAngle.
+    vecTarg = [0,0]
+
+    #####################################
+
+    if(moveAngle < 180):
+        compMoveAngle += 180
+    else:
+        compMoveAngle -= 180
+
+    vector1[0] = cos(radians(compMoveAngle)) * moveDistance
+    vector1[1] = sin(radians(compMoveAngle)) * moveDistance
+    vector2[0] = cos(radians(objAngle)) * objDistance
+    vector2[1] = sin(radians(objAngle)) * objDistance
+
+    vecTarg[0] = vector1[0] + vector2[0]
+    vecTarg[1] = vector1[1] + vector2[1]
+
+    if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
+        targetAngle = degrees(acos(round(vecTarg[0]/desiredDistance, 3)))
+    elif(vecTarg[0] < 0 and vecTarg[1] < 0):
+        targetAngle = 180 + (180 - degrees(acos(round(vecTarg[0]/
+                                                      desiredDistance, 3))))
+    elif(vecTarg[0] < 0):
+        print(round(vecTarg[0]/desiredDistance, 3))
+        targetAngle = degrees(acos(round(vecTarg[0]/desiredDistance, 3)))
+    else:
+        targetAngle = 360 + degrees(asin(round(vecTarg[1]/desiredDistance, 3)))
+
+    print(vector1, vector2, vecTarg)
+    print(sqrt(vecTarg[0]**2 + vecTarg[1]**2), desiredDistance)
+    print(targetAngle)
+
+    return round(targetAngle)
 
 ## ********************************************************
 ## name:      isPathClear
@@ -431,7 +454,6 @@ def isPathClear(maneuverAngle, pathAngles, allDistances, xBound, yBound):
         yCoord = cos(radians(coordAngle))*allDistances[angle]
         
         if(xCoord <= xBound and yCoord < yBound):
-            #print(angle, allDistances[angle])
             return False
 
     return True

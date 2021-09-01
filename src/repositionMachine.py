@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: August 13, 2021
+##  Last Updated: August 30, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -91,8 +91,8 @@ def calculatePWM(wheel, rpm, spinCW):
 ## ********************************************************
 ## name:      moveFromObject
 ## called by: maneuverAnalysis.calculateObjMovement()
-## passed:    int maneuverAngle, float maneuverDistance,
-##            float moveObjDistance, int[] pathAngles 
+## passed:    int maneuverAngle, int[] pathAngles,
+##            int newObjAngle, int desiredDistance
 ## returns:   nothing
 ## calls:     repositionMachine.calculatePWM()
 ##            helperFunctions.getCartesianAngle()
@@ -102,8 +102,7 @@ def calculatePWM(wheel, rpm, spinCW):
 ## too close, at the specified angular location and       *     
 ## distance.                                              *        
 ## ********************************************************
-def moveFromObject(repositionAngle, repositionDistance, objectDistance,        
-                   watchAngles):
+def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance):
 
     #####################################
     ##
@@ -111,26 +110,17 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     ##
     #####################################
     
-    stopAngles = [repositionAngle]  ##The angles in which the machine will look
-                                    ##to stop moving once at repositionDistance;
-                                    ##repositionAngle is the center-point for 
-                                    ##the movement path, and thus the preferred
-                                    ##angle used. However multiple values are
-                                    ##used as a failsafe in case an angle
-                                    ##doesn't return a distance value.
+    stopAngles = [targetAngle]     ##The angle values that the machine will look
+                                   ##at to assess if it has moved the correct
+                                   ##distance away from the object that was 
+                                   ##deemed too close. Multiple values are used
+                                   ##as a failsafe in case the targetAngle value
+                                   ##does not return a distance.
 
     stopDistances = \
-        [objectDistance - \
-        repositionDistance]        ##The corresponding distances associated 
-                                   ##with each stopAngles value. The machine has
-                                   ##moved appropriately once these distance
-                                   ##values have been reached.
-
-    stopAngle = 0                  ##The current value being added to
-                                   ##stopAngles.
-                                   
-    stopDist = 0                   ##The current value being added to 
-                                   ##stopDistances.
+        [desiredDistance]          ##The distance values that correspond with
+                                   ##the stopAngles values, in which the machine
+                                   ##will look to stop repositioning itself.
 
     wheelSpeeds = [0]*3            ##The speed for each wheel in order to
                                    ##reposition at the desired angle; this
@@ -156,25 +146,16 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
     #####################################
 
     for x in range(1, ANGLE_ERR + 1):
-        stopAngle = watchAngles[len(watchAngles)//2 - x]
+        stopAngles.insert(0, targetAngle - x)
+        if(stopAngles[0] < 0):
+            stopAngles[0] += 360
 
-        if(stopAngle >= 0):
-            stopAngles.insert(0, stopAngle)
-        else:
-            stopAngles.insert(0, stopAngle + 360)
+        stopAngles.append(targetAngle + x)
+        if(stopAngles[len(stopAngles)-1] > 359):
+            stopAngles[len(stopAngles)-1] -= 360
 
-        stopAngle = watchAngles[len(watchAngles)//2 + x]
-
-        if(stopAngle <= 359):
-            stopAngles.append(stopAngle)
-        else:
-            stopAngles.append(stopAngle - 360)        
-            
-        stopDist = objectDistance/cos(radians(x)) - \
-                   repositionDistance/cos(radians(x))
-
-        stopDistances.insert(0, stopDist)
-        stopDistances.append(stopDist)
+        stopDistances.insert(0, desiredDistance/cos(radians(x)))
+        stopDistances.append(desiredDistance/cos(radians(x)))
 
     ##See documentation for explanation on how the following equations were 
     ##determined.
@@ -220,8 +201,6 @@ def moveFromObject(repositionAngle, repositionDistance, objectDistance,
                     if(MACH_RADIUS < distance < SNS_MIN_DISTANCE):
                         doneMoving = True
                         break
-                else:
-                    continue
 
                 index = bisect_left(stopAngles, angle)
 

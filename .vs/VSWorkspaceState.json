@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\test"
   ],
   "SelectedNode": "\\src\\maneuverAnalysis.py",
   "PreviewInSolutionExplorer": false

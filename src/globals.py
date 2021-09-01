@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 14, 2021
+##  Last Updated: August 30, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -162,6 +162,9 @@ SNS_OPT_DISTANCE = OPT_DISTANCE + MACH_RADIUS
 ##The sufficient distance used if the OPT_DISTANCE value cannot be reached when
 ##repositioning.
 SUF_DISTANCE = 14.0
+
+##The sufficient distance sensor reading.
+SNS_SUF_DISTANCE = SUF_DISTANCE + MACH_RADIUS
 
 ##Distance used in order to verify that the opponent is beyond the MAX_DISTANCE,
 ##but still in front of the machine.
