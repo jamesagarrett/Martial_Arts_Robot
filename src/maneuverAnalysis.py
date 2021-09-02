@@ -8,8 +8,7 @@
 ##  the desired distance ranges described in globals.py.
 ##
 
-from math import acos, asin, atan, ceil, cos, degrees, floor, radians, sin, \
-                 sqrt, tan 
+from math import acos, asin, atan, ceil, cos, degrees, floor, radians, sin, sqrt
 from bisect import bisect_left   
 
 from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
@@ -19,16 +18,13 @@ from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
 from repositionMachine import moveFromObject
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
-from globals import ANGLE_ERR,\
-                    BLOKD_SOUND,\
+from globals import BLOKD_SOUND,\
                     MACH_RADIUS,\
-                    OPT_DISTANCE,\
                     PATH_ZONE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
                     SNS_SUF_DISTANCE,\
-                    SUF_DISTANCE
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -102,10 +98,10 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                                 ##objAngles and objDistances lists.
     
     wallAnglesCount = 0         ##The amount of adjacent angles on either side
-                                ##of the current value being added to 
-                                ##objAngles. These angles will also be added
-                                ##to objAngles if they are detecting the same
-                                ##object as the original angle.
+                                ##of the current value being added to objAngles.
+                                ##These angles will also be added to objAngles
+                                ##if they are detecting the same objects as the
+                                ##original angle.
 
     adjustedDistance = 0        ##The returned value of getCollinearDistance(). 
 
@@ -123,7 +119,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     ##Check OPT_DISTANCE maneuverability.
 
     maneuverDistance, closeObjAngle = findMoveDistance(objAngles, objDistances, 
-                                                    maneuverAngle, OPT_DISTANCE)
+                                      maneuverAngle, SNS_OPT_DISTANCE)
         
     clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                               MACH_RADIUS, maneuverDistance + SNS_MIN_DISTANCE)
@@ -137,7 +133,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         ##Check SUF_DISTANCE maneuverability.
 
         maneuverDistance, closeObjAngle = findMoveDistance(objAngles, 
-                                      objDistances, maneuverAngle, SUF_DISTANCE)
+                                          objDistances, maneuverAngle, 
+                                          SNS_SUF_DISTANCE)
 
         clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
                                 MACH_RADIUS, maneuverDistance + 
@@ -243,19 +240,6 @@ def findMoveAngle(objAngles):
     
     return maneuverAngle
 
-## ********************************************************
-## name:      findMoveDistance
-## called by: maneuverAnalysis.calculateObjMovement()
-## passed:    int[] objAngles, float[] objDistances,
-##            int maneuverAngle, 
-##            float OPT_DISTANCE/SUF_DISTANCE
-## returns:   float maneuverDistance, int closestObjAngle
-## calls:     nobody 
-##
-## Determine the required distance for the machine to     *
-## travel while repositioning itself away from an object  * 
-## or opponent considered too close.                      *
-## ********************************************************
 def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
 
     #####################################
@@ -263,27 +247,24 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     ##  VARIABLE DECLARATION
     ##
     #####################################
-    
+
+    compMoveAngle = 0           ##The complement of the moveAngle value, that
+                                ##is, the angle 180 degrees from moveAngle.
+
+    trigVars = [0.0]*4          ##Variables used to determine wheelSpeeds
+                                ##values.
+
+    a = b = c = 0.0             ##The 3 coefficients needed for the quadratic 
+                                ##formula; used to calculate maneuverDistance.
+
+    quadAnswer = 0              ##The solution coming from solving the quadratic
+                                ##equation.
+
     maneuverDistance = 0.0      ##The distance the machine will travel when 
                                 ##repositioning.
 
     closestObjAngle = 0         ##The objAngle value that results in the largest
                                 ##maneuverDistance value.
-
-    objXComp = 0.0              ##The x(horizontal) component of an object's 
-                                ##location relative to the machine.
-
-    objYComp = 0.0              ##The y(vertical) component of an object's 
-                                ##location relative to the machine.
-
-    maneuverXComp = 0.0         ##The x(horizontal) component of the 
-                                ##maneuverDistance value.
-
-    maneuverYComp = 0.0         ##The y(vertical) component of the 
-                                ##maneuverDistance value.
-
-    a = b = c = 0.0             ##The 3 coefficients needed for the quadratic 
-                                ##formula; used to calculate maneuverXComp.
 
     #####################################
     
@@ -291,51 +272,40 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     ##smallest distance between the machine and any given object that is too 
     ##close. The amount of movement required to reach the desiredDistance away
     ##from this object is our maneuverDistance.
-        
-    for x in range (len(objAngles)):
+     
+    if(maneuverAngle < 180):
+        compMoveAngle = maneuverAngle + 180
+    else:
+        compMoveAngle = maneuverAngle - 180
 
-        if(objDistances[x] - MACH_RADIUS >= desiredDistance 
-        or objDistances[x] <= MACH_RADIUS):
-            continue
+    ##See documentation for explanation on how the following equations were 
+    ##determined.
+    trigVars[0] = cos(radians(compMoveAngle))
+    trigVars[1] = sin(radians(compMoveAngle))
+    
+    ##Variable "a" for the quadratic formula is equal to: trigVars[0]**2 + 
+    ##trigVars[1]**2. Using trigonometric identities, this means a = 1.0.
+    a = 1.0 
 
-        objXComp = cos(radians(objAngles[x])) * (objDistances[x] - MACH_RADIUS)
-        objYComp = sin(radians(objAngles[x])) * (objDistances[x] - MACH_RADIUS)
+    for angle, distance in zip(objAngles, objDistances):
+        trigVars[2] = cos(radians(angle)) * distance
+        trigVars[3] = sin(radians(angle)) * distance
 
-        if(maneuverAngle == 90 or maneuverAngle == 270):
-            maneuverXComp = 0.0
-            maneuverYComp = sqrt(desiredDistance**2 - objXComp**2) \
-                            - abs(objYComp)
-            if(maneuverYComp > maneuverDistance):
-                maneuverDistance = maneuverYComp
-                closestObjAngle = objAngles[x]
+        b = 2.0 * trigVars[0] * trigVars[2] +  2.0 * trigVars[1] * trigVars[3]
+        c = -(desiredDistance**2 - trigVars[2]**2 - trigVars[3]**2)
+
+        #We can remove "a" from the equation due to its value being 1.0.
+        quadAnswer = (-b + sqrt(b**2 - 4*c))/2
+
+        if(quadAnswer > 0):
+            if(quadAnswer > maneuverDistance):
+                maneuverDistance = quadAnswer
+                closestObjAngle = angle
         else:
-            a = tan(radians(maneuverAngle))**2 + 1.0
-            b = -2*objXComp - 2*objYComp*tan(radians(maneuverAngle))
-            c = objXComp**2 + objYComp**2 - desiredDistance**2
-
-            maneuverXComp = (-b + sqrt(b**2 - 4*a*c)) / (2*a)           
-
-            ##Check if maneuverXComp is in the correct quadrant for the value 
-            ##of maneuverAngle.
-            if((maneuverXComp < 0 and 90 < maneuverAngle < 270) 
-                    or (maneuverXComp > 0 and (0 <= maneuverAngle < 90 
-                                               or 270 < maneuverAngle < 360))):
-                maneuverYComp = maneuverXComp * tan(radians(maneuverAngle))
-                if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
-                        > maneuverDistance):
-                    maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
-                    closestObjAngle = objAngles[x]
-
-            #Recalculate maneuverXComp if in the incorrect quadrant.
-            elif((maneuverXComp > 0 and 90 < maneuverAngle < 270) 
-                    or (maneuverXComp < 0 and (0 <= maneuverAngle < 90 
-                                               or 270 < maneuverAngle < 360))):
-                maneuverXComp = (-b - sqrt(b**2 - 4*a*c)) / (2*a)
-                maneuverYComp = maneuverXComp * tan(radians(maneuverAngle))
-                if(sqrt(maneuverXComp**2 + maneuverYComp**2) 
-                        > maneuverDistance):
-                    maneuverDistance = sqrt(maneuverXComp**2 + maneuverYComp**2)
-                    closestObjAngle = objAngles[x]
+            quadAnswer = (-b - sqrt(b**2 - 4*c))/2
+            if(quadAnswer > maneuverDistance):
+                maneuverDistance = quadAnswer
+                closestObjAngle = angle
 
     return maneuverDistance, closestObjAngle
 
@@ -365,10 +335,10 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
                                 ##object at closeAngle after repositioning with
                                 ##moveAngle and moveDistance.
  
-    targetDistance = 0.0        ##The corresponding distance value associatd
+    targetDistance = 0.0        ##The corresponding distance value associated
                                 ##with the targetAngle value.
 
-    compMoveAngle = moveAngle   ##The complement of the moveAngle value, that
+    compMoveAngle = 0           ##The complement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
     vector1 = [0,0]             
@@ -379,9 +349,9 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     #####################################
 
     if(moveAngle < 180):
-        compMoveAngle += 180
+        compMoveAngle = moveAngle + 180
     else:
-        compMoveAngle -= 180
+        compMoveAngle = moveAngle - 180
 
     vector1[0] = cos(radians(compMoveAngle)) * moveDistance
     vector1[1] = sin(radians(compMoveAngle)) * moveDistance
@@ -392,6 +362,7 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     vecTarg[1] = vector1[1] + vector2[1]
 
     targetDistance = sqrt(vecTarg[0]**2 + vecTarg[1]**2)  
+    print(targetDistance)
 
     if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
         targetAngle = degrees(acos(round(vecTarg[0]/targetDistance, 3)))
@@ -403,7 +374,6 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     else:
         targetAngle = 360 + degrees(asin(round(vecTarg[1]/targetDistance, 3)))
 
-    #print(vector1, vector2, vecTarg)
     #print(objDistance, targetAngle, targetDistance, '\n')
 
     return floor(targetAngle)
