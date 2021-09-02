@@ -2,13 +2,13 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: August 31, 2021
+##  Last Updated: September 2, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
 ##
 
-from math import acos, asin, atan, ceil, cos, degrees, floor, radians, sin, sqrt
+from math import acos, atan, ceil, cos, degrees, floor, radians, sin, sqrt
 from bisect import bisect_left   
 
 from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
@@ -125,10 +125,10 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                               MACH_RADIUS, maneuverDistance + SNS_MIN_DISTANCE)
 
     if(clearPath):
+        maneuverFound = True
+        desiredDistance = SNS_OPT_DISTANCE
         moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
                        MACH_RADIUS, closeObjAngle, allDistances[closeObjAngle])
-        desiredDistance = SNS_OPT_DISTANCE
-        maneuverFound = True
     else:
         ##Check SUF_DISTANCE maneuverability.
 
@@ -137,16 +137,14 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
                                           SNS_SUF_DISTANCE)
 
         clearPath = isPathClear(maneuverAngle, pathAngles, allDistances,
-                                MACH_RADIUS, maneuverDistance + 
-                                SNS_MIN_DISTANCE)
+                               MACH_RADIUS, maneuverDistance + SNS_MIN_DISTANCE)
 
         if(clearPath):
+            maneuverFound = True
+            desiredDistance = SNS_SUF_DISTANCE
             moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
                            MACH_RADIUS, closeObjAngle, allDistances
                            [closeObjAngle])
-            desiredDistance = SNS_SUF_DISTANCE
-            maneuverFound = True
-        
         else:
             manObjDistance = allDistances[maneuverAngle]
             insertPoint = bisect_left(objAngles, maneuverAngle)
@@ -317,7 +315,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
 ## passed:    int maneuverAngle, float maneuverDistance +
 ##            MACH_RADIUS, int closeObjAngle, 
 ##            float closeObjDistance
-## returns:   int targetAngle
+## returns:   int round(targetAngle)
 ## calls:     nobody 
 ##
 ## Determine the angle that the machine will find the     *
@@ -333,7 +331,7 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     ##
     #####################################
 
-    targetAngle = 0             ##The angle in which the machine will find the
+    targetAngle = 0.0           ##The angle in which the machine will find the
                                 ##object at closeAngle after repositioning with
                                 ##moveAngle and moveDistance.
  
@@ -343,10 +341,13 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     compMoveAngle = 0           ##The complement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
-    vector1 = [0,0]             
-    vector2 = [0,0]             
-    vecTarg = [0,0]             ##The x and y components for compMoveAngle,
+    vector1 = [0.0, 0.0]             
+    vector2 = [0.0, 0.0]             
+    vecTarg = [0.0, 0.0]        ##The x and y components for compMoveAngle,
                                 ##objAngle, and targetAngle.
+
+    targAngCos = 0.0            ##The cosine of targetAngle that is used to
+                                ##calculate the targetAngle value.
 
     #####################################
 
@@ -363,22 +364,24 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     vecTarg[0] = vector1[0] + vector2[0]
     vecTarg[1] = vector1[1] + vector2[1]
 
-    targetDistance = sqrt(vecTarg[0]**2 + vecTarg[1]**2)  
-    print(targetDistance)
+    targetDistance = sqrt(vecTarg[0]**2 + vecTarg[1]**2)
+
+    ##Rounded to prevent domain error from values minimally above 1.0 or below
+    ##-1.0 when attempting to find the arc cosine.
+    targAngCos = round(vecTarg[0]/targetDistance, 3)
 
     if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
-        targetAngle = degrees(acos(round(vecTarg[0]/targetDistance, 3)))
+        targetAngle = degrees(acos(targAngCos))
     elif(vecTarg[0] < 0 and vecTarg[1] < 0):
-        targetAngle = 180 + (180 - degrees(acos(round(vecTarg[0]/
-                                                      targetDistance, 3))))
+        targetAngle = 180 + (180 - degrees(acos(targAngCos)))
     elif(vecTarg[0] < 0):
-        targetAngle = degrees(acos(round(vecTarg[0]/targetDistance, 3)))
+        targetAngle = degrees(acos(targAngCos))
     else:
-        targetAngle = 360 + degrees(asin(round(vecTarg[1]/targetDistance, 3)))
+        targetAngle = 360 + -degrees(acos(targAngCos))
 
-    #print(objDistance, targetAngle, targetDistance, '\n')
+    print("Move   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f\n" % (moveDistance, compMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
 
-    return floor(targetAngle)
+    return round(targetAngle) if round(targetAngle) < 360 else 0
 
 ## ********************************************************
 ## name:      isPathClear
