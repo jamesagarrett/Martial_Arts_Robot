@@ -221,7 +221,6 @@ def main():
 
     ang = random.randint(0, 359)
     ret1 = findMoveDistance(a, d, ang, 42)
-    #ret2 = findMoveDistance2(a, d, ang, 42)
 
     findTargetAngle(ang, ret1[0], ret1[1], d[a.index(ret1[1])])
 
