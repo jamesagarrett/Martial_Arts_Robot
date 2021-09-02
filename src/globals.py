@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: August 31, 2021
+##  Last Updated: September 2, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -109,7 +109,7 @@ SNS_RANGE = 236.2200
 ##The front of the machine is considered to be within this angular range and is 
 ##where the opponent is assumed to be.
 FRONT_ANGLE_MIN = 245
-FRONT_ANGLE_MAX = 285
+FRONT_ANGLE_MAX = 295
 
 ##The midpoint of FRONT_ANGLE_MIN and FRONT_ANGLE_MAX, where the machine will 
 ##look to reposition itself with the opponent.
@@ -119,7 +119,7 @@ DES_OPP_ANGLE = round((FRONT_ANGLE_MIN + FRONT_ANGLE_MAX)/2)
 ##within these angular ranges.
 LEFT_TURN_ANGLE_MIN = 200
 LEFT_TURN_ANGLE_MAX = 244
-RIGHT_TURN_ANGLE_MIN = 286
+RIGHT_TURN_ANGLE_MIN = 296
 RIGHT_TURN_ANGLE_MAX = 340
 
 ##If the opponent is unable to move backward, allowing the machine to move

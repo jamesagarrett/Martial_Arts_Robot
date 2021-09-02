@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: September 1, 2021
+##  Last Updated: September 2, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -150,6 +150,7 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                                    ##is stored if present.
     
     #####################################
+    print(repositionAngle)
 
     for x in range(1, ANGLE_ERR + 1):
         stopAngles.insert(0, targetAngle - x)
