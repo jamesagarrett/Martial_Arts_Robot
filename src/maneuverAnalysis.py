@@ -251,8 +251,8 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     compMoveAngle = 0           ##The complement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
-    trigVars = [0.0]*4          ##Variables used to determine wheelSpeeds
-                                ##values.
+    trigVars = [0.0]*4          ##Variables used to determine quadratic equation
+                                ##coefficient values.
 
     a = b = c = 0.0             ##The 3 coefficients needed for the quadratic 
                                 ##formula; used to calculate maneuverDistance.
@@ -271,15 +271,14 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     ##In order to calculate the value of maneuverDistance, we must know the 
     ##smallest distance between the machine and any given object that is too 
     ##close. The amount of movement required to reach the desiredDistance away
-    ##from this object is our maneuverDistance.
-     
+    ##from this object is our maneuverDistance. See documentation for 
+    ##explanation on how the following equations were determined.
+
     if(maneuverAngle < 180):
         compMoveAngle = maneuverAngle + 180
     else:
         compMoveAngle = maneuverAngle - 180
 
-    ##See documentation for explanation on how the following equations were 
-    ##determined.
     trigVars[0] = cos(radians(compMoveAngle))
     trigVars[1] = sin(radians(compMoveAngle))
     
@@ -288,6 +287,9 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     a = 1.0 
 
     for angle, distance in zip(objAngles, objDistances):
+        if(not (MACH_RADIUS < distance < desiredDistance)):
+            continue
+
         trigVars[2] = cos(radians(angle)) * distance
         trigVars[3] = sin(radians(angle)) * distance
 
