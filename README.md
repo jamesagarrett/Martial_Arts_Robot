@@ -36,3 +36,8 @@ Both programs, which contain their respective licenses, can be found under the "
 They can also be found at their original GitHub links:  
 * [PCA9685.py](https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685)    
 * [Adafruit_rplidar.py](https://github.com/adafruit/rplidar)
+
+Thank you to the CDC for providing a Product Design Specification document template. Here is the download link for the original template,
+as well as where other CDC templates can be found:
+* [Download]https://www2a.cdc.gov/cdcup/library/templates/CDC_UP_Product_Design_Template.doc)    
+* [CDC Templates](https://www2a.cdc.gov/cdcup/library/templates/default.htm)
