@@ -24,7 +24,7 @@ from globals import BLOKD_SOUND,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
                     SNS_OPT_DISTANCE,\
-                    SNS_SUF_DISTANCE,\
+                    SNS_SUF_DISTANCE
 
 #--------------------------------------  --------------------------------------#
 #--------------------------------------  --------------------------------------#
@@ -115,7 +115,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         return
 
     pathAngles = getPathAngles(maneuverAngle)
-
+    
     ##Check OPT_DISTANCE maneuverability.
 
     maneuverDistance, closeObjAngle = findMoveDistance(objAngles, objDistances, 
@@ -127,8 +127,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     if(clearPath):
         maneuverFound = True
         desiredDistance = SNS_OPT_DISTANCE
-        moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
-                       MACH_RADIUS, closeObjAngle, allDistances[closeObjAngle])
+        moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, closeObjAngle, 
+                                       allDistances[closeObjAngle])
     else:
         ##Check SUF_DISTANCE maneuverability.
 
@@ -142,9 +142,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         if(clearPath):
             maneuverFound = True
             desiredDistance = SNS_SUF_DISTANCE
-            moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance + 
-                           MACH_RADIUS, closeObjAngle, allDistances
-                           [closeObjAngle])
+            moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, closeObjAngle, 
+                                           allDistances[closeObjAngle])
         else:
             manObjDistance = allDistances[maneuverAngle]
             insertPoint = bisect_left(objAngles, maneuverAngle)
@@ -306,14 +305,14 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
             if(quadAnswer > maneuverDistance):
                 maneuverDistance = quadAnswer
                 closestObjAngle = angle
-
+    
     return maneuverDistance, closestObjAngle
 
 ## ********************************************************
 ## name:      findTargetAngle
 ## called by: maneuverAnalysis.calculateObjMovement()
-## passed:    int maneuverAngle, float maneuverDistance +
-##            MACH_RADIUS, int closeObjAngle, 
+## passed:    int maneuverAngle, float maneuverDistance,
+##            int closeObjAngle, 
 ##            float closeObjDistance
 ## returns:   int round(targetAngle)
 ## calls:     nobody 

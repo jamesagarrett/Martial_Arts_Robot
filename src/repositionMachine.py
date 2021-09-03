@@ -150,7 +150,6 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                                    ##is stored if present.
     
     #####################################
-    print(repositionAngle)
 
     for x in range(1, ANGLE_ERR + 1):
         stopAngles.insert(0, targetAngle - x)
@@ -166,7 +165,7 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
     
     if(sum(x > desiredDistance for x in currDistances) > ANGLE_ERR):
         lookForShorter = True
-
+    print(stopAngles, currDistances, lookForShorter)
     ##See documentation for explanation on how the following equations were 
     ##determined.
 
@@ -220,13 +219,15 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                     currDistances[index] = distance
 
                     if(lookForShorter):
-                        if(sum(x <= desiredDistance for x in currDistances) > 
-                        ANGLE_ERR):
+                        print(currDistances)
+                        if(sum(x <= desiredDistance for x in currDistances) == 
+                        len(currDistances)):
                             doneMoving = True
                             break
                     else:
-                        if(sum(x >= desiredDistance for x in currDistances) > 
-                        ANGLE_ERR):
+                        print(currDistances)
+                        if(sum(x >= desiredDistance for x in currDistances) == 
+                        len(currDistances)):
                             doneMoving = True
                             break
 
