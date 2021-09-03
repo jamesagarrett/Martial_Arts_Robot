@@ -39,5 +39,5 @@ They can also be found at their original GitHub links:
 
 Thank you to the CDC for providing a Product Design Specification document template. Here is the download link for the original template,
 as well as where other CDC templates can be found:
-* [Download]https://www2a.cdc.gov/cdcup/library/templates/CDC_UP_Product_Design_Template.doc)    
+* [Download](https://www2a.cdc.gov/cdcup/library/templates/CDC_UP_Product_Design_Template.doc)    
 * [CDC Templates](https://www2a.cdc.gov/cdcup/library/templates/default.htm)
