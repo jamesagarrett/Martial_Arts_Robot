@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  lidarAnalysis.py
-##  Last Updated: September 1, 2021
+##  Last Updated: September 5, 2021
 ##
 ##  Collect and analyze sensor distance data to determine whether repositioning 
 ##  is needed. If so, also determine in what manner the machine needs to 
@@ -315,17 +315,17 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 
         if(tooFar and minLast == lastFar):
             moveToOpponent()
-        #elif(turningCW and minLast == lastCW):
-        #    rotateMachine(True, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
-        #elif(turningCCW and minLast == lastCCW):
-        #    rotateMachine(False, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
+        elif(turningCW and minLast == lastCW):
+            rotateMachine(True, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
+        elif(turningCCW and minLast == lastCCW):
+            rotateMachine(False, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
         return 0, 0, 0
 
     elif (not canMoveForward):
-        #if(turningCW):
-        #    rotateMachine(True, STUCK_RIGHT_TURN_MIN, STUCK_RIGHT_TURN_MAX)
-        #elif(turningCCW):
-        #    rotateMachine(False, STUCK_LEFT_TURN_MIN, STUCK_LEFT_TURN_MAX)
+        if(turningCW):
+            rotateMachine(True, STUCK_RIGHT_TURN_MIN, STUCK_RIGHT_TURN_MAX)
+        elif(turningCCW):
+            rotateMachine(False, STUCK_LEFT_TURN_MIN, STUCK_LEFT_TURN_MAX)
         return 0, 0, 0
 
     return (lastFar * tooFar + tooFar, 
@@ -349,6 +349,7 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 ## on keyboard interrupt.                                 *
 ## ********************************************************
 def main():
+
     #####################################
     ##
     ##	VARIABLE DECLARATION

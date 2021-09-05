@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: September 2, 2021
+##  Last Updated: September 5, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -245,7 +245,7 @@ def findMoveDistance(objAngles, objDistances, maneuverAngle, desiredDistance):
     ##
     #####################################
 
-    compMoveAngle = 0           ##The complement of the moveAngle value, that
+    suppMoveAngle = 0           ##The supplement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
     trigVars = [0.0]*4          ##Variables used to determine quadratic equation
@@ -337,12 +337,12 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     targetDistance = 0.0        ##The corresponding distance value associated
                                 ##with the targetAngle value.
 
-    compMoveAngle = 0           ##The complement of the moveAngle value, that
+    suppMoveAngle = 0           ##The supplement of the moveAngle value, that
                                 ##is, the angle 180 degrees from moveAngle.
 
     vector1 = [0.0, 0.0]             
     vector2 = [0.0, 0.0]             
-    vecTarg = [0.0, 0.0]        ##The x and y components for compMoveAngle,
+    vecTarg = [0.0, 0.0]        ##The x and y components for suppMoveAngle,
                                 ##objAngle, and targetAngle.
 
     targAngCos = 0.0            ##The cosine of targetAngle that is used to
@@ -351,12 +351,12 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     #####################################
 
     if(moveAngle < 180):
-        compMoveAngle = moveAngle + 180
+        suppMoveAngle = moveAngle + 180
     else:
-        compMoveAngle = moveAngle - 180
+        suppMoveAngle = moveAngle - 180
 
-    vector1[0] = cos(radians(compMoveAngle)) * moveDistance
-    vector1[1] = sin(radians(compMoveAngle)) * moveDistance
+    vector1[0] = cos(radians(suppMoveAngle)) * moveDistance
+    vector1[1] = sin(radians(suppMoveAngle)) * moveDistance
     vector2[0] = cos(radians(objAngle)) * objDistance
     vector2[1] = sin(radians(objAngle)) * objDistance
 
@@ -378,7 +378,7 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     else:
         targetAngle = 360 + -degrees(acos(targAngCos))
 
-    print("Move   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f\n" % (moveDistance, compMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
+    print("Move   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f\n" % (moveDistance, suppMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
 
     return round(targetAngle) if round(targetAngle) < 360 else 0
 
