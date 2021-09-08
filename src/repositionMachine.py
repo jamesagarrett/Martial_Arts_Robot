@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  repositionMachine.py
-##  Last Updated: September 2, 2021
+##  Last Updated: September 7, 2021
 ##
 ##  Perform a maneuver action of either: turning the machine, moving toward the
 ##  opponent, or moving away from an object, until back within the desired range
@@ -227,6 +227,11 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                     else:
                         print(currDistances)
                         if(sum(x >= desiredDistance for x in currDistances) == 
+                        len(currDistances)):
+                            doneMoving = True
+                            break
+
+                    if(sum(x >= SNS_MAX_DISTANCE for x in currDistances) == 
                         len(currDistances)):
                             doneMoving = True
                             break
