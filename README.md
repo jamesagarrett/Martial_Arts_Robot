@@ -4,7 +4,7 @@ A maneuverable, robotic machine that uses LIDAR detection to autonomously naviga
 ## Robot Features
 **Raspberry Pi 4.0:** Single-board computer used for code execution  
 **Slamtec RPLIDAR A1:** 360° distancing detection sensor used for analyzing robot surroundings  
-**Omni-directional Wheels (3):** Specialized wheels used for linear movement in any and all desired directions  
+**Omnidirectional Wheels (3):** Specialized wheels used for linear movement in any and all desired directions  
 **Jaguar Motor Controllers (3):** PWM speed controllers used to specify output current for the wheels  
 **Adafruit 16-Channel 12-Bit PWM/Servo Driver:** Breakout board connected to the Pi used to output PWM signals to the motor controllers 
 ## Program Details  
