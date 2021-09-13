@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: September 5, 2021
+##  Last Updated: September 12, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -127,8 +127,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     if(clearPath):
         maneuverFound = True
         desiredDistance = SNS_OPT_DISTANCE
-        moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, closeObjAngle, 
-                                       allDistances[closeObjAngle])
+        moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, 
+                       closeObjAngle, allDistances[closeObjAngle])
     else:
         ##Check SUF_DISTANCE maneuverability.
 
@@ -142,8 +142,8 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
         if(clearPath):
             maneuverFound = True
             desiredDistance = SNS_SUF_DISTANCE
-            moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, closeObjAngle, 
-                                           allDistances[closeObjAngle])
+            moveObjAngle = findTargetAngle(maneuverAngle, maneuverDistance, 
+                           closeObjAngle, allDistances[closeObjAngle])
         else:
             manObjDistance = allDistances[maneuverAngle]
             insertPoint = bisect_left(objAngles, maneuverAngle)
