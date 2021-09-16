@@ -197,14 +197,10 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     targetDistance = sqrt(vecTarg[0]**2 + vecTarg[1]**2)
     targAngCos = round(vecTarg[0]/targetDistance, 3)
 
-    if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
-        targetAngle = degrees(acos(targAngCos))
-    elif(vecTarg[0] < 0 and vecTarg[1] < 0):
-        targetAngle = 180 + (180 - degrees(acos(targAngCos)))
-    elif(vecTarg[0] < 0):
+    if(vecTarg[1] >= 0):
         targetAngle = degrees(acos(targAngCos))
     else:
-        targetAngle = 360 + -degrees(acos(targAngCos))
+        targetAngle = 360 - degrees(acos(targAngCos))
 
     print("\nMove   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f" % (moveDistance, compMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
 

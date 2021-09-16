@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: September 12, 2021
+##  Last Updated: September 16, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -369,15 +369,11 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     ##-1.0 when attempting to find the arc cosine.
     targAngCos = round(vecTarg[0]/targetDistance, 3)
 
-    if(vecTarg[0] >= 0 and vecTarg[1] >= 0):
-        targetAngle = degrees(acos(targAngCos))
-    elif(vecTarg[0] < 0 and vecTarg[1] < 0):
-        targetAngle = 180 + (180 - degrees(acos(targAngCos)))
-    elif(vecTarg[0] < 0):
+    if(vecTarg[1] >= 0):
         targetAngle = degrees(acos(targAngCos))
     else:
-        targetAngle = 360 + -degrees(acos(targAngCos))
-
+        targetAngle = 360 - degrees(acos(targAngCos))
+   
     print("Move   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f\n" % (moveDistance, suppMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
 
     return round(targetAngle) if round(targetAngle) < 360 else 0
