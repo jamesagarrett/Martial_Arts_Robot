@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: September 2, 2021
+##  Last Updated: September 16, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -59,15 +59,13 @@ TOTAL_SCANS = 4
 ##The physical angular location of each wheel on the machine.
 WHEEL_LOCATIONS = [210, 330, 90]
 
-##The angular direction the wheels turn when given positive output values;
-##that is, 90 deg (pi/2 rad) ccw rotation from their location on the machine.
+##The angular direction the wheels turn when given positive PWM values; that is,
+##90 degrees CCW rotation from their location on the machine.
 WHEEL_DIRECTIONS = [WHEEL_LOCATIONS[0] - 90, WHEEL_LOCATIONS[1] - 90, 
                     WHEEL_LOCATIONS[2] - 90]
 
-##The following are values used to determine wheel speeds. See documentation 
-##for further analysis. Due to how these equations are used, certain 
-##precautions must be taken when determining WHEEL_LOCATIONS values. This is 
-##also further explained in the documentation.
+##The following are values used to determine wheel speeds. See documentation for
+##further analysis.
 SPEED_CONSTS = [
 cos(radians(WHEEL_DIRECTIONS[0])) - cos(radians(WHEEL_DIRECTIONS[2])),
 sin(radians(WHEEL_DIRECTIONS[0])) - sin(radians(WHEEL_DIRECTIONS[2])),
@@ -83,7 +81,7 @@ PWM_PORTS = [7, 5, 6]
 ##The tick value in which the signal to the wheels transitions low to high.
 START_TICK = 0
 
-##The tick values in which the signal to any wheel transitioning from high to 
+##The tick values in which the signal to any wheel transitioning from high to
 ##low will result in no movement. 
 STOP_TICK = 1000
 
