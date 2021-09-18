@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\test"
   ],
+  "SelectedNode": "\\test\\pwmTest.py",
   "PreviewInSolutionExplorer": false
 }

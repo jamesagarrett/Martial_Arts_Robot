@@ -5,18 +5,18 @@
 from __future__ import division
 import time
 from math import sin, cos, radians
-import PCA9685
-import RPi.GPIO as GPIO
+#import PCA9685
+#import RPi.GPIO as GPIO
 
-pwm = PCA9685.PCA9685()
-pwm.set_pwm_freq(160)
+#pwm = PCA9685.PCA9685()
+#pwm.set_pwm_freq(160)
 PWM_PORTS = [7, 5, 6]
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(21, GPIO.IN)
-GPIO.setup(4, GPIO.IN)
-GPIO.setup(10, GPIO.IN)
-GPIO.setwarnings(False)
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(21, GPIO.IN)
+#GPIO.setup(4, GPIO.IN)
+#GPIO.setup(10, GPIO.IN)
+#GPIO.setwarnings(False)
 
 def calculatePWM(wheel, rpm, spinCCW):
     val = 0     
@@ -66,11 +66,10 @@ def getRPM(pin):
         pwm.set_pwm(PWM_PORTS[1], 0, 1000)
         pwm.set_pwm(PWM_PORTS[2], 0, 1000)
         quit()
-	
+
 maxSpeed = 400
 wheelSpeeds = [0]*3             
 speedVars = [0]*2
-rotationCoeff = 0
 wheelPWMs = [0]*3
 wantRPMs = [0]*3
 realRPMs = [0]*3
@@ -90,21 +89,23 @@ sin(radians(WHEEL_DIRECTIONS[1])) - sin(radians(WHEEL_DIRECTIONS[2]))]
 
 angle = int(input("Angle: "))
 
-speedVars[0] = sin(radians(angle)) \
-				- rotationCoeff*sin(radians(WHEEL_DIRECTIONS[2]))
+for x in range (101):
+    speedVars[0] = 1*sin(radians(angle)) \
+				    - x*sin(radians(WHEEL_DIRECTIONS[2]))
 
-speedVars[1] = cos(radians(angle)) \
-				- rotationCoeff*cos(radians(WHEEL_DIRECTIONS[2]))
+    speedVars[1] = 1*cos(radians(angle)) \
+				    - x*cos(radians(WHEEL_DIRECTIONS[2]))
 
-wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
-					- speedVars[0]*SPEED_CONSTS[2]) \
-					/ (SPEED_CONSTS[0]*SPEED_CONSTS[3] \
-					- SPEED_CONSTS[1]*SPEED_CONSTS[2]) 
-wheelSpeeds[0] = round(wheelSpeeds[0], 5)
+    wheelSpeeds[0] = (speedVars[1]*SPEED_CONSTS[3] \
+					    - speedVars[0]*SPEED_CONSTS[2]) \
+					    / (SPEED_CONSTS[0]*SPEED_CONSTS[3] \
+					    - SPEED_CONSTS[1]*SPEED_CONSTS[2]) 
+    wheelSpeeds[0] = round(wheelSpeeds[0], 5)
 
-wheelSpeeds[1] = round((speedVars[0] - wheelSpeeds[0]*SPEED_CONSTS[1]) / SPEED_CONSTS[3], 5)
+    wheelSpeeds[1] = round((speedVars[0] - wheelSpeeds[0]*SPEED_CONSTS[1]) / SPEED_CONSTS[3], 5)
 
-wheelSpeeds[2] = round((-wheelSpeeds[1] - wheelSpeeds[0] + rotationCoeff), 5)
+    wheelSpeeds[2] = round((-wheelSpeeds[1] - wheelSpeeds[0] + x), 5)
+    print("Speeds: ", wheelSpeeds)
 
 for x in range (3):
     if(wheelSpeeds[x] == 0):
@@ -117,16 +118,16 @@ for x in range (3):
         wantRPMs[x] = abs(wheelSpeeds[x]*maxSpeed)
         wheelPWMs[x] = calculatePWM(x, wantRPMs[x], False)
 
-pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
-pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
-pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
-time.sleep(3)
-print("Speeds: ", wheelSpeeds)
-print("PWMs: ", wheelPWMs)
+#pwm.set_pwm(PWM_PORTS[0], 0, wheelPWMs[0])
+#pwm.set_pwm(PWM_PORTS[1], 0, wheelPWMs[1])
+#pwm.set_pwm(PWM_PORTS[2], 0, wheelPWMs[2])
+#time.sleep(3)
+#print("Speeds: ", wheelSpeeds)
+#print("PWMs: ", wheelPWMs)
 
-pwm.set_pwm(PWM_PORTS[0], 0, 1000)
-pwm.set_pwm(PWM_PORTS[1], 0, 1000)
-pwm.set_pwm(PWM_PORTS[2], 0, 1000)
+#pwm.set_pwm(PWM_PORTS[0], 0, 1000)
+#pwm.set_pwm(PWM_PORTS[1], 0, 1000)
+#pwm.set_pwm(PWM_PORTS[2], 0, 1000)
 
 #for x in range (3):
 #    if (wantRPMs[x] < 1):
