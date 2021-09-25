@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: September 16, 2021
+##  Last Updated: September 24, 2021
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -111,7 +111,6 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
 
     if(maneuverAngle == -1):
         playSoundEff(BLOKD_SOUND)
-        print(objAngles)
         return
 
     pathAngles = getPathAngles(maneuverAngle)
@@ -374,8 +373,6 @@ def findTargetAngle(moveAngle, moveDistance, objAngle, objDistance):
     else:
         targetAngle = 360 - degrees(acos(targAngCos))
    
-    print("Move   - D: %.3f, A: %3d\nObject - D: %.3f, A: %3d\nTarget - D: %.3f, A: %7.3f\n" % (moveDistance, suppMoveAngle, objDistance, objAngle, targetDistance, targetAngle))
-
     return round(targetAngle) if round(targetAngle) < 360 else 0
 
 ## ********************************************************
