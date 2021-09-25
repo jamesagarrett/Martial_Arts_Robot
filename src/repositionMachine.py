@@ -219,7 +219,6 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
                     currDistances[index] = distance
 
                     if(lookForShorter):
-                        print(currDistances)
                         if(sum(x <= desiredDistance for x in currDistances) == 
                         len(currDistances)):
                             doneMoving = True
