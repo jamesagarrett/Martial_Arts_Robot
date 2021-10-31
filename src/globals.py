@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: September 16, 2021
+##  Last Updated: October 31, 2021
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -138,7 +138,7 @@ ANGLE_ERR = 7
 
 ##The minimum permitted distance for the machine to be from any given object,
 ##including the opponent.
-MIN_DISTANCE = 7.0
+MIN_DISTANCE = 10.0
 
 ##The minimum permitted distance sensor reading.
 SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
