@@ -22,14 +22,12 @@ Module Functionality:
 * **maneuverAnalysis.py:** Determines the best angle and distance to move at in order to be a safe distance from the user and any environmental obstacles
 * **repositionMachine.py:** Gives output to the wheels, moving the robot to the desired position  
 # Video Demos  
-A test of the ultrasonic sensors used before switching to a single LIDAR sensor, as the robot approaches an obstacle  
-[![Ultrasonic Sensors Test w/ Robot Before Switching to LIDAR](https://img.youtube.com/vi/7fe__-JRM5k/0.jpg)](https://www.youtube.com/watch?v=7fe__-JRM5k "Ultrasonic Sensor Test w/ Robot Before Switching to LIDAR") 
+A test of the robot lidar detection with a single opponent.  
+[![Robot Movement Test](https://img.youtube.com/vi/dPjG0p-31MU/0.jpg)](https://youtu.be/dPjG0p-31MU) 
 
-A display of the accuracy and frequency of LIDAR distance measurements, leading to both hardware and software changes from ultrasonic to LIDAR  
-[![LIDAR Sensor Test](https://img.youtube.com/vi/xRAZIY07_VE/0.jpg)](https://www.youtube.com/watch?v=xRAZIY07_VE "LIDAR Sensor Test")  
+Testing specific features of the machine, including multiple opponents and when it's surrounded on all sides.  
+[![Robot Tracking Test](https://img.youtube.com/vi/SVckKlRAG6c/0.jpg)](https://youtu.be/SVckKlRAG6c)  
 
-A showcase of the robot reacting to a distance measurement deemed too low, causing the machine's wheel to rotate  
-[![LIDAR Test w/ Stationary Robot](https://img.youtube.com/vi/GKys8iLUfHQ/0.jpg)](https://www.youtube.com/watch?v=GKys8iLUfHQ "LIDAR Test w/ Stationary Robot")
 ## Credits  
 Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
 Both programs, which contain their respective licenses, can be found under the "src" and "test" folders along with all other .py files.  
