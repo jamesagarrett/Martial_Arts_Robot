@@ -29,7 +29,7 @@ Module Functionality:
 * **repositionMachine.py:** Gives output to the wheels, moving the robot to the desired position  
 ## Credits  
 Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
-Both programs, which contain their respective licenses, can be found under the "src" and "test" folders along with all other .py files.  
+Both programs, which contain their respective licenses, can be found under the /src and /test folders along with all other *.py files.  
 They can also be found at their original GitHub links:  
 * [PCA9685.py](https://github.com/adafruit/Adafruit_Python_PCA9685/tree/master/Adafruit_PCA9685)    
 * [Adafruit_rplidar.py](https://github.com/adafruit/rplidar)
