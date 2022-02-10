@@ -1,6 +1,12 @@
 # Martial Arts Robot
 ## Introduction
 The developed system is a mobile robot that uses LIDAR detection to autonomously navigate its environment. This machine is controlled through a Raspberry Pi and is designed to simulate martial arts sparring for users who want a dynamic training experience when unaccompanied by another human opponent. Built to support the weight of a punching bag, the robot navigates its surroundings while also keeping track of its user's position and maintaining a close but safe distance from them at all times.
+## Video Demos  
+A test of the robot lidar detection with a single opponent.  
+[![Robot Movement Test](https://img.youtube.com/vi/dPjG0p-31MU/0.jpg)](https://youtu.be/dPjG0p-31MU) 
+
+Testing specific features of the machine, including multiple opponents and when it's surrounded on all sides.  
+[![Robot Tracking Test](https://img.youtube.com/vi/SVckKlRAG6c/0.jpg)](https://youtu.be/SVckKlRAG6c)
 ## Robot Features
 **Raspberry Pi 4.0:** Single-board computer used for software execution and electronics connectivity 
 **Slamtec RPLIDAR A1:** 360° distancing detection sensor used for analyzing robot surroundings  
@@ -21,13 +27,6 @@ Module Functionality:
 * **lidarAnalysis.py:** Contains main() and is where LIDAR sensor data is collected and analyzed to see if the robot should reposition itself
 * **maneuverAnalysis.py:** Determines the best angle and distance to move at in order to be a safe distance from the user and any environmental obstacles
 * **repositionMachine.py:** Gives output to the wheels, moving the robot to the desired position  
-# Video Demos  
-A test of the robot lidar detection with a single opponent.  
-[![Robot Movement Test](https://img.youtube.com/vi/dPjG0p-31MU/0.jpg)](https://youtu.be/dPjG0p-31MU) 
-
-Testing specific features of the machine, including multiple opponents and when it's surrounded on all sides.  
-[![Robot Tracking Test](https://img.youtube.com/vi/SVckKlRAG6c/0.jpg)](https://youtu.be/SVckKlRAG6c)  
-
 ## Credits  
 Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) and the Slamtec LIDAR Sensor (adafruit_rplidar.py).  
 Both programs, which contain their respective licenses, can be found under the "src" and "test" folders along with all other .py files.  
