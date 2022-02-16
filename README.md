@@ -8,7 +8,7 @@ A test of the robot lidar detection with a single opponent.
 Testing specific features of the machine, including multiple opponents and when it's surrounded on all sides.  
 [![Robot Tracking Test](https://img.youtube.com/vi/SVckKlRAG6c/0.jpg)](https://youtu.be/SVckKlRAG6c)
 ## Robot Features
-**Raspberry Pi 4.0:** Single-board computer used for software execution and electronics connectivity 
+**Raspberry Pi 4.0:** Single-board computer used for software execution and electronics connectivity  
 **Slamtec RPLIDAR A1:** 360° distancing detection sensor used for analyzing robot surroundings  
 **Omnidirectional Wheels (3):** Specialized wheels used for linear movement in any and all desired directions  
 **Jaguar Motor Controllers (3):** PWM speed controllers used to specify output current for the wheels  
