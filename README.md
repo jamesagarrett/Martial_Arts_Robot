@@ -32,7 +32,7 @@ Thank you to Adafruit for providing code to run their PWM Driver (PCA9685.py) an
 Both programs, which contain their respective licenses, can be found under the /src and /test folders along with all other *.py files.  
 They can also be found at their original GitHub links:  
 * [PCA9685.py](https://github.com/adafruit/Adafruit_Python_PCA9685/blob/master/LICENSE)      
-* [Adafruit_rplidar.py](https://github.com/adafruit/rplidar/LICENSE)
+* [Adafruit_rplidar.py](https://github.com/adafruit/rplidar/blob/master/LICENSE)
 
 Thank you to the CDC for providing a Product Design Specification document template. Here is the download link for the original template,
 as well as where other CDC templates can be found:
