@@ -1,0 +1,9 @@
+Webots Project File version R2022a
+perspectives: 000000ff00000000fd00000002000000010000025d00000287fc0200000001fb0000001400540065007800740045006400690074006f0072010000000000000287000000a200ffffff00000003000005a0000000dcfc0100000001fb0000001a0043006f006e0073006f006c00650041006c006c0041006c006c0100000000000005a00000004e00ffffff0000033d0000028700000001000000020000000100000008fc00000000
+simulationViewPerspectives: 000000ff0000000100000002000001180000035f0100000006010000000100
+sceneTreePerspectives: 000000ff0000000100000002000000c0000000fc0100000006010000000200
+maximizedDockId: -1
+centralWidgetVisible: 1
+orthographicViewHeight: 1
+textFiles: 2 "controllers/my_controller_mar/my_controller_mar.py" "../../../../Applications/Webots.app/projects/robots/festo/robotino3/controllers/robotino3/robotino3.c" "../../../../Applications/Webots.app/projects/robots/festo/robotino3/protos/Robotino3.proto"
+consoles: Console:All:All
