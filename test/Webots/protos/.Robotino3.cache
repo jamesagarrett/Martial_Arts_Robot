@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: 298c1b85dfa5aa401471a84e9c51ccd0
+needsRobotAncestor: 1
+baseType: Robot
+slotType: 
+parameters: translation,rotation,name,model,controller,controllerArgs,customData,supervisor,synchronization,selfCollision,topSlot,bodySlot,cameraSlot,middleSlot,bottomSlot,infraredSensorModel
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0.
+documentationUrl: https://www.cyberbotics.com/doc/guide/robotino3
+info: This\sis\sa\sPROTO\sfile\sfor\sWebots\sfor\sthe\srobot\sRobotino\s3\sfrom\sFesto.\nchanged\sby\sThomas\sFeldmeier\s2020,\swww.servicerobotik-ulm.de

@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: 7731f67a424ffa2934f57a041ef4122b
+needsRobotAncestor: 1
+baseType: Transform
+slotType: 
+parameters: number
+tags: hidden
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0.
+documentationUrl: https://www.cyberbotics.com/doc/guide/robotino3
+info: A\swheel\sfor\sRobotino3.proto

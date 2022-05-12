@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: 09efba75ef489ac36cb4d8b4c4811a46
+needsRobotAncestor: 0
+baseType: Solid
+slotType: 
+parameters: translation,rotation,name,model,extensionSlot
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0.
+documentationUrl: 
+info: This\sis\sa\sPROTO\sfile\sfor\sWebots\sof\sa\smounting\ssupport\sfor\sthe\srobot\sRobotino\s3\sfrom\sFesto\sand\sa\sHokuyo's\slidar.\nIt\sis\sa\sfeature\sfor\sRobotino\s3\sto\sfullfil\syour\srequirement.\nUse\sit\swith\sthe\s"topSlot"\sor\s"middleSlot"\sfield\sof\sthe\sRobotino\s3\srobot.

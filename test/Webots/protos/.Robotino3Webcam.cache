@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: 8f1f03398c655f5a983c89964fd39fa6
+needsRobotAncestor: 1
+baseType: Solid
+slotType: 
+parameters: translation,rotation,name,model,width,height
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0.
+documentationUrl: 
+info: This\sis\sa\sPROTO\sfile\sfor\sWebots\sof\sa\swebcam\sfor\sthe\srobot\sRobotino\s3\sfrom\sFesto.\nIt\sis\sa\sfeature\sfor\sRobotino\s3\sto\sfullfil\syour\srequirement.\nThe\smodel\sis\sbased\son\sthe\sLogitech®\sHD\sPro\sWebcam\sC920.

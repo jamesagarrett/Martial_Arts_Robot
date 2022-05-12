@@ -1,0 +1,11 @@
+Webots Proto Cache File version 1.5
+protoFileHash: dc07116716fa10bafce6695d866e4805
+needsRobotAncestor: 0
+baseType: Solid
+slotType: 
+parameters: translation,rotation,name,model,extensionSlot
+tags: 
+license:  Apache License 2.0
+licenseUrl:  http://www.apache.org/licenses/LICENSE-2.0.
+documentationUrl: 
+info: This\sis\sa\sPROTO\sfile\sfor\sWebots\sof\sa\smounting\ssupport\sfor\sthe\srobot\sRobotino\s3\sfrom\sFesto\sand\sa\swebcam.\nIt\sis\sa\sfeature\sfor\sRobotino\s3\sto\sfullfil\syour\srequirement.\nUse\sit\swith\sthe\s"cameraSlot"\sfield\sof\sthe\sRobotino\s3\srobot.
