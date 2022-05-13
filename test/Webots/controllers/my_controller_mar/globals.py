@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  globals.py
-##  Last Updated: October 31, 2021
+##  Last Updated: May 12, 2022
 ##
 ##  Constant declarations and definitions for values needed in other program
 ##  modules.
@@ -30,8 +30,8 @@ from controller import Robot
 ##Global objects for the LIDAR sensor and PWM driver breakout board.
 ROBOT = Robot()
 SENSOR  = ROBOT.getDevice('lidar')
-WHEELS = [ROBOT.getDevice('wheel0_joint'), ROBOT.getDevice('wheel1_joint'), 
-          ROBOT.getDevice('wheel2_joint')]
+WHEELS = [ROBOT.getDevice('wheel1_joint'), ROBOT.getDevice('wheel2_joint'), 
+          ROBOT.getDevice('wheel0_joint')]
 
 ##Any distance measurements are in inches.
 ##Any angular measurements are in degrees.

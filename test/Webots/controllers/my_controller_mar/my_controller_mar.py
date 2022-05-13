@@ -130,7 +130,6 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 
     #####################################
     
-    """
     ##Collect position data for objects if considered too close to the machine.
     ##getCollinearDistance() is used iff there is first an object detected 
     ##within SNS_MIN_DISTANCE, and looks for other distance values that lie on 
@@ -172,7 +171,6 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
     if(tooClose):
         calculateObjMovement(activeAngles, activeDistances, distanceValues)
         return 0, 0, 0
-    """
     
     ##Barring any objects too close to the machine, look for the opponent being
     ##too far away. getCollinearDistance() is used here as to allow the opponent
@@ -243,9 +241,9 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
         minLast = min([x for x in [lastFar, lastCW, lastCCW] if x >= 0], 
                       default=0)
 
-        #if(tooFar and minLast == lastFar):
-            #moveToOpponent()
-        if(turningCW and minLast == lastCW):
+        if(tooFar and minLast == lastFar):
+            moveToOpponent()
+        elif(turningCW and minLast == lastCW):
             rotateMachine(True, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
         elif(turningCCW and minLast == lastCCW):
             rotateMachine(False, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)

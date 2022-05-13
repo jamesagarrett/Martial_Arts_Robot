@@ -2,7 +2,7 @@
 ##  James Garrett
 ##
 ##  maneuverAnalysis.py
-##  Last Updated: September 24, 2021
+##  Last Updated: May 12, 2022
 ##
 ##  Determine the best course of action for maneuvering the machine back within
 ##  the desired distance ranges described in globals.py.
@@ -11,15 +11,14 @@
 from math import acos, atan, ceil, cos, degrees, floor, radians, sin, sqrt
 from bisect import bisect_left   
 
-from helperFunctions import getCollinearDistance, getPathAngles, playSoundEff
+from helperFunctions import getCollinearDistance, getPathAngles
 
 ##Module for performing reposition of the machine, based on sensor data 
 ##collection and analysis.
 from repositionMachine import moveFromObject
 
 ##THESE VALUES ARE NOT TO BE CHANGED!
-from globals import BLOKD_SOUND,\
-                    MACH_RADIUS,\
+from globals import MACH_RADIUS,\
                     PATH_ZONE,\
                     SNS_MAX_DISTANCE,\
                     SNS_MIN_DISTANCE,\
@@ -110,7 +109,7 @@ def calculateObjMovement(objAngles, objDistances, allDistances):
     maneuverAngle = findMoveAngle(objAngles)
 
     if(maneuverAngle == -1):
-        playSoundEff(BLOKD_SOUND)
+        print('blocked')
         return
 
     pathAngles = getPathAngles(maneuverAngle)
