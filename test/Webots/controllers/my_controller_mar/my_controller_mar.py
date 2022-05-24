@@ -285,11 +285,10 @@ def run_robot(ROBOT):
     
     for i in range (3):
         WHEELS[i].setPosition(float('inf'))
-    
-    for i in range (3):
         WHEELS[i].setVelocity(0.0)
         
-    SENSOR.enable(timestep)
+        
+    SENSOR.enable(timestep)    
     
     # Main loop:
     # - perform simulation steps until Webots is stopping the controller

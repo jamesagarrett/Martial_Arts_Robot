@@ -43,9 +43,9 @@ RectangleArena {
     }
   }
 }
-Robot {
-  translation 0.87996 -0.059942 1.23867
-  rotation -1.5593325499848376e-05 1.8811823114787518e-05 0.9999999997014818 3.1415900000000008
+DEF HUMAN Robot {
+  translation 0.9199663127007788 -0.05994971567704739 1.2386751099847504
+  rotation -1.3068059169074485e-05 1.576533610755237e-05 0.99999999979034 3.1415900000000003
   children [
     Group {
     }
@@ -405,8 +405,18 @@ DEF ROOF RectangleArena {
     }
   }
 }
-Robotino3 {
-  rotation -8.981109999128959e-06 4.040499999608128e-06 0.999999999951507 0
+DEF MY_ROBOT Robotino3 {
+  hidden position_0_0 2.654952343215184e-16
+  hidden position_0_1 1.2427776118265579e-14
+  hidden position_0_2 -1.2681559638633964e-14
+  hidden translation_1 0 0 0
+  hidden rotation_1 0 1 0 0
+  hidden translation_2 0 0 0
+  hidden rotation_2 0 1 0 0
+  hidden translation_3 0 0 0
+  hidden rotation_3 0 1 0 0
+  translation -4.508273067564645e-08 5.612529760169954e-10 -0.0022915330015582103
+  rotation -0.012443251252630447 -0.9999225797521846 -2.385326074682297e-11 1.171317513639874e-05
   controller "my_controller_mar"
   topSlot [
     Lidar {
@@ -419,4 +429,9 @@ Robotino3 {
       maxRange 12
     }
   ]
+}
+Robot {
+  name "scenic_supervisor"
+  controller "scenic_supervisor"
+  supervisor TRUE
 }
