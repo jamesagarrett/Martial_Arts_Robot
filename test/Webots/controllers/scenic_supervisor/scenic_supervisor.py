@@ -1,6 +1,10 @@
 
 from controller import Supervisor
+from random import randint, uniform
+from math import atan, ceil, degrees, floor, cos, sin, radians as rad
 
+
+#[-0.7165161866979263, -1.2410424398063153, 0.0] case didnt work
 MIN_DISTANCE = 0.7112
 MAX_DISTANCE = 1.3716
 OPP_DISTANCE = 1.8288
@@ -51,6 +55,36 @@ def getPosition():
             c) calculate the x and y coordinates using trig laws
             
     """
+    angle = randint(LEFT_TURN_ANGLE_MIN,RIGHT_TURN_ANGLE_MAX)
+    #light blue left region
+    if angle < FRONT_ANGLE_MIN:
+        helperAngle = abs(angle - LEFT_MDPT)
+        hyp = MAX_DISTANCE / cos(rad(helperAngle))
+        pos = uniform(MACH_RADIUS + 0.0001, hyp)
+        x = cos(rad(angle - 180)) * pos
+        y = sin(rad(angle - 180)) * pos
+        return [x*-1,y*-1]
+    #dark green region
+    elif angle < RIGHT_TURN_ANGLE_MIN:
+        helperAngle = abs(angle - DES_OPP_ANGLE)
+        lightHyp = MAX_DISTANCE / cos(rad(helperAngle))
+        darkHyp = OPP_DISTANCE / cos(rad(helperAngle))
+        pos = uniform(MACH_RADIUS + 0.0001, darkHyp)
+        while pos >= MIN_DISTANCE and pos <= lightHyp:
+            pos = uniform(MACH_RADIUS + 0.0001, darkHyp)
+        y = cos(rad(abs(DES_OPP_ANGLE - angle))) * pos
+        x = sin(rad(abs(DES_OPP_ANGLE - angle))) * pos
+        if angle < DES_OPP_ANGLE:
+            x *= -1
+        return [x,y*-1]
+    else:
+        helperAngle = abs(angle - RIGHT_MDPT)
+        hyp = MAX_DISTANCE / cos(rad(helperAngle))
+        pos = uniform(MACH_RADIUS + 0.0001, hyp)
+        x = cos(rad(360 - angle)) * pos
+        y = sin(rad(360 - angle)) * pos
+        return [x,y*-1]
+    
     
     
 
@@ -62,7 +96,8 @@ def main():
     human_node = supervisor.getFromDef("HUMAN")
     trans_field = human_node.getField("translation")
     print(trans_field.getSFVec3f())
-    trans_field.setSFVec3f([1,0,0])
+    pos = getPosition()
+    trans_field.setSFVec3f([pos[0],pos[1],0])
     print(trans_field.getSFVec3f())
 
 

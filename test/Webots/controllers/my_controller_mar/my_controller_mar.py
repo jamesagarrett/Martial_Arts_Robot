@@ -186,7 +186,10 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
         if(distanceValues[x] > adjustedDistance):
             canMoveForward = True
 
-        if(MACH_RADIUS < distanceValues[x] <= SNS_OPP_DISTANCE):
+        adjustedDistance = getCollinearDistance(x, DES_OPP_ANGLE, 
+                                                        SNS_OPP_DISTANCE)
+
+        if(MACH_RADIUS < distanceValues[x] <= adjustedDistance):
             tooFar = True
 
         if(opponentFound and tooFar and canMoveForward):
