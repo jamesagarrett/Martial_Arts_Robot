@@ -226,6 +226,9 @@ def moveFromObject(repositionAngle, watchAngles, targetAngle, desiredDistance,
         if(doneMoving):
             for i in range (3):
                 WHEELS[i].setVelocity(0.0)   
+            # with open('listfile2.txt', 'w') as filehandle:
+                # for listitem in sensorDistances:
+                    # filehandle.write('%s\n' % listitem) 
             break
 
     return
@@ -323,6 +326,9 @@ def moveToOpponent():
         if(doneMoving):
             for i in range (3):
                 WHEELS[i].setVelocity(0.0)   
+            # with open('listfile2.txt', 'w') as filehandle:
+                # for listitem in sensorDistances:
+                    # filehandle.write('%s\n' % listitem) 
             break  
 
     return
@@ -366,7 +372,6 @@ def rotateMachine(turnCW, stopMin, stopMax):
                 WHEELS[i].setVelocity(TURN_SPEED)
             else:
                 WHEELS[i].setVelocity(-1 * TURN_SPEED)
-              
         sensorDistances = SENSOR.getRangeImage()[::-1]
         for i in range(360):
             distance = sensorDistances[i] * 39.3701
@@ -386,7 +391,10 @@ def rotateMachine(turnCW, stopMin, stopMax):
 
         if(doneMoving):
             for i in range (3):
-                WHEELS[i].setVelocity(0.0)   
+                WHEELS[i].setVelocity(0.0)  
+            # with open('listfile2.txt', 'w') as filehandle:
+                # for listitem in sensorDistances:
+                    # filehandle.write('%s\n' % listitem) 
             break  
 
     return

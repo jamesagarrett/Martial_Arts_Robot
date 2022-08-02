@@ -170,6 +170,7 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
 
     if(tooClose):
         calculateObjMovement(activeAngles, activeDistances, distanceValues)
+        # exit(1)
         return 0, 0, 0
     
     ##Barring any objects too close to the machine, look for the opponent being
@@ -250,6 +251,7 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
             rotateMachine(True, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
         elif(turningCCW and minLast == lastCCW):
             rotateMachine(False, FRONT_ANGLE_MIN, FRONT_ANGLE_MAX)
+        # exit(1)
         return 0, 0, 0
 
     elif (not canMoveForward):
@@ -257,6 +259,7 @@ def interpretData(distanceValues, lastFar, lastCW, lastCCW):
             rotateMachine(True, STUCK_RIGHT_TURN_MIN, STUCK_RIGHT_TURN_MAX)
         elif(turningCCW):
             rotateMachine(False, STUCK_LEFT_TURN_MIN, STUCK_LEFT_TURN_MAX)
+        # exit(1)
         return 0, 0, 0
 
     return (lastFar * tooFar + tooFar, 
@@ -291,17 +294,33 @@ def run_robot(ROBOT):
         WHEELS[i].setVelocity(0.0)
         
         
-    SENSOR.enable(timestep)    
+    SENSOR.enable(timestep) 
+    # SENSOR.enablePointCloud()   
     
     # Main loop:
     # - perform simulation steps until Webots is stopping the controller
+    start = True
     while ROBOT.step(timestep) != -1:
         sensorDistances = SENSOR.getRangeImage()[::-1]
         for i in range(360):
             sensorDistances[i] *= 39.3701
+            # if start:
+                # print(i, sensorDistances[i])
+        if start:
+            with open('listfile.txt', 'w') as filehandle:
+                for listitem in sensorDistances:
+                    filehandle.write('%s\n' % listitem)
+            start = False
+            
+         
         
         lastFar, lastCW, lastCCW = interpretData(sensorDistances, lastFar, 
                                                  lastCW, lastCCW)
+        with open('listfile2.txt', 'w') as filehandle:
+            for listitem in sensorDistances:
+                filehandle.write('%s\n' % listitem)
+            
+        
         
 if __name__ == "__main__":
 # create the Robot instance.

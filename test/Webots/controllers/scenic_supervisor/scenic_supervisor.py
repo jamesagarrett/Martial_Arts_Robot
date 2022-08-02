@@ -1,17 +1,9 @@
-
 from controller import Supervisor
-from random import randint, uniform
-from math import atan, ceil, degrees, floor, cos, sin, radians as rad
+import scenic
+from scenic.simulators.webots import WebotsSimulator
+from math import cos, radians
+import time
 
-
-#[-0.7165161866979263, -1.2410424398063153, 0.0] case didnt work
-MIN_DISTANCE = 0.7112
-MAX_DISTANCE = 1.3716
-OPP_DISTANCE = 1.8288
-MACH_RADIUS = 0.4572
-
-##The front of the machine is considered to be within this angular range and is 
-##where the opponent is assumed to be.
 FRONT_ANGLE_MIN = 245
 FRONT_ANGLE_MAX = 295
 
@@ -26,128 +18,156 @@ LEFT_TURN_ANGLE_MAX = 244
 RIGHT_TURN_ANGLE_MIN = 296
 RIGHT_TURN_ANGLE_MAX = 340
 
-LEFT_MDPT = round((LEFT_TURN_ANGLE_MIN + LEFT_TURN_ANGLE_MAX)/2)
-RIGHT_MDPT = round((RIGHT_TURN_ANGLE_MIN + RIGHT_TURN_ANGLE_MAX)/2)
+MACH_RADIUS = 18
 
-def getPosition():
-    """
-        1) randomly pick angle from 180 to 359
-        2) 3 if statements for diff regions
-        3) case 1: dark green/ red region
-            a) further split into < 270 and > 270
-            b) calculate length of hyp of light and dark green regions using angle (abs value diff
-                of angle and 270)
-                and midpoint line
-                randomly select distance between machine radius to min distance 
-                or within dark green region
-            c) calculate the x and y coordinates using trig laws
-        4) case 2: left side light blue region
-            a) further split into < 210 and > 210
-            b) calculate the hyp formed from angle measure using the midpoint line
-                and angle (abs value diff of angle and 210) 
-                randomly pick distance from machine radius to hyp calculated
-           c) calculate the x and y coordinates using trig laws
-        5) case 3: right side light blue region
-            a) further split into < 330 and > 330
-            b) calculate the hyp formed from angle measure using the midpoint line
-                and angle (abs value diff of angle and 330) 
-                randomly pick distance from machine radius to hyp calculated
-            c) calculate the x and y coordinates using trig laws
+MIN_DISTANCE = 10.0 
+
+##The minimum permitted distance sensor reading.
+SNS_MIN_DISTANCE = MIN_DISTANCE + MACH_RADIUS
+
+##The maximum permitted distance for the machine to be from the opponent it is 
+##tracking.
+MAX_DISTANCE = 36.0
+
+##The maximum permitted distance sensor reading.
+SNS_MAX_DISTANCE = MAX_DISTANCE + MACH_RADIUS
+
+OPP_DISTANCE = MAX_DISTANCE + 18.0
+
+##The opponent distance sensor reading.
+SNS_OPP_DISTANCE = OPP_DISTANCE + MACH_RADIUS
+
+supervisor = Supervisor()
+simulator = WebotsSimulator(supervisor)
+
+path = "/Users/suryasuresh/Desktop/Martial_Arts_Robot/test/Webots/mars/project.scenic"
+print(f'Loading Scenic scenario {path}')
+
+scenario = scenic.scenarioFromFile(path)
+
+def checkRegion(beforeDistances):
+    absOppDist = SNS_OPP_DISTANCE / cos(radians(FRONT_ANGLE_MAX - DES_OPP_ANGLE))
+    regions = [False] * 5 #red,lightGreen,darkGreen,leftBlue,rightBlue
+    for i in range(180, len(beforeDistances)):
+        if beforeDistances[i] <= absOppDist:
+            # print(i, distances[i])
+            if beforeDistances[i] < SNS_MIN_DISTANCE:
+                regions[0] = True
+                break
+            if i <= LEFT_TURN_ANGLE_MAX:
+                regions[3] = True
+            elif i <= FRONT_ANGLE_MAX:
+                absMaxDist = SNS_MAX_DISTANCE / cos(radians(abs(i - DES_OPP_ANGLE)))
+                if beforeDistances[i] <= absMaxDist:
+                    regions[1] = True
+                else:
+                    regions[2] = True
+            else:
+                regions[4] = True
+    return regions
+    
+
+for i in range(10):
+    scene, _ = scenario.generate()
+    print('Starting new simulation...')
+    
+    # time.sleep(1)
+    
+    robot_node = supervisor.getFromDef("MY_ROBOT")
+    
+    trans_field = robot_node.getField("translation")
+    beforePos = [round(i, 4) for i in trans_field.getSFVec3f()]
+    rot_field = robot_node.getField("rotation")
+    beforeRot = round(rot_field.getSFRotation()[3],4)
+    # print("before:", beforePos, beforeRot)
+    
+    
+    simulator.simulate(scene, verbosity=2)
+    print('finished simulating')
+    
+    beforeDistances = []
+    with open('../my_controller_mar/listfile.txt', 'r') as filehandle:
+        for line in filehandle:
+            # remove linebreak which is the last character of the string
+            dist = float(line[:-1])
+        
+            # add item to the list
+            beforeDistances.append(dist)
             
-    """
-    angle = randint(LEFT_TURN_ANGLE_MIN,RIGHT_TURN_ANGLE_MAX)
-    #light blue left region
-    if angle < FRONT_ANGLE_MIN:
-        helperAngle = abs(angle - LEFT_MDPT)
-        hyp = MAX_DISTANCE / cos(rad(helperAngle))
-        pos = uniform(MACH_RADIUS + 0.0001, hyp)
-        x = cos(rad(angle - 180)) * pos
-        y = sin(rad(angle - 180)) * pos
-        return [x*-1,y*-1]
-    #dark green region
-    elif angle < RIGHT_TURN_ANGLE_MIN:
-        helperAngle = abs(angle - DES_OPP_ANGLE)
-        lightHyp = MAX_DISTANCE / cos(rad(helperAngle))
-        darkHyp = OPP_DISTANCE / cos(rad(helperAngle))
-        pos = uniform(MACH_RADIUS + 0.0001, darkHyp)
-        while pos >= MIN_DISTANCE and pos <= lightHyp:
-            pos = uniform(MACH_RADIUS + 0.0001, darkHyp)
-        y = cos(rad(abs(DES_OPP_ANGLE - angle))) * pos
-        x = sin(rad(abs(DES_OPP_ANGLE - angle))) * pos
-        if angle < DES_OPP_ANGLE:
-            x *= -1
-        return [x,y*-1]
+    afterDistances = []
+    with open('../my_controller_mar/listfile2.txt', 'r') as filehandle:
+        for line in filehandle:
+            # remove linebreak which is the last character of the string
+            dist = float(line[:-1])
+        
+            # add item to the list
+            afterDistances.append(dist)
+    # print('before distances:', beforeDistances[245:296])
+    # print()
+    # print('afterDistances:',afterDistances[245:296])
+    
+    afterPos = [round(i, 4) for i in trans_field.getSFVec3f()]
+    afterRot = round(rot_field.getSFRotation()[3], 4)
+    # print("after:", afterPos, afterRot)
+    
+    results = ['bRot',beforeRot, 'aRot', afterRot, 'bX', beforePos[0], 'aX', afterPos[0],
+                'bY', beforePos[1], 'aY', afterPos[1]]
+                
+    regions = checkRegion(beforeDistances)
+    afterRegions = checkRegion(afterDistances)
+    
+    results.append('bRegions')
+    
+    for i in range(len(regions)):
+        if regions[i]:
+            results.append(i)
+    
+    results.append('aRegions')
+    
+    for i in range(len(afterRegions)):
+        if afterRegions[i]:
+            results.append(i)
+    
+    results.append('result')
+    
+    if afterRegions[1] and not afterRegions[0]:
+        results.append(True)
+        if regions[0]: #red
+            if afterPos[1] <= beforePos[1]:
+                results[-1] = False
+        elif regions[1]:
+            if beforePos[0] != afterPos[0] or beforePos[1] != afterPos[1] or beforeRot != afterRot:
+                results[-1] = False
+        elif regions[2]:
+            if afterPos[1] >= beforePos[1]:
+                results[-1] = False
+        elif regions[3]:
+            if beforeRot >= afterRot:
+                results[-1] = False
+        elif regions[4]:
+            if beforeRot <= afterRot:
+                results[-1] = False
     else:
-        helperAngle = abs(angle - RIGHT_MDPT)
-        hyp = MAX_DISTANCE / cos(rad(helperAngle))
-        pos = uniform(MACH_RADIUS + 0.0001, hyp)
-        x = cos(rad(360 - angle)) * pos
-        y = sin(rad(360 - angle)) * pos
-        return [x,y*-1]
+        results.append(False)
+    print(results)
+    with open('results.txt', 'a') as f:
+        for item in results:
+            f.write("%s " % item)
+        f.write("\n")
+
+            
     
     
     
-
-
-def main():
-    supervisor = Supervisor()
     
-    # set positions of the robot and pedestrian
-    human_node = supervisor.getFromDef("HUMAN")
-    trans_field = human_node.getField("translation")
-    print(trans_field.getSFVec3f())
-    pos = getPosition()
-    trans_field.setSFVec3f([pos[0],pos[1],0])
-    print(trans_field.getSFVec3f())
-
-
-main()
+                
+   
+            
+            
+                
+                
+            
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import scenic
-# from scenic.simulators.webots import WebotsSimulator
-
-# simulator = WebotsSimulator(supervisor)
-
-# path = "/Users/suryasuresh/Desktop/Martial_Arts_Robot/test/Webots/mars/narrow.scenic"
-# print(f'Loading Scenic scenario {path}')
-# scenario = scenic.scenarioFromFile(path)
-
-# while True:
-    # scene, _ = scenario.generate()
-    # print('Starting new simulation...')
-    # simulator.simulate(scene, verbosity=2)
